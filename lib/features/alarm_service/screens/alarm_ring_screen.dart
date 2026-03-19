@@ -74,8 +74,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isProximity =
-        widget.alarmSettings.notificationSettings.title == 'Location Alarm';
+    final isProximity = widget.alarmSettings.payload == 'proximity';
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -99,8 +98,8 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen>
               Text(
                 widget.alarmSettings.notificationSettings.body,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  color: colorScheme.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 64),

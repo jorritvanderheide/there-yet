@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/app.dart';
 
 void main() {
-  testWidgets('app renders map screen', (tester) async {
+  testWidgets('app renders alarm list', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: LocationAlarmApp()));
-    await tester.pumpAndSettle();
-    expect(find.byType(LocationAlarmApp), findsOneWidget);
+    await tester.pump();
+    expect(find.text('Location Alarm'), findsOneWidget);
   });
 }

@@ -21,6 +21,11 @@ class AlarmNotificationService {
       ),
     };
 
+    final alarmType = switch (alarm) {
+      ProximityAlarmData() => 'proximity',
+      DepartureAlarmData() => 'departure',
+    };
+
     final settings = AlarmSettings(
       id: alarm.id ?? 0,
       dateTime: DateTime.now(),
@@ -28,6 +33,7 @@ class AlarmNotificationService {
       loopAudio: true,
       vibrate: true,
       androidFullScreenIntent: true,
+      payload: alarmType,
       volumeSettings: const VolumeSettings.fixed(),
       notificationSettings: NotificationSettings(
         title: title,
