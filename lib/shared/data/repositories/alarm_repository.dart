@@ -38,7 +38,10 @@ class AlarmRepository {
 
   Future<void> toggleActive(int id, {required bool active}) {
     return (_db.update(_db.alarms)..where((t) => t.id.equals(id))).write(
-      db.AlarmsCompanion(active: Value(active)),
+      db.AlarmsCompanion(
+        active: Value(active),
+        updatedAt: Value(DateTime.now()),
+      ),
     );
   }
 
@@ -51,6 +54,7 @@ class AlarmRepository {
         location: location,
         active: row.active,
         createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
         radius: row.radius ?? 500,
       ),
       AlarmMode.departure => DepartureAlarmData(
@@ -59,6 +63,7 @@ class AlarmRepository {
         location: location,
         active: row.active,
         createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
         travelMode: row.travelMode ?? TravelMode.walk,
         bufferMinutes: row.bufferMinutes ?? 5,
         arrivalTime: row.arrivalTime ?? DateTime.now(),

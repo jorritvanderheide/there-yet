@@ -8,6 +8,7 @@ sealed class AlarmData {
     required this.location,
     required this.active,
     this.createdAt,
+    this.updatedAt,
   });
 
   final int? id;
@@ -15,6 +16,7 @@ sealed class AlarmData {
   final LatLng location;
   final bool active;
   final DateTime? createdAt;
+  final DateTime? updatedAt;
 }
 
 final class ProximityAlarmData extends AlarmData {
@@ -24,6 +26,7 @@ final class ProximityAlarmData extends AlarmData {
     required super.location,
     required super.active,
     super.createdAt,
+    super.updatedAt,
     required this.radius,
   });
 
@@ -37,6 +40,7 @@ final class DepartureAlarmData extends AlarmData {
     required super.location,
     required super.active,
     super.createdAt,
+    super.updatedAt,
     required this.travelMode,
     required this.bufferMinutes,
     required this.arrivalTime,

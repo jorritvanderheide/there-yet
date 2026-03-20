@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/features/alarm_edit/widgets/alarm_type_selector.dart';
@@ -120,11 +121,13 @@ class _AlarmEditScreenState extends ConsumerState<AlarmEditScreen> {
 
     final repo = ref.read(alarmRepositoryProvider);
 
+    final position = ref.read(locationProvider).whenData((p) => p).value;
+    final hasLocationLock = position != null;
     final isInsideRadius =
-        _isNew &&
+        hasLocationLock &&
         _mode == AlarmMode.proximity &&
-        _isInsideProximity(_location!, _radius);
-    final active = isInsideRadius ? false : _wasActive;
+        _isInsideProximity(position, _location!, _radius);
+    final active = (!hasLocationLock || isInsideRadius) ? false : _wasActive;
     final alarm = switch (_mode) {
       AlarmMode.proximity => ProximityAlarmData(
         id: widget.alarmId,
@@ -137,7 +140,7 @@ class _AlarmEditScreenState extends ConsumerState<AlarmEditScreen> {
         id: widget.alarmId,
         name: _labelController.text,
         location: _location!,
-        active: _wasActive,
+        active: active,
         travelMode: _travelMode,
         bufferMinutes: _bufferMinutes,
         arrivalTime: _arrivalTime!,
@@ -171,13 +174,17 @@ class _AlarmEditScreenState extends ConsumerState<AlarmEditScreen> {
         ? (_mode == AlarmMode.proximity ? 'Proximity alarm' : 'Departure alarm')
         : _labelController.text;
 
-    final message = switch (alarm) {
-      DepartureAlarmData() => _departureMessage(alarm) ?? '$label saved',
-      ProximityAlarmData() =>
-        isInsideRadius
-            ? '$label saved (inactive — you are in the alarm area)'
-            : '$label saved',
-    };
+    final String message;
+    if (!hasLocationLock) {
+      message = '$label saved (inactive — no location lock)';
+    } else if (isInsideRadius) {
+      message = '$label saved (inactive — you are in the alarm area)';
+    } else {
+      message = switch (alarm) {
+        DepartureAlarmData() => _departureMessage(alarm) ?? '$label saved',
+        ProximityAlarmData() => '$label saved',
+      };
+    }
 
     // Pop first, then show snackbar on the parent scaffold
     context.pop();
@@ -216,11 +223,7 @@ class _AlarmEditScreenState extends ConsumerState<AlarmEditScreen> {
     if (mounted) context.pop();
   }
 
-  bool _isInsideProximity(LatLng target, double radius) {
-    final locationAsync = ref.read(locationProvider);
-    final position = locationAsync.whenData((p) => p).value;
-    if (position == null) return false;
-
+  bool _isInsideProximity(Position position, LatLng target, double radius) {
     final distance = distanceInMeters(
       LatLng(position.latitude, position.longitude),
       target,

@@ -40,6 +40,12 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
       case AlarmSortMode.active:
         sorted.sort((a, b) {
           if (a.active != b.active) return a.active ? -1 : 1;
+          // Within inactive group: most recently updated first
+          if (!a.active && !b.active) {
+            final aTime = a.updatedAt ?? DateTime(0);
+            final bTime = b.updatedAt ?? DateTime(0);
+            return bTime.compareTo(aTime);
+          }
           return 0;
         });
       case AlarmSortMode.created:

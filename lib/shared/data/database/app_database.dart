@@ -18,6 +18,7 @@ class Alarms extends Table {
   IntColumn get bufferMinutes => integer().nullable()();
   DateTimeColumn get arrivalTime => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
 
 @DriftDatabase(tables: [Alarms])
@@ -25,13 +26,16 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (migrator, from, to) async {
       if (from < 2) {
         await migrator.addColumn(alarms, alarms.arrivalTime);
+      }
+      if (from < 3) {
+        await migrator.addColumn(alarms, alarms.updatedAt);
       }
     },
   );
