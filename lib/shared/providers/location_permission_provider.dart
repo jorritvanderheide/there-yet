@@ -8,7 +8,14 @@ final locationPermissionProvider =
 
 class LocationPermissionNotifier extends Notifier<PermissionStatus> {
   @override
-  PermissionStatus build() => PermissionStatus.denied;
+  PermissionStatus build() {
+    _init();
+    return PermissionStatus.denied;
+  }
+
+  Future<void> _init() async {
+    state = await Permission.locationWhenInUse.status;
+  }
 
   Future<void> check() async {
     state = await Permission.locationWhenInUse.status;
