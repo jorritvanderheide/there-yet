@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/app.dart';
-import 'package:location_alarm/features/alarm_service/background_notification_handler.dart';
 import 'package:location_alarm/features/alarm_service/foreground_service_manager.dart';
 import 'package:location_alarm/features/alarm_service/providers/alarm_service_provider.dart';
 import 'package:location_alarm/features/alarm_service/providers/foreground_service_provider.dart';
@@ -31,19 +32,8 @@ void main() async {
   final db = openDatabase();
   final prefs = await SharedPreferences.getInstance();
 
-  // Initialize notifications in main isolate for foreground responses.
-  // Background responses are handled by onBackgroundNotificationResponse.
-  final notifications = FlutterLocalNotificationsPlugin();
-  const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-  const initSettings = InitializationSettings(android: androidSettings);
-  await notifications.initialize(
-    settings: initSettings,
-    onDidReceiveNotificationResponse: _onForegroundNotificationResponse,
-    onDidReceiveBackgroundNotificationResponse:
-        onBackgroundNotificationResponse,
-  );
-
   ForegroundServiceManager.init();
+  FlutterForegroundTask.initCommunicationPort();
 
   // Clear any leftover lock screen flags
   try {
@@ -59,21 +49,50 @@ void main() async {
     ],
   );
 
-  // Store container reference for the foreground notification callback
-  _container = container;
-
   bool dismissScreenShowing = false;
 
   // Listen for alarm fires from the background isolate via the provider
   container.listen(alarmServiceProvider, (previous, next) {
-    if (next == null || previous == next) return;
+    if (next == null) return;
 
+    // Show full-screen dismiss when screen is off
     _showDismissScreenIfNeeded(
       next,
       isDismissShowing: () => dismissScreenShowing,
       setDismissShowing: (value) => dismissScreenShowing = value,
-      container: container,
     );
+  });
+
+  // Check if launched via full-screen alarm intent (screen off case)
+  unawaited(
+    _checkLaunchIntent(() {
+      if (!dismissScreenShowing) {
+        dismissScreenShowing = true;
+        return () => dismissScreenShowing = false;
+      }
+      return null;
+    }),
+  );
+
+  // Listen for alarm intents arriving while the app is already running
+  _screenChannel.setMethodCallHandler((call) async {
+    if (call.method == 'onAlarmRing') {
+      final args = call.arguments as Map<Object?, Object?>;
+      final alarmId = args['alarm_id'] as int?;
+      final title = args['title'] as String? ?? '';
+      final body = args['body'] as String? ?? '';
+      final isProximity = args['is_proximity'] as bool? ?? true;
+      if (alarmId != null && !dismissScreenShowing) {
+        dismissScreenShowing = true;
+        _showDismissScreenFromIntent(
+          alarmId: alarmId,
+          isProximity: isProximity,
+          title: title,
+          body: body,
+          onDismissed: () => dismissScreenShowing = false,
+        );
+      }
+    }
   });
 
   runApp(
@@ -84,7 +103,7 @@ void main() async {
           final alarm = container.read(alarmServiceProvider);
           if (alarm != null && !dismissScreenShowing) {
             dismissScreenShowing = true;
-            _showDismissScreen(alarm, container, () {
+            _showDismissScreen(alarm, () {
               dismissScreenShowing = false;
             });
           }
@@ -94,40 +113,80 @@ void main() async {
   );
 }
 
-ProviderContainer? _container;
+/// Check if the app was launched via a full-screen alarm intent.
+/// [acquireDismiss] is called to mark dismiss as showing; returns the
+/// onDismissed callback, or null if a dismiss screen is already showing.
+Future<void> _checkLaunchIntent(VoidCallback? Function() acquireDismiss) async {
+  try {
+    final data = await _screenChannel.invokeMethod<Map<Object?, Object?>>(
+      'getLaunchAlarmData',
+    );
+    if (data == null) return;
 
-/// Handle notification actions when the main isolate is alive.
-void _onForegroundNotificationResponse(NotificationResponse response) {
-  if (response.actionId == 'dismiss_alarm') {
-    final alarmId = int.tryParse(response.payload ?? '');
-    if (alarmId != null) {
-      _container?.read(alarmServiceProvider.notifier).dismiss(alarmId);
-    }
+    final alarmId = data['alarm_id'] as int?;
+    if (alarmId == null) return;
+
+    final onDismissed = acquireDismiss();
+    if (onDismissed == null) return;
+
+    final title = data['title'] as String? ?? '';
+    final body = data['body'] as String? ?? '';
+    final isProximity = data['is_proximity'] as bool? ?? true;
+
+    // Wait for the navigator to be ready (runApp may not have completed yet)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showDismissScreenFromIntent(
+        alarmId: alarmId,
+        isProximity: isProximity,
+        title: title,
+        body: body,
+        onDismissed: onDismissed,
+      );
+    });
+  } on MissingPluginException {
+    // ignore
   }
+}
+
+void _showDismissScreenFromIntent({
+  required int alarmId,
+  required bool isProximity,
+  required String title,
+  required String body,
+  required VoidCallback onDismissed,
+}) {
+  navigatorKey.currentState?.push(
+    MaterialPageRoute<void>(
+      builder: (_) => AlarmRingScreen(
+        alarmId: alarmId,
+        isProximity: isProximity,
+        title: title,
+        body: body,
+        onDismissed: onDismissed,
+      ),
+    ),
+  );
 }
 
 Future<void> _showDismissScreenIfNeeded(
   AlarmData alarm, {
   required bool Function() isDismissShowing,
   required void Function(bool) setDismissShowing,
-  required ProviderContainer container,
 }) async {
   if (isDismissShowing()) return;
 
   final screenOff = await _isScreenOff();
   if (screenOff) {
     setDismissShowing(true);
-    _showDismissScreen(alarm, container, () {
+    _showDismissScreen(alarm, () {
       setDismissShowing(false);
     });
   }
+  // Screen on: the native notification (shown by background isolate) handles
+  // dismiss via AlarmDismissReceiver — no Flutter UI needed.
 }
 
-void _showDismissScreen(
-  AlarmData alarm,
-  ProviderContainer container,
-  VoidCallback onDismissed,
-) {
+void _showDismissScreen(AlarmData alarm, VoidCallback onDismissed) {
   final (title, body) = switch (alarm) {
     ProximityAlarmData(:final radius) => (
       'Location Alarm',

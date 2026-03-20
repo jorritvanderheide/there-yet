@@ -1,11 +1,15 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
+import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
 import 'package:location_alarm/shared/providers/alarms_provider.dart';
+
+const _notificationChannel = MethodChannel(
+  'nl.bw20.location_alarm/alarm_notification',
+);
 
 final alarmServiceProvider = NotifierProvider<AlarmServiceNotifier, AlarmData?>(
   AlarmServiceNotifier.new,
@@ -17,7 +21,6 @@ final alarmServiceProvider = NotifierProvider<AlarmServiceNotifier, AlarmData?>(
 class AlarmServiceNotifier extends Notifier<AlarmData?> {
   @override
   AlarmData? build() {
-    FlutterForegroundTask.initCommunicationPort();
     FlutterForegroundTask.addTaskDataCallback(_onTaskData);
 
     ref.onDispose(() {
@@ -35,24 +38,37 @@ class AlarmServiceNotifier extends Notifier<AlarmData?> {
 
     if (type == 'alarm_fired') {
       final id = json['id'] as int;
-      debugPrint('ALARM: received alarm_fired for $id in main isolate');
-
-      // Look up the alarm data for the UI
       final alarms = ref.read(alarmsProvider).whenData((a) => a).value;
       final alarm = alarms?.where((a) => a.id == id).firstOrNull;
       if (alarm != null) {
         state = alarm;
+      }
+    } else if (type == 'alarm_dismissed') {
+      final id = json['id'] as int;
+      // Deactivate via main isolate's DB connection so alarmsProvider updates
+      await ref.read(alarmRepositoryProvider).toggleActive(id, active: false);
+      if (state?.id == id) {
+        state = null;
       }
     }
   }
 
   /// Dismiss the currently ringing alarm by sending a command to the
   /// background isolate.
-  void dismiss(int alarmId) {
-    debugPrint('ALARM: sending dismiss for $alarmId to background');
+  Future<void> dismiss(int alarmId) async {
     FlutterForegroundTask.sendDataToTask(
       jsonEncode({'type': 'dismiss', 'id': alarmId}),
     );
+    // Deactivate via main isolate's DB so alarmsProvider updates
+    await ref
+        .read(alarmRepositoryProvider)
+        .toggleActive(alarmId, active: false);
+    // Cancel notification from main isolate
+    try {
+      await _notificationChannel.invokeMethod('dismissAlarm');
+    } on MissingPluginException {
+      // Channel may not be available yet
+    }
     state = null;
   }
 }

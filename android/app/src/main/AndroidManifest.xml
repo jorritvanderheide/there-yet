@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <application
         android:label="Location Alarm"
-        android:name="${applicationName}"
+        android:name=".LocationAlarmApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -37,6 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".AlarmDismissReceiver"
+            android:exported="false"/>
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
             android:foregroundServiceType="location"

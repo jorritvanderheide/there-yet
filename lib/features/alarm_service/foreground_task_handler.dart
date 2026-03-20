@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -13,39 +13,54 @@ import 'package:location_alarm/shared/data/repositories/alarm_repository.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
+  WidgetsFlutterBinding.ensureInitialized();
   FlutterForegroundTask.setTaskHandler(LocationTaskHandler());
 }
 
 class LocationTaskHandler extends TaskHandler {
   StreamSubscription<Position>? _positionSub;
 
-  late AppDatabase _db;
-  late AlarmRepository _repo;
+  AppDatabase? _db;
+  AlarmRepository? _repo;
   final _checker = AlarmChecker();
   final _player = BackgroundAlarmPlayer();
   final Set<int> _firedIds = {};
   LatLng? _lastPosition;
+  bool _ready = false;
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    _db = openDatabase();
-    _repo = AlarmRepository(_db);
-    await _player.init();
+    try {
+      _db = openDatabase();
+      _repo = AlarmRepository(_db!);
+      await _player.init();
+      _ready = true;
+    } on Exception catch (e) {
+      debugPrint('ALARM: failed to initialize background task: $e');
+      return;
+    }
 
-    _positionSub = Geolocator.getPositionStream(
-      locationSettings: AndroidSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 10,
-        forceLocationManager: true,
-      ),
-    ).listen(_onPosition);
+    _positionSub =
+        Geolocator.getPositionStream(
+          locationSettings: AndroidSettings(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 10,
+            forceLocationManager: true,
+          ),
+        ).listen(
+          _onPosition,
+          onError: (Object e) {
+            debugPrint('ALARM: position stream error: $e');
+          },
+        );
   }
 
   Future<void> _onPosition(Position position) async {
+    if (!_ready) return;
+
     final latLng = LatLng(position.latitude, position.longitude);
     _lastPosition = latLng;
 
-    // Send position to main isolate for UI
     FlutterForegroundTask.sendDataToMain(
       jsonEncode({
         'type': 'position',
@@ -58,32 +73,36 @@ class LocationTaskHandler extends TaskHandler {
   }
 
   Future<void> _checkAlarms(LatLng position) async {
-    final activeAlarms = await _repo.getActive();
+    try {
+      final activeAlarms = await _repo!.getActive();
 
-    // Clear firedIds for alarms that are no longer active
-    final activeIds = activeAlarms.map((a) => a.id!).toSet();
-    _firedIds.retainAll(activeIds);
+      final activeIds = activeAlarms.map((a) => a.id!).toSet();
+      _firedIds.retainAll(activeIds);
 
-    final checkable = activeAlarms
-        .where((a) => !_firedIds.contains(a.id))
-        .toList();
-    final triggered = _checker.check(checkable, position);
+      final checkable = activeAlarms
+          .where((a) => !_firedIds.contains(a.id))
+          .toList();
+      final triggered = _checker.check(checkable, position);
 
-    for (final alarm in triggered) {
-      _firedIds.add(alarm.id!);
-      debugPrint('ALARM: firing alarm ${alarm.id} from background');
-      await _player.fire(alarm);
+      for (final alarm in triggered) {
+        _firedIds.add(alarm.id!);
 
-      // Notify main isolate for UI (AlarmRingScreen)
-      FlutterForegroundTask.sendDataToMain(
-        jsonEncode({'type': 'alarm_fired', 'id': alarm.id}),
-      );
+        // Notify main isolate first so dismiss screen shows regardless
+        // of whether audio/notification succeeds
+        FlutterForegroundTask.sendDataToMain(
+          jsonEncode({'type': 'alarm_fired', 'id': alarm.id}),
+        );
+
+        await _player.fire(alarm);
+      }
+    } on Exception catch (e) {
+      debugPrint('ALARM: error checking alarms: $e');
     }
   }
 
   @override
   void onRepeatEvent(DateTime timestamp) {
-    // Safety-net heartbeat: re-check with last known position
+    if (!_ready) return;
     final position = _lastPosition;
     if (position != null) {
       _checkAlarms(position);
@@ -94,21 +113,26 @@ class LocationTaskHandler extends TaskHandler {
   void onReceiveData(Object data) {
     if (data is! String) return;
 
-    final json = jsonDecode(data) as Map<String, dynamic>;
-    final type = json['type'] as String?;
+    try {
+      final json = jsonDecode(data) as Map<String, dynamic>;
+      final type = json['type'] as String?;
 
-    if (type == 'dismiss') {
-      final id = json['id'] as int;
-      debugPrint('ALARM: dismiss received for alarm $id');
-      _player.stop();
-      _firedIds.remove(id);
-      _repo.toggleActive(id, active: false);
-    } else if (type == 'refresh') {
-      // Main isolate changed alarm state — re-check on next position update
-      final position = _lastPosition;
-      if (position != null) {
-        _checkAlarms(position);
+      if (type == 'dismiss') {
+        final id = json['id'] as int;
+        _player.stop();
+        _firedIds.remove(id);
+        _repo?.toggleActive(id, active: false);
+        FlutterForegroundTask.sendDataToMain(
+          jsonEncode({'type': 'alarm_dismissed', 'id': id}),
+        );
+      } else if (type == 'refresh') {
+        final position = _lastPosition;
+        if (position != null) {
+          _checkAlarms(position);
+        }
       }
+    } on Exception catch (e) {
+      debugPrint('ALARM: error handling received data: $e');
     }
   }
 
@@ -117,6 +141,6 @@ class LocationTaskHandler extends TaskHandler {
     await _positionSub?.cancel();
     await _player.stop();
     await _player.dispose();
-    await _db.close();
+    await _db?.close();
   }
 }

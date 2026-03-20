@@ -301,19 +301,8 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
       return;
     }
 
-    // Departure alarms: activate immediately, no GPS pre-check needed
-    if (alarm is DepartureAlarmData) {
-      await ref
-          .read(alarmRepositoryProvider)
-          .toggleActive(alarm.id!, active: true);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_departureActivatedMessage(alarm, ref))),
-      );
-      return;
-    }
-
-    // Proximity alarms: GPS check first to verify user is outside the area
+    // GPS check before activating — needed for proximity (area check) and
+    // departure (travel time calculation).
     setState(() => _activatingIds.add(alarm.id!));
 
     try {
@@ -345,9 +334,13 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
       if (!mounted) return;
       setState(() => _activatingIds.remove(alarm.id));
 
+      final message = switch (alarm) {
+        DepartureAlarmData() => _departureActivatedMessage(alarm, ref),
+        _ => 'Alarm activated',
+      };
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Alarm activated')));
+      ).showSnackBar(SnackBar(content: Text(message)));
     } on Exception {
       if (!mounted) return;
       setState(() => _activatingIds.remove(alarm.id));

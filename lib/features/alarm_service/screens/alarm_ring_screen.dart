@@ -72,7 +72,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen>
     _dismissed = true;
 
     // Send dismiss command to background isolate
-    ref.read(alarmServiceProvider.notifier).dismiss(widget.alarmId);
+    await ref.read(alarmServiceProvider.notifier).dismiss(widget.alarmId);
 
     await _clearLockScreenFlags();
     if (mounted) {
