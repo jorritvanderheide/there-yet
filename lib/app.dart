@@ -2,37 +2,55 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:location_alarm/features/alarm_edit/screens/alarm_edit_screen.dart';
+import 'package:location_alarm/features/alarm_map/screens/alarm_map_screen.dart';
 import 'package:location_alarm/features/alarm_list/screens/alarm_list_screen.dart';
+import 'package:location_alarm/features/onboarding/screens/onboarding_screen.dart';
 import 'package:location_alarm/features/settings/screens/about_screen.dart';
 import 'package:location_alarm/features/settings/screens/settings_screen.dart';
+import 'package:location_alarm/shared/providers/onboarding_provider.dart';
 import 'package:location_alarm/shared/providers/theme_provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-final router = GoRouter(
-  navigatorKey: navigatorKey,
-  initialLocation: '/',
-  routes: [
-    GoRoute(path: '/', builder: (context, state) => const AlarmListScreen()),
-    GoRoute(
-      path: '/create',
-      builder: (context, state) => const AlarmEditScreen(),
-    ),
-    GoRoute(
-      path: '/edit/:id',
-      builder: (context, state) {
-        final id = int.parse(state.pathParameters['id']!);
-        return AlarmEditScreen(alarmId: id);
-      },
-    ),
-    GoRoute(
-      path: '/settings',
-      builder: (context, state) => const SettingsScreen(),
-    ),
-    GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
-  ],
-);
+final _routerProvider = Provider<GoRouter>((ref) {
+  return GoRouter(
+    navigatorKey: navigatorKey,
+    initialLocation: '/',
+    redirect: (context, state) {
+      final onboarded = ref.read(onboardingCompleteProvider);
+      if (!onboarded && state.matchedLocation != '/onboarding') {
+        return '/onboarding';
+      }
+      if (onboarded && state.matchedLocation == '/onboarding') {
+        return '/';
+      }
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(path: '/', builder: (context, state) => const AlarmListScreen()),
+      GoRoute(
+        path: '/create',
+        builder: (context, state) => const AlarmMapScreen(),
+      ),
+      GoRoute(
+        path: '/edit/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return AlarmMapScreen(alarmId: id);
+        },
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
+    ],
+  );
+});
 
 const _fallbackSeed = Colors.deepPurple;
 
@@ -75,6 +93,7 @@ class LocationAlarmApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final amoled = ref.watch(amoledBlackProvider);
+    final routerConfig = ref.watch(_routerProvider);
 
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
@@ -83,7 +102,7 @@ class LocationAlarmApp extends ConsumerWidget {
           themeMode: themeMode,
           theme: _buildTheme(lightDynamic, Brightness.light),
           darkTheme: _buildTheme(darkDynamic, Brightness.dark, amoled: amoled),
-          routerConfig: router,
+          routerConfig: routerConfig,
         );
       },
     );
