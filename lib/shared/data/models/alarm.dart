@@ -9,6 +9,7 @@ final class AlarmData {
     this.createdAt,
     this.updatedAt,
     required this.radius,
+    this.locationName = '',
   });
 
   final int? id;
@@ -18,4 +19,5 @@ final class AlarmData {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final double radius;
+  final String locationName;
 }

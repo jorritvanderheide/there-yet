@@ -9,6 +9,7 @@ class Alarms extends Table {
   RealColumn get longitude => real()();
   BoolColumn get active => boolean().withDefault(const Constant(true))();
   RealColumn get radius => real().nullable()();
+  TextColumn get locationName => text().withDefault(const Constant(''))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
@@ -18,7 +19,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -32,9 +33,10 @@ class AppDatabase extends _$AppDatabase {
       if (from < 3) {
         await migrator.addColumn(alarms, alarms.updatedAt);
       }
-      // v4: removed departure columns (mode, travelMode, bufferMinutes,
-      // arrivalTime) from the Drift schema. SQLite keeps them in the table
-      // but we no longer read or write them. No migration action needed.
+      // v4: removed departure columns from Drift schema. No migration needed.
+      if (from < 5) {
+        await migrator.addColumn(alarms, alarms.locationName);
+      }
     },
   );
 }

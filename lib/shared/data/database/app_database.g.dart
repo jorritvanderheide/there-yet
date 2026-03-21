@@ -75,6 +75,18 @@ class $AlarmsTable extends Alarms with TableInfo<$AlarmsTable, Alarm> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _locationNameMeta = const VerificationMeta(
+    'locationName',
+  );
+  @override
+  late final GeneratedColumn<String> locationName = GeneratedColumn<String>(
+    'location_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -107,6 +119,7 @@ class $AlarmsTable extends Alarms with TableInfo<$AlarmsTable, Alarm> {
     longitude,
     active,
     radius,
+    locationName,
     createdAt,
     updatedAt,
   ];
@@ -159,6 +172,15 @@ class $AlarmsTable extends Alarms with TableInfo<$AlarmsTable, Alarm> {
         radius.isAcceptableOrUnknown(data['radius']!, _radiusMeta),
       );
     }
+    if (data.containsKey('location_name')) {
+      context.handle(
+        _locationNameMeta,
+        locationName.isAcceptableOrUnknown(
+          data['location_name']!,
+          _locationNameMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -204,6 +226,10 @@ class $AlarmsTable extends Alarms with TableInfo<$AlarmsTable, Alarm> {
         DriftSqlType.double,
         data['${effectivePrefix}radius'],
       ),
+      locationName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location_name'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -228,6 +254,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
   final double longitude;
   final bool active;
   final double? radius;
+  final String locationName;
   final DateTime createdAt;
   final DateTime updatedAt;
   const Alarm({
@@ -237,6 +264,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
     required this.longitude,
     required this.active,
     this.radius,
+    required this.locationName,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -251,6 +279,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
     if (!nullToAbsent || radius != null) {
       map['radius'] = Variable<double>(radius);
     }
+    map['location_name'] = Variable<String>(locationName);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -266,6 +295,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
       radius: radius == null && nullToAbsent
           ? const Value.absent()
           : Value(radius),
+      locationName: Value(locationName),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -283,6 +313,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
       longitude: serializer.fromJson<double>(json['longitude']),
       active: serializer.fromJson<bool>(json['active']),
       radius: serializer.fromJson<double?>(json['radius']),
+      locationName: serializer.fromJson<String>(json['locationName']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -297,6 +328,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
       'longitude': serializer.toJson<double>(longitude),
       'active': serializer.toJson<bool>(active),
       'radius': serializer.toJson<double?>(radius),
+      'locationName': serializer.toJson<String>(locationName),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -309,6 +341,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
     double? longitude,
     bool? active,
     Value<double?> radius = const Value.absent(),
+    String? locationName,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => Alarm(
@@ -318,6 +351,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
     longitude: longitude ?? this.longitude,
     active: active ?? this.active,
     radius: radius.present ? radius.value : this.radius,
+    locationName: locationName ?? this.locationName,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -329,6 +363,9 @@ class Alarm extends DataClass implements Insertable<Alarm> {
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       active: data.active.present ? data.active.value : this.active,
       radius: data.radius.present ? data.radius.value : this.radius,
+      locationName: data.locationName.present
+          ? data.locationName.value
+          : this.locationName,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -343,6 +380,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
           ..write('longitude: $longitude, ')
           ..write('active: $active, ')
           ..write('radius: $radius, ')
+          ..write('locationName: $locationName, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -357,6 +395,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
     longitude,
     active,
     radius,
+    locationName,
     createdAt,
     updatedAt,
   );
@@ -370,6 +409,7 @@ class Alarm extends DataClass implements Insertable<Alarm> {
           other.longitude == this.longitude &&
           other.active == this.active &&
           other.radius == this.radius &&
+          other.locationName == this.locationName &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -381,6 +421,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
   final Value<double> longitude;
   final Value<bool> active;
   final Value<double?> radius;
+  final Value<String> locationName;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const AlarmsCompanion({
@@ -390,6 +431,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
     this.longitude = const Value.absent(),
     this.active = const Value.absent(),
     this.radius = const Value.absent(),
+    this.locationName = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -400,6 +442,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
     required double longitude,
     this.active = const Value.absent(),
     this.radius = const Value.absent(),
+    this.locationName = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   }) : latitude = Value(latitude),
@@ -411,6 +454,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
     Expression<double>? longitude,
     Expression<bool>? active,
     Expression<double>? radius,
+    Expression<String>? locationName,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -421,6 +465,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
       if (longitude != null) 'longitude': longitude,
       if (active != null) 'active': active,
       if (radius != null) 'radius': radius,
+      if (locationName != null) 'location_name': locationName,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -433,6 +478,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
     Value<double>? longitude,
     Value<bool>? active,
     Value<double?>? radius,
+    Value<String>? locationName,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -443,6 +489,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
       longitude: longitude ?? this.longitude,
       active: active ?? this.active,
       radius: radius ?? this.radius,
+      locationName: locationName ?? this.locationName,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -469,6 +516,9 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
     if (radius.present) {
       map['radius'] = Variable<double>(radius.value);
     }
+    if (locationName.present) {
+      map['location_name'] = Variable<String>(locationName.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -487,6 +537,7 @@ class AlarmsCompanion extends UpdateCompanion<Alarm> {
           ..write('longitude: $longitude, ')
           ..write('active: $active, ')
           ..write('radius: $radius, ')
+          ..write('locationName: $locationName, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -513,6 +564,7 @@ typedef $$AlarmsTableCreateCompanionBuilder =
       required double longitude,
       Value<bool> active,
       Value<double?> radius,
+      Value<String> locationName,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -524,6 +576,7 @@ typedef $$AlarmsTableUpdateCompanionBuilder =
       Value<double> longitude,
       Value<bool> active,
       Value<double?> radius,
+      Value<String> locationName,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -564,6 +617,11 @@ class $$AlarmsTableFilterComposer
 
   ColumnFilters<double> get radius => $composableBuilder(
     column: $table.radius,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get locationName => $composableBuilder(
+    column: $table.locationName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -617,6 +675,11 @@ class $$AlarmsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -654,6 +717,11 @@ class $$AlarmsTableAnnotationComposer
 
   GeneratedColumn<double> get radius =>
       $composableBuilder(column: $table.radius, builder: (column) => column);
+
+  GeneratedColumn<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -696,6 +764,7 @@ class $$AlarmsTableTableManager
                 Value<double> longitude = const Value.absent(),
                 Value<bool> active = const Value.absent(),
                 Value<double?> radius = const Value.absent(),
+                Value<String> locationName = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => AlarmsCompanion(
@@ -705,6 +774,7 @@ class $$AlarmsTableTableManager
                 longitude: longitude,
                 active: active,
                 radius: radius,
+                locationName: locationName,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -716,6 +786,7 @@ class $$AlarmsTableTableManager
                 required double longitude,
                 Value<bool> active = const Value.absent(),
                 Value<double?> radius = const Value.absent(),
+                Value<String> locationName = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => AlarmsCompanion.insert(
@@ -725,6 +796,7 @@ class $$AlarmsTableTableManager
                 longitude: longitude,
                 active: active,
                 radius: radius,
+                locationName: locationName,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),

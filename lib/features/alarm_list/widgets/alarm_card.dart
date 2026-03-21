@@ -66,7 +66,10 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final subtitle = '${formatRadius(widget.alarm.radius)} radius';
+    final hasLocation = widget.alarm.locationName.isNotEmpty;
+    final subtitle = hasLocation
+        ? '${widget.alarm.locationName} · ${formatRadius(widget.alarm.radius)}'
+        : '${formatRadius(widget.alarm.radius)} radius';
     final title = widget.alarm.name.isEmpty
         ? 'Alarm #${widget.alarm.id}'
         : widget.alarm.name;
@@ -102,11 +105,17 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                         key: ValueKey(_thumbnailVersion),
                         fit: BoxFit.cover,
                       )
-                    : Icon(
-                        Icons.location_on,
-                        color: widget.alarm.active
-                            ? colorScheme.primary
-                            : colorScheme.onSurfaceVariant,
+                    : ColoredBox(
+                        color: colorScheme.surfaceContainerHighest,
+                        child: Center(
+                          child: Icon(
+                            Icons.location_on,
+                            size: 40,
+                            color: widget.alarm.active
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant,
+                          ),
+                        ),
                       ),
               ),
               Expanded(

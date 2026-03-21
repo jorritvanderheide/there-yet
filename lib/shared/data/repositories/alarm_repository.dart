@@ -52,6 +52,7 @@ class AlarmRepository {
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       radius: row.radius ?? 500,
+      locationName: row.locationName,
     );
   }
 
@@ -66,6 +67,7 @@ class AlarmRepository {
       longitude: Value(alarm.location.longitude),
       active: Value(alarm.active),
       radius: Value(alarm.radius),
+      locationName: Value(alarm.locationName),
     );
   }
 }
