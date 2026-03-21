@@ -8,14 +8,16 @@ final locationPermissionProvider =
 
 /// Tracks whether background location permission has been granted.
 /// Used by [foregroundServiceProvider] and the alarm list warning banner.
+/// Tracks background location permission status.
+/// `null` = not checked yet, `true`/`false` = checked result.
 final backgroundPermissionProvider =
-    NotifierProvider<BackgroundPermissionNotifier, bool>(
+    NotifierProvider<BackgroundPermissionNotifier, bool?>(
       BackgroundPermissionNotifier.new,
     );
 
-class BackgroundPermissionNotifier extends Notifier<bool> {
+class BackgroundPermissionNotifier extends Notifier<bool?> {
   @override
-  bool build() => false;
+  bool? build() => null;
 
   void set(bool value) => state = value;
 }

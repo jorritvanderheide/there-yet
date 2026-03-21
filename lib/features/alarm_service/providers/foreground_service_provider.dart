@@ -31,7 +31,7 @@ class ForegroundServiceNotifier extends Notifier<bool> {
 
   void _evaluate(List<AlarmData> alarms) {
     final hasActive = alarms.any((a) => a.active);
-    final hasPermission = ref.read(backgroundPermissionProvider);
+    final hasPermission = ref.read(backgroundPermissionProvider) ?? false;
     _updateService(hasActive && hasPermission);
   }
 
