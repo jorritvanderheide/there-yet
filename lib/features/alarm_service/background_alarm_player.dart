@@ -8,6 +8,7 @@ import 'package:location_alarm/shared/data/models/alarm.dart';
 const _notificationChannel = MethodChannel(
   'nl.bw20.location_alarm/alarm_notification',
 );
+const _ringtoneChannel = MethodChannel('nl.bw20.location_alarm/ringtone');
 
 /// Isolate-safe alarm player — works from the foreground service's background
 /// isolate as well as the main isolate.
@@ -47,8 +48,30 @@ class BackgroundAlarmPlayer {
 
   Future<void> _playLoop() async {
     try {
+      await _audioPlayer?.setAudioContext(
+        AudioContext(
+          android: const AudioContextAndroid(
+            audioFocus: AndroidAudioFocus.gain,
+            usageType: AndroidUsageType.alarm,
+            contentType: AndroidContentType.sonification,
+          ),
+          iOS: AudioContextIOS(),
+        ),
+      );
       await _audioPlayer?.setReleaseMode(ReleaseMode.loop);
-      await _audioPlayer?.play(AssetSource('alarm.wav'), volume: 1.0);
+
+      // Try the system alarm sound first, fall back to bundled asset.
+      Source source = AssetSource('alarm.wav');
+      try {
+        final uri = await _ringtoneChannel.invokeMethod<String>('getAlarmUri');
+        if (uri != null && uri.isNotEmpty) {
+          source = UrlSource(uri);
+        }
+      } on MissingPluginException {
+        // Background isolate may not have the channel — use asset.
+      }
+
+      await _audioPlayer?.play(source, volume: 1.0);
     } on Exception catch (e) {
       debugPrint('ALARM: audio playback failed: $e');
     }

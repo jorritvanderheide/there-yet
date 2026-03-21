@@ -1,6 +1,7 @@
 package nl.bw20.location_alarm
 
 import android.content.Context
+import android.media.RingtoneManager
 import com.pravera.flutter_foreground_task.FlutterForegroundTaskLifecycleListener
 import com.pravera.flutter_foreground_task.FlutterForegroundTaskStarter
 import io.flutter.embedding.engine.FlutterEngine
@@ -11,6 +12,7 @@ class AlarmNotificationPlugin(private val context: Context) :
 
     companion object {
         const val CHANNEL = "nl.bw20.location_alarm/alarm_notification"
+        const val RINGTONE_CHANNEL = "nl.bw20.location_alarm/ringtone"
 
         fun registerChannel(context: Context, engine: FlutterEngine) {
             MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL)
@@ -26,6 +28,18 @@ class AlarmNotificationPlugin(private val context: Context) :
                         "dismissAlarm" -> {
                             AlarmNotificationHelper.cancel(context)
                             result.success(null)
+                        }
+                        else -> result.notImplemented()
+                    }
+                }
+
+            MethodChannel(engine.dartExecutor.binaryMessenger, RINGTONE_CHANNEL)
+                .setMethodCallHandler { call, result ->
+                    when (call.method) {
+                        "getAlarmUri" -> {
+                            val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+                                ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                            result.success(uri?.toString() ?: "")
                         }
                         else -> result.notImplemented()
                     }
