@@ -9,14 +9,20 @@ class AlarmCard extends ConsumerStatefulWidget {
     super.key,
     required this.alarm,
     required this.onTap,
+    this.onLongPress,
     required this.onToggle,
     this.activating = false,
+    this.selected = false,
+    this.editMode = false,
   });
 
   final AlarmData alarm;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   final ValueChanged<bool> onToggle;
   final bool activating;
+  final bool selected;
+  final bool editMode;
 
   @override
   ConsumerState<AlarmCard> createState() => _AlarmCardState();
@@ -67,49 +73,36 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
     final cardWidth = MediaQuery.of(context).size.width - 32;
     final thumbSize = cardWidth * 2 / 5;
 
+    final Color? cardColor;
+    if (widget.selected) {
+      cardColor = colorScheme.primaryContainer;
+    } else if (widget.alarm.active) {
+      cardColor = colorScheme.primaryContainer.withValues(alpha: 0.15);
+    } else {
+      cardColor = null;
+    }
+
     return SizedBox(
       height: thumbSize,
       child: Card.outlined(
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,
-        color: widget.alarm.active
-            ? colorScheme.primaryContainer.withValues(alpha: 0.15)
-            : null,
+        color: cardColor,
         child: InkWell(
           onTap: widget.activating ? null : widget.onTap,
+          onLongPress: widget.activating ? null : widget.onLongPress,
           child: Row(
             children: [
               SizedBox(
                 width: thumbSize,
                 child: _thumbnailFile != null
-                    ? Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.file(
-                            _thumbnailFile!,
-                            key: ValueKey(_thumbnailVersion),
-                            fit: BoxFit.cover,
-                          ),
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: colorScheme.surface.withValues(
-                                  alpha: 0.7,
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.notifications,
-                                size: 24,
-                                color: colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
+                    ? Image.file(
+                        _thumbnailFile!,
+                        key: ValueKey(_thumbnailVersion),
+                        fit: BoxFit.cover,
                       )
                     : Icon(
-                        Icons.notifications,
+                        Icons.location_on,
                         color: widget.alarm.active
                             ? colorScheme.primary
                             : colorScheme.onSurfaceVariant,
@@ -140,7 +133,16 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
                       const Spacer(),
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: widget.activating
+                        child: widget.editMode
+                            ? Icon(
+                                widget.selected
+                                    ? Icons.check_circle
+                                    : Icons.circle_outlined,
+                                color: widget.selected
+                                    ? colorScheme.primary
+                                    : colorScheme.onSurfaceVariant,
+                              )
+                            : widget.activating
                             ? Semantics(
                                 label: '$title, getting location',
                                 child: Row(

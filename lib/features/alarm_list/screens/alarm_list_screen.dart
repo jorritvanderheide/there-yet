@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/features/alarm_list/widgets/alarm_card.dart';
 import 'package:location_alarm/features/alarm_service/providers/foreground_service_provider.dart';
+import 'package:location_alarm/shared/data/alarm_thumbnail.dart';
 import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
 import 'package:location_alarm/shared/providers/alarms_provider.dart';
+import 'package:location_alarm/shared/providers/location_permission_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum AlarmSortMode {
@@ -30,6 +32,10 @@ class AlarmListScreen extends ConsumerStatefulWidget {
 class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
   AlarmSortMode _sortMode = AlarmSortMode.active;
   final Set<int> _activatingIds = {};
+
+  // Multi-select state
+  bool _editMode = false;
+  final Set<int> _selectedIds = {};
 
   List<AlarmData> _sortAlarms(List<AlarmData> alarms) {
     final sorted = [...alarms];
@@ -97,134 +103,229 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     return '${meters.round()} m';
   }
 
+  // -- Multi-select --
+
+  void _enterEditMode(int alarmId) {
+    setState(() {
+      _editMode = true;
+      _selectedIds.add(alarmId);
+    });
+  }
+
+  void _exitEditMode() {
+    setState(() {
+      _editMode = false;
+      _selectedIds.clear();
+    });
+  }
+
+  void _toggleSelection(int alarmId) {
+    setState(() {
+      if (_selectedIds.contains(alarmId)) {
+        _selectedIds.remove(alarmId);
+        if (_selectedIds.isEmpty) _editMode = false;
+      } else {
+        _selectedIds.add(alarmId);
+      }
+    });
+  }
+
+  Future<void> _deleteSelected() async {
+    final count = _selectedIds.length;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete $count alarm${count > 1 ? 's' : ''}?'),
+        content: Text(
+          '$count alarm${count > 1 ? 's' : ''} will be permanently removed.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+
+    final repo = ref.read(alarmRepositoryProvider);
+    await Future.wait(
+      _selectedIds.map((id) async {
+        await repo.delete(id);
+        await AlarmThumbnail.delete(id);
+      }),
+    );
+    _exitEditMode();
+  }
+
+  // -- Build --
+
   @override
   Widget build(BuildContext context) {
     final alarmsAsync = ref.watch(alarmsProvider);
     final serviceRunning = ref.watch(foregroundServiceProvider);
+    final bgPerm = ref.watch(backgroundPermissionProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Alarms'),
-        actions: [
-          IconButton(
-            icon: _sortMode != AlarmSortMode.active
-                ? Icon(Icons.sort, color: colorScheme.primary)
-                : const Icon(Icons.sort),
-            tooltip: 'Sort alarms',
-            onPressed: _showSortSheet,
-          ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              switch (value) {
-                case 'settings':
-                  context.push('/settings');
-                case 'about':
-                  context.push('/about');
-              }
-            },
-            itemBuilder: (context) => const [
-              PopupMenuItem(
-                value: 'settings',
-                child: ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Settings'),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
+    return PopScope(
+      canPop: !_editMode,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _exitEditMode();
+      },
+      child: Scaffold(
+        appBar: _editMode
+            ? AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: _exitEditMode,
                 ),
-              ),
-              PopupMenuItem(
-                value: 'about',
-                child: ListTile(
-                  leading: Icon(Icons.info_outline),
-                  title: Text('About'),
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: alarmsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => const Center(child: Text('Failed to load alarms')),
-        data: (alarms) {
-          if (alarms.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.notifications_none,
-                    size: 64,
-                    color: colorScheme.onSurfaceVariant,
+                title: Text('${_selectedIds.length} selected'),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    tooltip: 'Delete selected',
+                    onPressed: _selectedIds.isNotEmpty ? _deleteSelected : null,
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No alarms yet',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                ],
+              )
+            : AppBar(
+                title: const Text('Alarms'),
+                actions: [
+                  IconButton(
+                    icon: _sortMode != AlarmSortMode.active
+                        ? Icon(Icons.sort, color: colorScheme.primary)
+                        : const Icon(Icons.sort),
+                    tooltip: 'Sort alarms',
+                    onPressed: _showSortSheet,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Tap + to create your first alarm',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'settings':
+                          context.push('/settings');
+                        case 'about':
+                          context.push('/about');
+                      }
+                    },
+                    itemBuilder: (context) => const [
+                      PopupMenuItem(
+                        value: 'settings',
+                        child: ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Settings'),
+                          dense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'about',
+                        child: ListTile(
+                          leading: Icon(Icons.info_outline),
+                          title: Text('About'),
+                          dense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            );
-          }
-
-          final hasActive = alarms.any((a) => a.active);
-          final sorted = _sortAlarms(alarms);
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              spacing: 16,
-              children: [
-                // Warning banner when active alarms exist but service isn't running
-                if (hasActive && !serviceRunning)
-                  Card(
-                    color: colorScheme.errorContainer,
-                    margin: EdgeInsets.zero,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.warning_amber,
-                        color: colorScheme.onErrorContainer,
-                      ),
-                      title: Text(
-                        'Alarms are not being monitored',
-                        style: TextStyle(color: colorScheme.onErrorContainer),
-                      ),
-                      subtitle: Text(
-                        'Background location permission required',
-                        style: TextStyle(color: colorScheme.onErrorContainer),
-                      ),
-                      onTap: openAppSettings,
+        body: alarmsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, _) => const Center(child: Text('Failed to load alarms')),
+          data: (alarms) {
+            if (alarms.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.notifications_none,
+                      size: 64,
+                      color: colorScheme.onSurfaceVariant,
                     ),
-                  ),
-                for (final alarm in sorted)
-                  AlarmCard(
-                    key: ValueKey(alarm.id),
-                    alarm: alarm,
-                    activating: _activatingIds.contains(alarm.id),
-                    onTap: () => context.push('/edit/${alarm.id}'),
-                    onToggle: (active) => _handleToggle(alarm, active, ref),
-                  ),
-              ],
-            ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'create_alarm',
-        onPressed: () => context.push('/create'),
-        child: const Icon(Icons.add),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No alarms yet',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tap + to create your first alarm',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            final hasActive = alarms.any((a) => a.active);
+            final sorted = _sortAlarms(alarms);
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                spacing: 16,
+                children: [
+                  if (hasActive && !serviceRunning && bgPerm != null)
+                    Card(
+                      color: colorScheme.errorContainer,
+                      margin: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.warning_amber,
+                          color: colorScheme.onErrorContainer,
+                        ),
+                        title: Text(
+                          'Alarms are not being monitored',
+                          style: TextStyle(color: colorScheme.onErrorContainer),
+                        ),
+                        subtitle: Text(
+                          'Background location permission required',
+                          style: TextStyle(color: colorScheme.onErrorContainer),
+                        ),
+                        onTap: openAppSettings,
+                      ),
+                    ),
+                  for (final alarm in sorted)
+                    AlarmCard(
+                      key: ValueKey(alarm.id),
+                      alarm: alarm,
+                      activating: _activatingIds.contains(alarm.id),
+                      selected: _selectedIds.contains(alarm.id),
+                      editMode: _editMode,
+                      onTap: _editMode
+                          ? () => _toggleSelection(alarm.id!)
+                          : () => context.push('/edit/${alarm.id}'),
+                      onLongPress: _editMode
+                          ? null
+                          : () => _enterEditMode(alarm.id!),
+                      onToggle: (active) => _handleToggle(alarm, active, ref),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+        floatingActionButton: _editMode
+            ? null
+            : FloatingActionButton(
+                heroTag: 'create_alarm',
+                onPressed: () => context.push('/create'),
+                child: const Icon(Icons.add),
+              ),
       ),
     );
   }
@@ -238,7 +339,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     final alarmName = alarm.name.isEmpty ? 'Alarm #$id' : alarm.name;
 
     if (!active) {
-      // Cancel any pending activation for this alarm.
       _activatingIds.remove(id);
       await ref.read(alarmRepositoryProvider).toggleActive(id, active: false);
       if (mounted) {
@@ -259,7 +359,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
       return;
     }
 
-    // GPS check before activating
     setState(() => _activatingIds.add(id));
 
     try {
