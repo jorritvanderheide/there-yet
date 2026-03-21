@@ -1,7 +1,8 @@
-import 'dart:typed_data';
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,13 +29,12 @@ class AlarmMapScreen extends ConsumerStatefulWidget {
   ConsumerState<AlarmMapScreen> createState() => _AlarmMapScreenState();
 }
 
-class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
-  // Map state
+class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
+    with TickerProviderStateMixin {
   final _mapController = MapController();
   final _mapKey = GlobalKey();
   bool _hasCenteredOnLocation = false;
 
-  // Alarm state
   bool _isNew = true;
   bool _loaded = false;
   bool _saving = false;
@@ -44,7 +44,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
   LatLng? _selectedLocation;
   double _radius = 500;
 
-  // Unsaved-changes tracking
   String _initialLabel = '';
   LatLng? _initialLocation;
   double _initialRadius = 500;
@@ -117,9 +116,14 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
 
   CameraFit? _initialCameraFit() {
     if (_selectedLocation == null) return null;
+    return _boundsForCircle();
+  }
+
+  CameraFit _boundsForCircle({EdgeInsets padding = const EdgeInsets.all(48)}) {
     const dist = Distance();
     final offset = dist.offset(_selectedLocation!, _radius, 0);
     final latDiff = (offset.latitude - _selectedLocation!.latitude).abs() * 1.5;
+
     return CameraFit.bounds(
       bounds: LatLngBounds(
         LatLng(
@@ -131,38 +135,13 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
           _selectedLocation!.longitude + latDiff,
         ),
       ),
-      padding: const EdgeInsets.all(48),
+      padding: padding,
     );
   }
 
-  void _fitCircle({bool forCapture = false}) {
+  void _fitCircle() {
     if (_selectedLocation == null) return;
-    const dist = Distance();
-    final offset = dist.offset(_selectedLocation!, _radius, 0);
-    final latDiff = (offset.latitude - _selectedLocation!.latitude).abs() * 1.5;
-
-    final padding = forCapture
-        ? EdgeInsets.symmetric(
-            horizontal: 48,
-            vertical: MediaQuery.of(context).size.height * 0.25,
-          )
-        : const EdgeInsets.all(48);
-
-    _mapController.fitCamera(
-      CameraFit.bounds(
-        bounds: LatLngBounds(
-          LatLng(
-            _selectedLocation!.latitude - latDiff,
-            _selectedLocation!.longitude - latDiff,
-          ),
-          LatLng(
-            _selectedLocation!.latitude + latDiff,
-            _selectedLocation!.longitude + latDiff,
-          ),
-        ),
-        padding: padding,
-      ),
-    );
+    _mapController.fitCamera(_boundsForCircle());
   }
 
   void _centerOnFirstLocation() {
@@ -174,6 +153,45 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
     });
   }
 
+  /// Animates the camera to [target] over [duration].
+  Future<void> _animateCamera(
+    CameraFit target, {
+    Duration duration = const Duration(milliseconds: 400),
+  }) {
+    final dest = target.fit(_mapController.camera);
+    final startCenter = _mapController.camera.center;
+    final startZoom = _mapController.camera.zoom;
+    final endCenter = dest.center;
+    final endZoom = dest.zoom;
+
+    final controller = AnimationController(vsync: this, duration: duration);
+    final completer = Completer<void>();
+
+    controller.addListener(() {
+      if (!mounted) return;
+      final t = Curves.easeInOut.transform(controller.value);
+      final lat =
+          startCenter.latitude +
+          (endCenter.latitude - startCenter.latitude) * t;
+      final lng =
+          startCenter.longitude +
+          (endCenter.longitude - startCenter.longitude) * t;
+      final zoom = startZoom + (endZoom - startZoom) * t;
+      _mapController.move(LatLng(lat, lng), zoom);
+    });
+
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        controller.dispose();
+        if (!completer.isCompleted) completer.complete();
+      }
+    });
+
+    controller.forward();
+    return completer.future;
+  }
+
   Future<Uint8List?> _captureMap() async {
     try {
       final boundary =
@@ -181,13 +199,14 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
       if (boundary == null) return null;
       final image = await boundary.toImage(pixelRatio: 1.5);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
       return byteData?.buffer.asUint8List();
     } catch (_) {
       return null;
     }
   }
 
-  // -- Save / delete --
+  // -- Save --
 
   Future<void> _save() async {
     if (_saving || _selectedLocation == null) return;
@@ -232,9 +251,9 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
     await permNotifier.requestNotification();
     if (!mounted) return;
 
-    // Capture thumbnail
-    _fitCircle(forCapture: true);
-    await Future<void>.delayed(const Duration(milliseconds: 500));
+    // Animate to nicely framed view, then capture thumbnail.
+    await _animateCamera(_boundsForCircle());
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     final thumbnail = await _captureMap();
     if (!mounted) return;
 
@@ -318,7 +337,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
       message = '$label saved';
     }
 
-    // Reset initial values so PopScope doesn't trigger.
     _initialLabel = _labelController.text;
     _initialLocation = _selectedLocation;
     _initialRadius = _radius;
@@ -328,12 +346,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  // Approximate sheet height for positioning controls above it.
-  double _sheetHeight(BuildContext context) {
-    // TextField(56) + spacing(16) + slider(48) + spacing(16) + button(48) + padding(32) + bottom safe area
-    return 216 + MediaQuery.of(context).viewPadding.bottom;
   }
 
   // -- Build --
@@ -381,10 +393,23 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           scrolledUnderElevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.35),
+                  Colors.black.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+          ),
+          foregroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
         body: Stack(
           children: [
-            // Map (captured for thumbnail — excludes sheet)
             RepaintBoundary(
               key: _mapKey,
               child: AlarmMap(
@@ -436,20 +461,19 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen> {
             // Map controls (bottom-right, above sheet)
             Positioned(
               right: 16,
-              bottom: _sheetHeight(context) + 16,
+              bottom: 232,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  CenterOnLocationButton(mapController: _mapController),
-                  const SizedBox(height: 8),
                   CompassButton(mapController: _mapController),
+                  const SizedBox(height: 8),
+                  CenterOnLocationButton(mapController: _mapController),
                 ],
               ),
             ),
 
-            // Hint overlay when no location is selected
             if (_selectedLocation == null) const AlarmMapHint(),
 
-            // Settings sheet
             AlarmSettingsSheet(
               labelController: _labelController,
               radius: _radius,

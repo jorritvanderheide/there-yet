@@ -21,11 +21,12 @@ class AlarmSettingsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     return Positioned(
       left: 0,
       right: 0,
-      bottom: 0,
+      bottom: keyboardHeight,
       child: Container(
         decoration: BoxDecoration(
           color: colorScheme.surface,
@@ -38,7 +39,12 @@ class AlarmSettingsSheet extends StatelessWidget {
             ),
           ],
         ),
-        padding: EdgeInsets.fromLTRB(16, 16, 16, bottomPadding + 16),
+        padding: EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          keyboardHeight > 0 ? 16 : bottomPadding + 16,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -47,6 +53,7 @@ class AlarmSettingsSheet extends StatelessWidget {
                 labelText: 'Label',
                 border: OutlineInputBorder(),
               ),
+              textCapitalization: TextCapitalization.sentences,
               controller: labelController,
             ),
             const SizedBox(height: 16),

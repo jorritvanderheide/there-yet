@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/shared/data/alarm_thumbnail.dart';
+import 'package:location_alarm/features/alarm_map/widgets/radius_slider.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 
 class AlarmCard extends ConsumerStatefulWidget {
@@ -65,7 +66,7 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final subtitle = '${widget.alarm.radius.round()} m radius';
+    final subtitle = '${formatRadius(widget.alarm.radius)} radius';
     final title = widget.alarm.name.isEmpty
         ? 'Alarm #${widget.alarm.id}'
         : widget.alarm.name;

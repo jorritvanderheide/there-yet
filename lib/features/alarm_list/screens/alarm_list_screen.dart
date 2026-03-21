@@ -14,7 +14,6 @@ import 'package:location_alarm/shared/providers/location_permission_provider.dar
 import 'package:permission_handler/permission_handler.dart';
 
 enum AlarmSortMode {
-  active('Active first'),
   created('Date created'),
   name('Name');
 
@@ -30,7 +29,7 @@ class AlarmListScreen extends ConsumerStatefulWidget {
 }
 
 class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
-  AlarmSortMode _sortMode = AlarmSortMode.active;
+  AlarmSortMode _sortMode = AlarmSortMode.created;
   final Set<int> _activatingIds = {};
 
   // Multi-select state
@@ -40,16 +39,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
   List<AlarmData> _sortAlarms(List<AlarmData> alarms) {
     final sorted = [...alarms];
     switch (_sortMode) {
-      case AlarmSortMode.active:
-        sorted.sort((a, b) {
-          if (a.active != b.active) return a.active ? -1 : 1;
-          if (!a.active && !b.active) {
-            final aTime = a.updatedAt ?? DateTime(0);
-            final bTime = b.updatedAt ?? DateTime(0);
-            return bTime.compareTo(aTime);
-          }
-          return 0;
-        });
       case AlarmSortMode.created:
         sorted.sort((a, b) {
           final aTime = a.createdAt ?? DateTime(0);
@@ -57,7 +46,12 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
           return bTime.compareTo(aTime);
         });
       case AlarmSortMode.name:
-        sorted.sort((a, b) => a.name.compareTo(b.name));
+        sorted.sort((a, b) {
+          if (a.name.isEmpty != b.name.isEmpty) {
+            return a.name.isEmpty ? 1 : -1;
+          }
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        });
     }
     return sorted;
   }
@@ -200,7 +194,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
                 title: const Text('Alarms'),
                 actions: [
                   IconButton(
-                    icon: _sortMode != AlarmSortMode.active
+                    icon: _sortMode != AlarmSortMode.created
                         ? Icon(Icons.sort, color: colorScheme.primary)
                         : const Icon(Icons.sort),
                     tooltip: 'Sort alarms',
@@ -275,7 +269,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
             final sorted = _sortAlarms(alarms);
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
               child: Column(
                 spacing: 16,
                 children: [
@@ -382,7 +376,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
               title: const Text('Already inside alarm area'),
               content: Text(
                 'You are ${_formatDistance(distance)} from "$alarmName". '
-                'Move outside the ${alarm.radius.round()} m radius to activate.',
+                'Move outside the ${_formatDistance(alarm.radius)} radius to activate.',
               ),
               actions: [
                 TextButton(
