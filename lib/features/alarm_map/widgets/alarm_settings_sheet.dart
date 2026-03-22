@@ -93,14 +93,6 @@ class AlarmSettingsSheet extends StatelessWidget {
                         : const Text('Save'),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '\u00a9 OpenStreetMap contributors',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
               ],
             ),
           ),

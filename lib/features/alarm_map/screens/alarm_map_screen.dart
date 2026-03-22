@@ -551,6 +551,19 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
             ),
 
             Positioned(
+              left: 16,
+              bottom: _sheetHeight + 16,
+              child: Text(
+                '\u00a9 OpenStreetMap',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+
+            Positioned(
               left: 0,
               right: 0,
               bottom: 0,
