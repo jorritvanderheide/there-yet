@@ -249,8 +249,8 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     return completer.future;
   }
 
-  /// Captures the map and crops symmetrically around the alarm pin so it
-  /// appears centered in the resulting thumbnail.
+  /// Captures the map and crops around the alarm pin so it appears centered
+  /// in the resulting thumbnail.
   Future<Uint8List?> _captureAndCropMap() async {
     try {
       final boundary =
@@ -260,16 +260,17 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
       final viewPadding = MediaQuery.of(context).viewPadding;
       const pixelRatio = 1.5;
       final fullImage = await boundary.toImage(pixelRatio: pixelRatio);
+      final h = fullImage.height.toDouble();
 
-      // The map padding positions the pin in the visual center between the
-      // search bar (top) and the sheet (bottom). Crop both top and bottom
-      // by the larger of the two paddings so the pin is centered.
-      final topPad = ((80 + viewPadding.top) * pixelRatio).round();
-      final bottomPad = ((_sheetHeight + 16) * pixelRatio).round();
-      final cropEach = topPad > bottomPad ? topPad : bottomPad;
+      // The pin is at the visual center between the top and bottom paddings.
+      final topPad = (80 + viewPadding.top) * pixelRatio;
+      final bottomPad = (_sheetHeight + 16) * pixelRatio;
+      final pinY = topPad + (h - topPad - bottomPad) / 2;
 
-      final cropTop = cropEach;
-      final cropHeight = fullImage.height - cropEach - cropEach;
+      // Crop equally above and below the pin to center it.
+      final halfH = [pinY, h - pinY].reduce((a, b) => a < b ? a : b);
+      final cropTop = (pinY - halfH).round();
+      final cropHeight = (halfH * 2).round();
       if (cropHeight <= 0) {
         fullImage.dispose();
         return null;
