@@ -81,6 +81,16 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     return EdgeInsets.fromLTRB(48, 80 + viewPadding.top, 48, _sheetHeight + 16);
   }
 
+  /// Best available initial center: live GPS > last known > null.
+  LatLng? _initialCenter() {
+    // Check live GPS from pre-warmed provider.
+    final loc = ref.read(locationProvider);
+    if (loc case AsyncData(:final value)) {
+      return LatLng(value.latitude, value.longitude);
+    }
+    return _lastKnownLocation;
+  }
+
   Future<void> _loadLastKnownLocation() async {
     final form = ref.read(alarmFormProvider(widget.alarmId));
     if (form.location != null) return;
@@ -490,14 +500,16 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                 mapController: _mapController,
                 onMapReady: () {
                   _mapReady = true;
-                  if (!_hasCenteredOnLocation) {
-                    _centerOnFirstLocation();
+                  // If initialCenter already placed us at GPS/alarm location,
+                  // mark as centered to skip the animation.
+                  if (_initialCenter() != null || form.location != null) {
+                    _hasCenteredOnLocation = true;
                   }
                 },
-                initialCenter: form.location ?? _lastKnownLocation,
+                initialCenter: form.location ?? _initialCenter(),
                 initialZoom: form.location != null
                     ? 15
-                    : _lastKnownLocation != null
+                    : _initialCenter() != null
                     ? 13
                     : 7,
                 initialCameraFit: _initialCameraFit(context),
