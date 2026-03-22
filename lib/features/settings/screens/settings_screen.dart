@@ -49,7 +49,7 @@ class SettingsScreen extends ConsumerWidget {
                 horizontal: 16,
                 vertical: 8,
               ),
-              title: const Text('Trigger inside radius'),
+              title: const Text('Activate while in radius'),
               subtitle: const Text(
                 'Allow activating alarms when already inside the radius',
               ),
