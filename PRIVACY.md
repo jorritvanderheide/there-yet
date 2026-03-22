@@ -16,8 +16,8 @@ Location Alarm is designed to be privacy-respecting and works fully offline for 
 When viewing the map, tile images are requested from OpenStreetMap's tile servers.
 
 - **Server:** `tile.openstreetmap.org`
-- **Data sent:** tile coordinates (zoom/x/y), User-Agent header (`LocationAlarm/<version>`)
-- **When:** only while the map is visible
+- **Data sent:** tile coordinates (zoom/x/y), User-Agent header (`nl.bw20.location_alarm`)
+- **When:** only while the map is visible; tiles are cached locally for 30 days
 - **No personal data** is included in tile requests
 
 ### Location search (optional)

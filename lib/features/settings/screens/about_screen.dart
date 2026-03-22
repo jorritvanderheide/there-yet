@@ -26,7 +26,7 @@ class AboutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Offline location-based alarm app',
+            'Get alerted when you arrive',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
@@ -46,7 +46,12 @@ class AboutScreen extends StatelessWidget {
           const ListTile(
             leading: Icon(Icons.map),
             title: Text('Map data'),
-            subtitle: Text('OpenStreetMap contributors · OSM France'),
+            subtitle: Text('OpenStreetMap contributors'),
+          ),
+          const ListTile(
+            leading: Icon(Icons.search),
+            title: Text('Geocoding'),
+            subtitle: Text('Photon by Komoot'),
           ),
           const SizedBox(height: 16),
           FilledButton.tonal(

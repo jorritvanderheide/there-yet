@@ -1,8 +1,50 @@
 # Location Alarm
 
-Offline, FOSS location-based alarm app for Android.
+Get alerted when you arrive. Place a pin on the map, set a radius, and the app wakes you up when you enter the area. No accounts, no tracking, no Google Play Services.
 
-## Modes
+## Features
 
-- **Proximity** — alarm when within range of a location
-- **Departure** — alarm when it's time to leave, based on travel mode (walk/cycle/drive) and a time buffer
+- **Proximity alarms** — set a location and radius, get alerted when you arrive
+- **Works in the background** — dual trigger: GPS polling + Android ProximityAlert for reliability even when the app is closed
+- **Adaptive monitoring** — polling frequency adjusts based on your speed and distance to the alarm
+- **Offline-capable** — map tiles are cached locally for offline use after first viewing
+- **Location search** — find places by name with autocomplete (Photon geocoding)
+- **Material 3** — dynamic colors, dark mode, AMOLED true black
+
+## Privacy
+
+Location Alarm is designed to minimize data leaving your device. See [PRIVACY.md](PRIVACY.md) for full details.
+
+- All alarm data stays on your device (SQLite + local files)
+- No accounts, no analytics, no telemetry, no ads
+- No Google Play Services — uses Android's LocationManager directly
+- Works on privacy-focused ROMs (GrapheneOS, CalyxOS, LineageOS)
+- Permissions requested at point of use with rationale, never upfront
+
+**Network calls (only when you use the map):**
+- Map tiles from OpenStreetMap (`tile.openstreetmap.org`)
+- Search queries and reverse geocoding via Photon (`photon.komoot.io`)
+
+## Limitations
+
+- **Android only** — no iOS or web
+- **GPS accuracy degrades with screen off** — Android LocationManager limitation without Play Services (100–200m)
+- **Aggressive OEMs may kill the service** — battery optimization exemption helps but doesn't guarantee survival on all devices
+- **Minimum practical radius ~100m** — GPS hardware constraint
+- **High-speed transit** — at 140 km/h in Doze mode, trigger reliability is ~35% without Play Services
+
+## Tech stack
+
+- Flutter + Dart
+- Riverpod for state management
+- Drift (SQLite) for persistence
+- flutter_map with OpenStreetMap tiles
+- Photon (Nominatim) for geocoding
+- Kotlin for Android-native alarm service, notifications, and proximity alerts
+
+## License
+
+[PolyForm Shield 1.0.0](LICENSE) — source-available, all dependencies non-copyleft (MIT, BSD, Apache 2.0).
+
+Map data: [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL).
+Geocoding: [Photon](https://photon.komoot.io/) by Komoot.
