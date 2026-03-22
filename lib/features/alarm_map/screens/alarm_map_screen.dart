@@ -495,7 +495,11 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                   }
                 },
                 initialCenter: form.location ?? _lastKnownLocation,
-                initialZoom: form.location != null ? 15 : 13,
+                initialZoom: form.location != null
+                    ? 15
+                    : _lastKnownLocation != null
+                    ? 13
+                    : 7,
                 initialCameraFit: _initialCameraFit(context),
                 onTap: (_, latLng) {
                   ref

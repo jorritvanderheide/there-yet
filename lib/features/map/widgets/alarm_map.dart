@@ -47,6 +47,10 @@ class AlarmMap extends StatelessWidget {
             urlTemplate: _tileUrl,
             subdomains: const ['a', 'b', 'c'],
             userAgentPackageName: 'nl.bw20.location_alarm',
+            tileProvider: NetworkTileProvider(
+              // Show cached tiles when offline instead of error widgets.
+              silenceExceptions: true,
+            ),
           ),
           ...children,
         ],
