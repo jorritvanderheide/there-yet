@@ -246,9 +246,8 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     final activationState = ref.watch(alarmActivationProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
-    // Pre-warm GPS + last known position so the map opens fast.
-    ref.watch(locationProvider);
-    ref.watch(lastKnownPositionProvider);
+    // Pre-warm GPS so the map opens fast.
+    ref.watch(bestPositionProvider);
 
     // React to activation events.
     ref.listen(alarmActivationProvider, (_, next) {

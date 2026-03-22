@@ -19,7 +19,6 @@ import 'package:location_alarm/features/map/widgets/current_location_marker.dart
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
 import 'package:location_alarm/shared/widgets/permission_dialogs.dart';
 import 'package:location_alarm/shared/providers/location_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class AlarmMapScreen extends ConsumerStatefulWidget {
   const AlarmMapScreen({super.key, this.alarmId});
@@ -37,7 +36,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
   final _labelController = TextEditingController();
   final _labelFocusNode = FocusNode();
 
-  bool _hasCenteredOnLocation = false;
   bool _mapReady = false;
   double _sheetHeight = 0;
 
@@ -76,21 +74,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
   EdgeInsets _mapPadding(BuildContext context) {
     final viewPadding = MediaQuery.of(context).viewPadding;
     return EdgeInsets.fromLTRB(48, 80 + viewPadding.top, 48, _sheetHeight + 16);
-  }
-
-  /// Best available initial center: live GPS > last known > null.
-  LatLng? _initialCenter() {
-    // Check live GPS from pre-warmed provider.
-    final loc = ref.read(locationProvider);
-    if (loc case AsyncData(:final value)) {
-      return LatLng(value.latitude, value.longitude);
-    }
-    // Check cached last-known position (pre-warmed on list screen).
-    final lastKnown = ref.read(lastKnownPositionProvider);
-    if (lastKnown case AsyncData(:final value) when value != null) {
-      return LatLng(value.latitude, value.longitude);
-    }
-    return null;
   }
 
   CameraFit? _initialCameraFit(BuildContext context) {
@@ -139,65 +122,26 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     }
   }
 
-  Future<void> _centerOnGps() async {
-    final perm = ref.read(locationPermissionProvider);
-    if (perm != PermissionStatus.granted) {
-      await ref.read(locationPermissionProvider.notifier).request();
-      if (ref.read(locationPermissionProvider) != PermissionStatus.granted) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permission required')),
-          );
-        }
-        return;
-      }
-    }
-
+  void _centerOnGps() {
     if (!_mapReady) return;
-
-    final locationAsync = ref.read(locationProvider);
-    locationAsync.when(
-      data: (position) {
-        final loc = LatLng(position.latitude, position.longitude);
-        const delta = 0.005;
-        _animateCamera(
-          CameraFit.bounds(
-            bounds: LatLngBounds(
-              LatLng(loc.latitude - delta, loc.longitude - delta),
-              LatLng(loc.latitude + delta, loc.longitude + delta),
-            ),
-            padding: _mapPadding(context),
-            maxZoom: 15,
-          ),
-        );
-      },
-      loading: () {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Getting location...')));
-      },
-      error: (_, _) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Location unavailable')));
-      },
-    );
-  }
-
-  void _centerOnFirstLocation() {
-    if (_hasCenteredOnLocation) return;
-    // When editing, the alarm's location is already set via initialCameraFit.
-    // Don't override it with the GPS position.
-    final form = ref.read(alarmFormProvider(widget.alarmId));
-    if (form.location != null) {
-      _hasCenteredOnLocation = true;
+    final pos = ref.read(bestPositionProvider);
+    if (pos == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Location unavailable')));
       return;
     }
-    final locationAsync = ref.read(locationProvider);
-    locationAsync.whenData((_) {
-      _hasCenteredOnLocation = true;
-      _centerOnGps();
-    });
+    const delta = 0.005;
+    _animateCamera(
+      CameraFit.bounds(
+        bounds: LatLngBounds(
+          LatLng(pos.latitude - delta, pos.longitude - delta),
+          LatLng(pos.latitude + delta, pos.longitude + delta),
+        ),
+        padding: _mapPadding(context),
+        maxZoom: 15,
+      ),
+    );
   }
 
   AnimationController? _cameraAnimController;
@@ -411,17 +355,9 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
   @override
   Widget build(BuildContext context) {
     final form = ref.watch(alarmFormProvider(widget.alarmId));
+    final bestPos = ref.watch(bestPositionProvider);
     final saveState = ref.watch(alarmSaveProvider);
     final saving = saveState is AlarmSaveBusy;
-
-    // Center on GPS for new alarms. Listen for changes AND check current value
-    // (GPS may already be available from the list screen pre-warm).
-    ref.listen(locationProvider, (_, next) {
-      next.whenData((_) => _centerOnFirstLocation());
-    });
-    if (!_hasCenteredOnLocation) {
-      ref.read(locationProvider).whenData((_) => _centerOnFirstLocation());
-    }
 
     // Sync loaded alarm data into UI (one-time on load).
     ref.listen(alarmFormProvider(widget.alarmId), (prev, next) {
@@ -429,7 +365,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
         if (next.name.isNotEmpty) _labelController.text = next.name;
         // Center on the alarm's location once loaded (edit mode).
         if (next.location != null && _mapReady) {
-          _hasCenteredOnLocation = true;
           _fitCircle();
         }
       }
@@ -486,18 +421,11 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
               key: _mapKey,
               child: AlarmMap(
                 mapController: _mapController,
-                onMapReady: () {
-                  _mapReady = true;
-                  // If initialCenter already placed us at GPS/alarm location,
-                  // mark as centered to skip the animation.
-                  if (_initialCenter() != null || form.location != null) {
-                    _hasCenteredOnLocation = true;
-                  }
-                },
-                initialCenter: form.location ?? _initialCenter(),
+                onMapReady: () => _mapReady = true,
+                initialCenter: form.location ?? bestPos,
                 initialZoom: form.location != null
                     ? 15
-                    : _initialCenter() != null
+                    : bestPos != null
                     ? 13
                     : 7,
                 initialCameraFit: _initialCameraFit(context),
@@ -522,13 +450,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
 
             MapSearchBar(
               onBack: () => Navigator.of(context).maybePop(),
-              near: switch (ref.read(locationProvider)) {
-                AsyncData(:final value) => LatLng(
-                  value.latitude,
-                  value.longitude,
-                ),
-                _ => null,
-              },
+              near: bestPos,
               onLocationSelected: (location) {
                 ref
                     .read(alarmFormProvider(widget.alarmId).notifier)
@@ -575,13 +497,10 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                 radiusEnabled: form.location != null,
                 onHeightChanged: (h) {
                   if (h != _sheetHeight) {
-                    final wasZero = _sheetHeight == 0;
                     setState(() => _sheetHeight = h);
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (form.location != null) {
                         _fitCircle(animate: false);
-                      } else if (wasZero && _hasCenteredOnLocation) {
-                        _centerOnGps();
                       }
                     });
                   }
