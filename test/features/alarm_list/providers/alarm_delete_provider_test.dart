@@ -39,17 +39,17 @@ void main() {
       // deletion. The DB delete still succeeds.
       final repo = container.read(alarmRepositoryProvider);
       final id1 = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'A',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),
       );
       final id2 = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'B',
-          location: const LatLng(52.0, 6.0),
+          location: LatLng(52.0, 6.0),
           active: true,
           radius: 500,
         ),
@@ -71,9 +71,9 @@ void main() {
       final notifier = container.read(alarmDeleteProvider.notifier);
       final repo = container.read(alarmRepositoryProvider);
       final id = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'C',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),

@@ -22,9 +22,9 @@ void main() {
 
   group('save', () {
     test('inserts a new alarm and returns its ID', () async {
-      final alarm = AlarmData(
+      const alarm = AlarmData(
         name: 'Test',
-        location: const LatLng(51.0, 5.0),
+        location: LatLng(51.0, 5.0),
         active: true,
         radius: 500,
       );
@@ -33,9 +33,9 @@ void main() {
     });
 
     test('updates an existing alarm', () async {
-      final alarm = AlarmData(
+      const alarm = AlarmData(
         name: 'Original',
-        location: const LatLng(51.0, 5.0),
+        location: LatLng(51.0, 5.0),
         active: true,
         radius: 500,
       );
@@ -64,9 +64,9 @@ void main() {
     });
 
     test('returns the alarm with matching ID', () async {
-      final alarm = AlarmData(
+      const alarm = AlarmData(
         name: 'Find me',
-        location: const LatLng(51.0, 5.0),
+        location: LatLng(51.0, 5.0),
         active: true,
         radius: 300,
       );
@@ -81,17 +81,17 @@ void main() {
   group('getActive', () {
     test('returns only active alarms', () async {
       await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Active',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),
       );
       await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Inactive',
-          location: const LatLng(52.0, 6.0),
+          location: LatLng(52.0, 6.0),
           active: false,
           radius: 500,
         ),
@@ -105,9 +105,9 @@ void main() {
   group('delete', () {
     test('removes the alarm', () async {
       final id = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Delete me',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),
@@ -121,9 +121,9 @@ void main() {
   group('toggleActive', () {
     test('toggles alarm active state', () async {
       final id = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Toggle',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),
@@ -140,9 +140,9 @@ void main() {
 
     test('updates updatedAt timestamp', () async {
       final id = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Timestamp',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),
@@ -163,18 +163,18 @@ void main() {
   group('watchAll', () {
     test('emits alarm list ordered by createdAt desc', () async {
       await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'First',
-          location: const LatLng(51.0, 5.0),
+          location: LatLng(51.0, 5.0),
           active: true,
           radius: 500,
         ),
       );
       await Future<void>.delayed(const Duration(seconds: 1));
       await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Second',
-          location: const LatLng(52.0, 6.0),
+          location: LatLng(52.0, 6.0),
           active: true,
           radius: 500,
         ),
@@ -189,17 +189,17 @@ void main() {
 
   group('AlarmData equality', () {
     test('equal alarms have same hashCode', () {
-      final a = AlarmData(
+      const a = AlarmData(
         id: 1,
         name: 'Test',
-        location: const LatLng(51.0, 5.0),
+        location: LatLng(51.0, 5.0),
         active: true,
         radius: 500,
       );
-      final b = AlarmData(
+      const b = AlarmData(
         id: 1,
         name: 'Test',
-        location: const LatLng(51.0, 5.0),
+        location: LatLng(51.0, 5.0),
         active: true,
         radius: 500,
       );
@@ -208,17 +208,17 @@ void main() {
     });
 
     test('different alarms are not equal', () {
-      final a = AlarmData(
+      const a = AlarmData(
         id: 1,
         name: 'Test',
-        location: const LatLng(51.0, 5.0),
+        location: LatLng(51.0, 5.0),
         active: true,
         radius: 500,
       );
-      final b = AlarmData(
+      const b = AlarmData(
         id: 2,
         name: 'Other',
-        location: const LatLng(52.0, 6.0),
+        location: LatLng(52.0, 6.0),
         active: false,
         radius: 1000,
       );

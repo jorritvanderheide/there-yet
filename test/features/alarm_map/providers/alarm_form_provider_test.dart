@@ -90,9 +90,9 @@ void main() {
       // Insert an alarm directly.
       final repo = container.read(alarmRepositoryProvider);
       final id = await repo.save(
-        AlarmData(
+        const AlarmData(
           name: 'Loaded',
-          location: const LatLng(52.0, 6.0),
+          location: LatLng(52.0, 6.0),
           active: true,
           radius: 750,
           locationName: 'Test City',

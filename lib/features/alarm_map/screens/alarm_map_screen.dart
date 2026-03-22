@@ -44,8 +44,12 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
   @override
   void initState() {
     super.initState();
+    final formNotifier = ref.read(alarmFormProvider.notifier);
     if (widget.alarmId != null) {
-      ref.read(alarmFormProvider.notifier).loadAlarm(widget.alarmId!);
+      formNotifier.loadAlarm(widget.alarmId!);
+    } else {
+      formNotifier.reset();
+      _labelController.clear();
     }
     _labelController.addListener(_syncNameToProvider);
     _loadLastKnownLocation();
@@ -82,7 +86,12 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
       if (pos != null && !_hasCenteredOnLocation && mounted) {
         _lastKnownLocation = LatLng(pos.latitude, pos.longitude);
         setState(() {});
-        _mapController.move(_lastKnownLocation!, 13);
+        // Defer move until after the map widget has rendered.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && !_hasCenteredOnLocation) {
+            _mapController.move(_lastKnownLocation!, 13);
+          }
+        });
       }
     } on Exception {
       // Best-effort
