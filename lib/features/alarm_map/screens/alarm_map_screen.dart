@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/features/alarm_map/providers/alarm_form_provider.dart';
@@ -40,7 +39,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
 
   bool _hasCenteredOnLocation = false;
   bool _mapReady = false;
-  LatLng? _lastKnownLocation;
   double _sheetHeight = 0;
 
   @override
@@ -54,7 +52,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
       ref.invalidate(alarmSaveProvider);
       _labelController.clear();
       ref.read(locationPermissionProvider.notifier).request();
-      _loadLastKnownLocation();
     });
   }
 
@@ -88,21 +85,12 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     if (loc case AsyncData(:final value)) {
       return LatLng(value.latitude, value.longitude);
     }
-    return _lastKnownLocation;
-  }
-
-  Future<void> _loadLastKnownLocation() async {
-    final form = ref.read(alarmFormProvider(widget.alarmId));
-    if (form.location != null) return;
-    try {
-      final pos = await Geolocator.getLastKnownPosition();
-      if (pos != null && !_hasCenteredOnLocation && mounted) {
-        _lastKnownLocation = LatLng(pos.latitude, pos.longitude);
-        setState(() {});
-      }
-    } on Exception {
-      // Best-effort
+    // Check cached last-known position (pre-warmed on list screen).
+    final lastKnown = ref.read(lastKnownPositionProvider);
+    if (lastKnown case AsyncData(:final value) when value != null) {
+      return LatLng(value.latitude, value.longitude);
     }
+    return null;
   }
 
   CameraFit? _initialCameraFit(BuildContext context) {
