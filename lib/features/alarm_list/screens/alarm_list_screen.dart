@@ -2,20 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:location_alarm/features/alarm_list/providers/alarm_activation_provider.dart';
 import 'package:location_alarm/features/alarm_list/providers/alarm_delete_provider.dart';
 import 'package:location_alarm/features/alarm_list/widgets/alarm_card.dart';
 import 'package:location_alarm/features/alarm_list/widgets/alarm_list_empty_state.dart';
 import 'package:location_alarm/features/alarm_list/widgets/alarm_list_error_state.dart';
 import 'package:location_alarm/features/alarm_list/widgets/service_health_banner.dart';
-import 'package:location_alarm/features/alarm_service/providers/alarm_service_provider.dart';
 import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
-import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
 import 'package:location_alarm/shared/providers/alarms_provider.dart';
-import 'package:location_alarm/shared/providers/location_permission_provider.dart';
-import 'package:location_alarm/shared/providers/location_settings_provider.dart';
-import 'package:location_alarm/shared/widgets/permission_dialogs.dart';
 
 enum AlarmSortMode {
   created('Date created'),
@@ -34,7 +29,6 @@ class AlarmListScreen extends ConsumerStatefulWidget {
 
 class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
   AlarmSortMode _sortMode = AlarmSortMode.created;
-  final Set<int> _activatingIds = {};
 
   // Multi-select state
   bool _editMode = false;
@@ -152,28 +146,170 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     await ref.read(alarmDeleteProvider.notifier).deleteAlarms(_selectedIds);
   }
 
+  // -- Activation event handling --
+
+  Future<void> _onActivationEvent(AlarmActivationEvent event) async {
+    final notifier = ref.read(alarmActivationProvider.notifier);
+
+    switch (event) {
+      case AlarmActivationIdle():
+        break;
+
+      case AlarmDeactivated(:final alarmName):
+        _showSnackBar('$alarmName deactivated');
+        notifier.consumeEvent();
+
+      case AlarmActivated(:final alarmName, :final distance):
+        _showSnackBar(
+          '$alarmName activated — ${formatDistance(distance)} away',
+        );
+        notifier.consumeEvent();
+
+      case AlarmActivationNeedsForeground():
+        _showSnackBar('Location permission required');
+        notifier.consumeEvent();
+
+      case AlarmActivationNeedsBackgroundRationale():
+        notifier.consumeEvent();
+        if (!mounted) return;
+        final confirmed = await _showBackgroundRationaleDialog();
+        await notifier.continueWithBackground(confirmed);
+
+      case AlarmActivationNeedsBatteryRationale():
+        notifier.consumeEvent();
+        if (!mounted) return;
+        final confirmed = await _showBatteryRationaleDialog();
+        await notifier.continueWithBattery(confirmed);
+
+      case AlarmActivationNotificationDenied():
+        _showSnackBar('Notifications disabled — you won\'t hear the alarm');
+        notifier.consumeEvent();
+
+      case AlarmActivationInsideRadius(
+        :final alarmName,
+        :final distance,
+        :final radius,
+      ):
+        notifier.consumeEvent();
+        if (!mounted) return;
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Already inside alarm area'),
+            content: Text(
+              'You are ${formatDistance(distance)} from "$alarmName". '
+              'Move outside the ${formatDistance(radius)} radius to activate.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+
+      case AlarmActivationGpsDisabled():
+        notifier.consumeEvent();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('GPS is disabled'),
+            action: SnackBarAction(
+              label: 'Open Settings',
+              onPressed: Geolocator.openLocationSettings,
+            ),
+            duration: Duration(seconds: 6),
+          ),
+        );
+
+      case AlarmActivationError(:final message):
+        _showSnackBar(message);
+        notifier.consumeEvent();
+    }
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<bool> _showBackgroundRationaleDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Background location needed'),
+        content: const Text(
+          'Location Alarm needs to monitor your location in the background '
+          'to trigger alarms when you arrive.\n\n'
+          'On the next screen, select "Allow all the time".',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
+  Future<bool> _showBatteryRationaleDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Disable battery optimization'),
+        content: const Text(
+          'To reliably monitor your location in the background, '
+          'Location Alarm needs to be excluded from battery optimization.\n\n'
+          'Without this, Android may stop the alarm service to save battery.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Skip'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Disable optimization'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
   // -- Build --
 
   @override
   Widget build(BuildContext context) {
     final alarmsAsync = ref.watch(alarmsProvider);
+    final activationState = ref.watch(alarmActivationProvider);
     final colorScheme = Theme.of(context).colorScheme;
+
+    // React to activation events.
+    ref.listen(alarmActivationProvider, (_, next) {
+      if (next.lastEvent is! AlarmActivationIdle) {
+        _onActivationEvent(next.lastEvent);
+      }
+    });
 
     // React to delete events.
     ref.listen(alarmDeleteProvider, (_, next) {
       switch (next) {
         case AlarmDeleteSuccess(:final count):
           _exitEditMode();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$count alarm${count > 1 ? 's' : ''} deleted'),
-            ),
-          );
+          _showSnackBar('$count alarm${count > 1 ? 's' : ''} deleted');
           ref.read(alarmDeleteProvider.notifier).reset();
         case AlarmDeleteError(:final message):
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Delete failed: $message')));
+          _showSnackBar('Delete failed: $message');
           ref.read(alarmDeleteProvider.notifier).reset();
         case AlarmDeleteIdle():
           break;
@@ -266,7 +402,9 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
                     AlarmCard(
                       key: ValueKey(alarm.id),
                       alarm: alarm,
-                      activating: _activatingIds.contains(alarm.id),
+                      activating: activationState.activatingIds.contains(
+                        alarm.id,
+                      ),
                       selected: _selectedIds.contains(alarm.id),
                       editMode: _editMode,
                       onTap: _editMode
@@ -275,7 +413,16 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
                       onLongPress: _editMode
                           ? null
                           : () => _enterEditMode(alarm.id!),
-                      onToggle: (active) => _handleToggle(alarm, active, ref),
+                      onToggle: (active) {
+                        final notifier = ref.read(
+                          alarmActivationProvider.notifier,
+                        );
+                        if (active) {
+                          notifier.activate(alarm);
+                        } else {
+                          notifier.deactivate(alarm);
+                        }
+                      },
                     ),
                 ],
               ),
@@ -291,136 +438,5 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
               ),
       ),
     );
-  }
-
-  // -- Toggle activation --
-  // TODO(phase2): Extract into AlarmActivationProvider
-
-  Future<void> _handleToggle(
-    AlarmData alarm,
-    bool active,
-    WidgetRef ref,
-  ) async {
-    final id = alarm.id!;
-    final alarmName = alarm.name.isEmpty ? 'Alarm #$id' : alarm.name;
-
-    if (!active) {
-      _activatingIds.remove(id);
-      await ref.read(alarmRepositoryProvider).toggleActive(id, active: false);
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('$alarmName deactivated')));
-      }
-      return;
-    }
-
-    if (_activatingIds.contains(id)) return;
-    setState(() => _activatingIds.add(id));
-
-    try {
-      if (!await ensureForegroundLocation(context, ref)) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permission required')),
-          );
-        }
-        return;
-      }
-      if (!mounted) return;
-
-      final bgGranted = await requestBackgroundWithRationale(context, ref);
-      if (!mounted) return;
-      if (!bgGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Background location required')),
-        );
-        return;
-      }
-
-      final permNotifier = ref.read(locationPermissionProvider.notifier);
-      final notifGranted = await permNotifier.requestNotification();
-      if (!mounted) return;
-      if (!notifGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Notifications disabled — you won\'t hear the alarm'),
-          ),
-        );
-      }
-
-      await requestBatteryOptimization(context, ref);
-      if (!mounted) return;
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
-
-      if (!_activatingIds.contains(id)) return;
-      if (!mounted) return;
-
-      final currentLatLng = LatLng(position.latitude, position.longitude);
-      final distance = distanceInMeters(currentLatLng, alarm.location);
-      final triggerInside = ref.read(triggerInsideRadiusProvider);
-      if (distance <= alarm.radius && !triggerInside) {
-        await showDialog<void>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Already inside alarm area'),
-            content: Text(
-              'You are ${formatDistance(distance)} from "$alarmName". '
-              'Move outside the ${formatDistance(alarm.radius)} radius to activate.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-        return;
-      }
-
-      if (!_activatingIds.contains(id)) return;
-
-      await ref.read(alarmRepositoryProvider).toggleActive(id, active: true);
-      AlarmServiceNotifier.refresh();
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '$alarmName activated — ${formatDistance(distance)} away',
-            ),
-          ),
-        );
-      }
-    } on LocationServiceDisabledException {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('GPS is disabled'),
-            action: SnackBarAction(
-              label: 'Open Settings',
-              onPressed: Geolocator.openLocationSettings,
-            ),
-            duration: Duration(seconds: 6),
-          ),
-        );
-      }
-    } on Exception {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not acquire location')),
-        );
-      }
-    } finally {
-      _activatingIds.remove(id);
-      if (mounted) setState(() {});
-    }
   }
 }
