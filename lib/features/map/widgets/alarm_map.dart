@@ -58,10 +58,6 @@ class AlarmMap extends StatelessWidget {
           tileProvider: _tileProvider,
         ),
         ...children,
-        const RichAttributionWidget(
-          alignment: AttributionAlignment.bottomLeft,
-          attributions: [TextSourceAttribution('OpenStreetMap contributors')],
-        ),
       ],
     );
   }
