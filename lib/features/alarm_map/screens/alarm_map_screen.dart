@@ -490,35 +490,12 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                 mapController: _mapController,
                 onMapReady: () {
                   _mapReady = true;
-                  // Try to center on GPS first, fall back to last known location.
                   if (!_hasCenteredOnLocation) {
                     _centerOnFirstLocation();
                   }
-                  if (_lastKnownLocation != null && !_hasCenteredOnLocation) {
-                    _animateCamera(
-                      CameraFit.bounds(
-                        bounds: LatLngBounds(
-                          LatLng(
-                            _lastKnownLocation!.latitude - 0.005,
-                            _lastKnownLocation!.longitude - 0.005,
-                          ),
-                          LatLng(
-                            _lastKnownLocation!.latitude + 0.005,
-                            _lastKnownLocation!.longitude + 0.005,
-                          ),
-                        ),
-                        padding: _mapPadding(context),
-                        maxZoom: 13,
-                      ),
-                    );
-                  }
                 },
                 initialCenter: form.location ?? _lastKnownLocation,
-                initialZoom: form.location != null
-                    ? 15
-                    : _lastKnownLocation != null
-                    ? 13
-                    : 7,
+                initialZoom: form.location != null ? 15 : 13,
                 initialCameraFit: _initialCameraFit(context),
                 onTap: (_, latLng) {
                   ref
