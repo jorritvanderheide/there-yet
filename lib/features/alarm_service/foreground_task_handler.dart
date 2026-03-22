@@ -51,7 +51,6 @@ class LocationTaskHandler extends TaskHandler {
     try {
       _db = openDatabase();
       _repo = AlarmRepository(_db!);
-      await _player.init();
       _ready = true;
       await AlarmLog.write('Initialized');
     } on Exception catch (e) {

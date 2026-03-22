@@ -91,13 +91,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     }
   }
 
-  String _formatDistance(double meters) {
-    if (meters >= 1000) {
-      return '${(meters / 1000).toStringAsFixed(1)} km';
-    }
-    return '${meters.round()} m';
-  }
-
   // -- Multi-select --
 
   void _enterEditMode(int alarmId) {
@@ -402,8 +395,8 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
             builder: (context) => AlertDialog(
               title: const Text('Already inside alarm area'),
               content: Text(
-                'You are ${_formatDistance(distance)} from "$alarmName". '
-                'Move outside the ${_formatDistance(alarm.radius)} radius to activate.',
+                'You are ${formatDistance(distance)} from "$alarmName". '
+                'Move outside the ${formatDistance(alarm.radius)} radius to activate.',
               ),
               actions: [
                 TextButton(
@@ -426,7 +419,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '$alarmName activated — ${_formatDistance(distance)} away',
+              '$alarmName activated — ${formatDistance(distance)} away',
             ),
           ),
         );

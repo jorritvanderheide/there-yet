@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location_alarm/shared/data/geo_utils.dart';
 
 // Fixed radius steps: 25m increments up to 500m, 50m to 1000m,
 // 100m to 2000m, 250m to 5000m. ~40 values total.
@@ -27,15 +28,8 @@ int _radiusToIndex(double radius) {
   return closest;
 }
 
-String formatRadius(double radius) {
-  if (radius >= 1000) {
-    final km = radius / 1000;
-    return km == km.roundToDouble()
-        ? '${km.toInt()} km'
-        : '${km.toStringAsFixed(1)} km';
-  }
-  return '${radius.round()} m';
-}
+/// Alias for backward compatibility — use [formatDistance] from geo_utils.
+String formatRadius(double radius) => formatDistance(radius);
 
 class RadiusSlider extends StatelessWidget {
   const RadiusSlider({

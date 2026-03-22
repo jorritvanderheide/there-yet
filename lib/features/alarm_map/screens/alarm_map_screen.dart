@@ -117,8 +117,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
   Future<void> _loadAlarm() async {
     try {
       final repo = ref.read(alarmRepositoryProvider);
-      final alarms = await repo.watchAll().first;
-      final alarm = alarms.where((a) => a.id == widget.alarmId).firstOrNull;
+      final alarm = await repo.getById(widget.alarmId!);
       if (alarm == null) {
         if (mounted) context.pop();
         return;
@@ -392,9 +391,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
         ? locationName
         : _labelController.text;
 
-    final active = !hasLocationLock || (isInsideRadius && !triggerInside)
-        ? false
-        : true;
+    final active = hasLocationLock && !(isInsideRadius && !triggerInside);
     final alarm = AlarmData(
       id: widget.alarmId,
       name: alarmName,

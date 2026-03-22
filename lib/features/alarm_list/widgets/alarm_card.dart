@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/shared/data/alarm_thumbnail.dart';
-import 'package:location_alarm/features/alarm_map/widgets/radius_slider.dart';
+import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 
-class AlarmCard extends ConsumerStatefulWidget {
+class AlarmCard extends StatefulWidget {
   const AlarmCard({
     super.key,
     required this.alarm,
@@ -26,10 +25,10 @@ class AlarmCard extends ConsumerStatefulWidget {
   final bool editMode;
 
   @override
-  ConsumerState<AlarmCard> createState() => _AlarmCardState();
+  State<AlarmCard> createState() => _AlarmCardState();
 }
 
-class _AlarmCardState extends ConsumerState<AlarmCard> {
+class _AlarmCardState extends State<AlarmCard> {
   File? _thumbnailFile;
   int _thumbnailVersion = 0;
 
@@ -68,8 +67,8 @@ class _AlarmCardState extends ConsumerState<AlarmCard> {
 
     final hasLocation = widget.alarm.locationName.isNotEmpty;
     final subtitle = hasLocation
-        ? '${widget.alarm.locationName} · ${formatRadius(widget.alarm.radius)}'
-        : '${formatRadius(widget.alarm.radius)} radius';
+        ? '${widget.alarm.locationName} · ${formatDistance(widget.alarm.radius)}'
+        : '${formatDistance(widget.alarm.radius)} radius';
     final title = widget.alarm.name.isEmpty
         ? 'Alarm #${widget.alarm.id}'
         : widget.alarm.name;

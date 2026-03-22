@@ -20,4 +20,29 @@ final class AlarmData {
   final DateTime? updatedAt;
   final double radius;
   final String locationName;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AlarmData &&
+          id == other.id &&
+          name == other.name &&
+          location == other.location &&
+          active == other.active &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt &&
+          radius == other.radius &&
+          locationName == other.locationName;
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    location,
+    active,
+    createdAt,
+    updatedAt,
+    radius,
+    locationName,
+  );
 }

@@ -26,7 +26,7 @@ class ForegroundServiceNotifier extends Notifier<bool> {
     final alarmsAsync = ref.read(alarmsProvider);
     alarmsAsync.whenData((alarms) {
       Future.microtask(() => _evaluate(alarms));
-    }); // ignore: unnecessary_lambdas
+    });
 
     return false;
   }

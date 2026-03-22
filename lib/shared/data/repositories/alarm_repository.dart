@@ -14,6 +14,12 @@ class AlarmRepository {
     return query.watch().map((rows) => rows.map(_rowToAlarm).toList());
   }
 
+  Future<AlarmData?> getById(int id) async {
+    final query = _db.select(_db.alarms)..where((t) => t.id.equals(id));
+    final row = await query.getSingleOrNull();
+    return row != null ? _rowToAlarm(row) : null;
+  }
+
   Future<List<AlarmData>> getActive() async {
     final query = _db.select(_db.alarms)..where((t) => t.active.equals(true));
     final rows = await query.get();

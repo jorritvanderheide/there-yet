@@ -17,14 +17,12 @@ class SettingsScreen extends ConsumerWidget {
         themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
             MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          _SectionHeader(label: 'Appearance', colorScheme: colorScheme),
+          const _SectionHeader(label: 'Appearance'),
           _ThemeListTile(
             themeMode: themeMode,
             onChanged: (mode) {
@@ -45,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
           if (kDebugMode) ...[
-            _SectionHeader(label: 'Debug', colorScheme: colorScheme),
+            const _SectionHeader(label: 'Debug'),
             SwitchListTile(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -105,10 +103,9 @@ class SettingsScreen extends ConsumerWidget {
 }
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label, required this.colorScheme});
+  const _SectionHeader({required this.label});
 
   final String label;
-  final ColorScheme colorScheme;
 
   @override
   Widget build(BuildContext context) {
@@ -116,9 +113,9 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(
         label,
-        style: Theme.of(
-          context,
-        ).textTheme.titleSmall?.copyWith(color: colorScheme.primary),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

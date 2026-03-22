@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart';
+import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 
 const _notificationChannel = MethodChannel(
@@ -12,12 +12,6 @@ const _audioChannel = MethodChannel('nl.bw20.location_alarm/alarm_audio');
 /// Isolate-safe alarm player — works from the foreground service's background
 /// isolate as well as the main isolate.
 class BackgroundAlarmPlayer {
-  /// Initialize the audio player.
-  /// Must be called after the Flutter binding is initialized.
-  Future<void> init() async {
-    // No-op — native MediaPlayer needs no Dart-side init.
-  }
-
   /// Fire an alarm — play looping audio, vibrate, show notification.
   Future<void> fire(AlarmData alarm) async {
     if (alarm.id == null) return;
@@ -29,7 +23,6 @@ class BackgroundAlarmPlayer {
     final title = label ?? 'Location Alarm';
     final body = 'You are within ${alarm.radius.round()} m of your destination';
 
-    // Show notification via native Android method channel
     try {
       await _notificationChannel.invokeMethod('showAlarm', {
         'alarmId': alarm.id,
@@ -37,7 +30,7 @@ class BackgroundAlarmPlayer {
         'body': body,
       });
     } on Exception catch (e) {
-      debugPrint('ALARM: notification failed: $e');
+      await AlarmLog.write('Notification failed: $e');
     }
   }
 
@@ -45,7 +38,7 @@ class BackgroundAlarmPlayer {
     try {
       await _audioChannel.invokeMethod('play');
     } on Exception catch (e) {
-      debugPrint('ALARM: audio playback failed: $e');
+      await AlarmLog.write('Audio playback failed: $e');
     }
     try {
       await HapticFeedback.vibrate();
@@ -59,21 +52,17 @@ class BackgroundAlarmPlayer {
     try {
       await _audioChannel.invokeMethod('stop');
     } on Exception catch (e) {
-      debugPrint('ALARM: audio stop failed: $e');
+      await AlarmLog.write('Audio stop failed: $e');
     }
     try {
       await _notificationChannel.invokeMethod('dismissAlarm');
     } on Exception catch (e) {
-      debugPrint('ALARM: notification dismiss failed: $e');
+      await AlarmLog.write('Notification dismiss failed: $e');
     }
   }
 
   /// Release resources.
   Future<void> dispose() async {
-    try {
-      await _audioChannel.invokeMethod('stop');
-    } on Exception catch (e) {
-      debugPrint('ALARM: audio dispose failed: $e');
-    }
+    await stop();
   }
 }

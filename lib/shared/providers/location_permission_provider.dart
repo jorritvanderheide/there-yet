@@ -30,21 +30,8 @@ class _BoolPermNotifier extends Notifier<bool?> {
 class LocationPermissionNotifier extends Notifier<PermissionStatus> {
   @override
   PermissionStatus build() {
-    _init();
+    checkAll();
     return PermissionStatus.denied;
-  }
-
-  Future<void> _init() async {
-    state = await Permission.locationWhenInUse.status;
-    ref
-        .read(backgroundPermissionProvider.notifier)
-        .set((await Permission.locationAlways.status).isGranted);
-    ref
-        .read(notificationPermissionProvider.notifier)
-        .set((await Permission.notification.status).isGranted);
-    ref
-        .read(batteryOptimizationProvider.notifier)
-        .set(await Permission.ignoreBatteryOptimizations.isGranted);
   }
 
   Future<void> checkAll() async {
