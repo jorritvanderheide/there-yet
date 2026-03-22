@@ -46,7 +46,7 @@ class AboutScreen extends StatelessWidget {
           const ListTile(
             leading: Icon(Icons.map),
             title: Text('Map data'),
-            subtitle: Text('OpenStreetMap contributors'),
+            subtitle: Text('OpenStreetMap contributors · OSM France'),
           ),
           const ListTile(
             leading: Icon(Icons.search),

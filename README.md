@@ -22,7 +22,7 @@ Location Alarm is designed to minimize data leaving your device. See [PRIVACY.md
 - Permissions requested at point of use with rationale, never upfront
 
 **Network calls (only when you use the map):**
-- Map tiles from OpenStreetMap (`tile.openstreetmap.org`)
+- Map tiles from OSM France (`tile.openstreetmap.fr`)
 - Search queries and reverse geocoding via Photon (`photon.komoot.io`)
 
 ## Limitations

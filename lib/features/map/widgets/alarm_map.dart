@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-const _tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const _tileUrl = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 
 /// Shared tile provider — created once, reused across all map instances.
 /// Avoids recreating the HTTP client and cache provider on every rebuild.
@@ -53,6 +53,7 @@ class AlarmMap extends StatelessWidget {
       children: [
         TileLayer(
           urlTemplate: _tileUrl,
+          subdomains: const ['a', 'b', 'c'],
           userAgentPackageName: 'nl.bw20.location_alarm',
           tileProvider: _tileProvider,
         ),
