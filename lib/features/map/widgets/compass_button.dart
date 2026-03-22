@@ -13,10 +13,11 @@ class CompassButton extends StatefulWidget {
 }
 
 class _CompassButtonState extends State<CompassButton>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   bool _visible = false;
   Timer? _hideTimer;
   StreamSubscription<MapEvent>? _mapEventSub;
+  AnimationController? _rotateController;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _CompassButtonState extends State<CompassButton>
   void dispose() {
     _mapEventSub?.cancel();
     _hideTimer?.cancel();
+    _rotateController?.dispose();
     super.dispose();
   }
 
@@ -51,25 +53,27 @@ class _CompassButtonState extends State<CompassButton>
     final startRotation = widget.mapController.camera.rotation;
     if (startRotation.abs() < 0.5) return;
 
-    final controller = AnimationController(
+    _rotateController?.dispose();
+    _rotateController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
 
-    controller.addListener(() {
+    _rotateController!.addListener(() {
       if (!mounted) return;
-      final t = Curves.easeOut.transform(controller.value);
+      final t = Curves.easeOut.transform(_rotateController!.value);
       widget.mapController.rotate(startRotation * (1 - t));
     });
 
-    controller.addStatusListener((status) {
+    _rotateController!.addStatusListener((status) {
       if (status == AnimationStatus.completed ||
           status == AnimationStatus.dismissed) {
-        controller.dispose();
+        _rotateController?.dispose();
+        _rotateController = null;
       }
     });
 
-    controller.forward();
+    _rotateController!.forward();
   }
 
   @override

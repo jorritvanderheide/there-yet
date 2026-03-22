@@ -533,6 +533,10 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                   ref
                       .read(alarmFormProvider(widget.alarmId).notifier)
                       .setLocation(latLng);
+                  // Center on the tapped location with the alarm circle.
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _fitCircle();
+                  });
                 },
                 children: [
                   const CurrentLocationMarker(),
@@ -591,7 +595,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                     setState(() => _sheetHeight = h);
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       if (form.location != null) {
-                        _fitCircle();
+                        _fitCircle(animate: false);
                       } else if (wasZero && _hasCenteredOnLocation) {
                         _centerOnGps();
                       }
@@ -602,7 +606,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                   ref
                       .read(alarmFormProvider(widget.alarmId).notifier)
                       .setRadius(r);
-                  _fitCircle();
+                  _fitCircle(animate: false);
                 },
                 onSave: _save,
                 saving: saving,

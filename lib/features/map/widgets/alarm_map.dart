@@ -4,6 +4,16 @@ import 'package:latlong2/latlong.dart';
 
 const _tileUrl = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 
+/// Shared tile provider — created once, reused across all map instances.
+/// Avoids recreating the HTTP client and cache provider on every rebuild.
+final _tileProvider = NetworkTileProvider(
+  silenceExceptions: true,
+  cachingProvider: BuiltInMapCachingProvider.getOrCreateInstance(
+    overrideFreshAge: const Duration(days: 30),
+    maxCacheSize: 2_000_000_000,
+  ),
+);
+
 class AlarmMap extends StatelessWidget {
   const AlarmMap({
     super.key,
@@ -34,23 +44,18 @@ class AlarmMap extends StatelessWidget {
         initialCameraFit: initialCameraFit,
         onTap: onTap,
         onMapReady: onMapReady,
-        interactionOptions: const InteractionOptions(rotationThreshold: 45),
+        interactionOptions: const InteractionOptions(
+          enableMultiFingerGestureRace: true,
+          rotationThreshold: 45,
+          pinchZoomThreshold: 0.3,
+        ),
       ),
       children: [
         TileLayer(
           urlTemplate: _tileUrl,
           subdomains: const ['a', 'b', 'c'],
           userAgentPackageName: 'nl.bw20.location_alarm',
-          tileProvider: NetworkTileProvider(
-            // Show cached tiles when offline instead of errors.
-            silenceExceptions: true,
-            cachingProvider: BuiltInMapCachingProvider.getOrCreateInstance(
-              // Keep tiles fresh for 30 days — reduces network requests.
-              overrideFreshAge: const Duration(days: 30),
-              // 2 GB cache — enough for a country at high zoom.
-              maxCacheSize: 2_000_000_000,
-            ),
-          ),
+          tileProvider: _tileProvider,
         ),
         ...children,
         const RichAttributionWidget(
