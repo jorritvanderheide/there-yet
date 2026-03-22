@@ -4,16 +4,6 @@ import 'package:latlong2/latlong.dart';
 
 const _tileUrl = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 
-/// Shared tile provider — created once, reused across all map instances.
-/// Avoids recreating the HTTP client and cache provider on every rebuild.
-final _tileProvider = NetworkTileProvider(
-  silenceExceptions: true,
-  cachingProvider: BuiltInMapCachingProvider.getOrCreateInstance(
-    overrideFreshAge: const Duration(days: 30),
-    maxCacheSize: 500_000_000,
-  ),
-);
-
 class AlarmMap extends StatelessWidget {
   const AlarmMap({
     super.key,
@@ -36,29 +26,31 @@ class AlarmMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
-      mapController: mapController,
-      options: MapOptions(
-        initialCenter: initialCenter ?? const LatLng(52.0, 5.5),
-        initialZoom: initialZoom,
-        initialCameraFit: initialCameraFit,
-        onTap: onTap,
-        onMapReady: onMapReady,
-        interactionOptions: const InteractionOptions(
-          enableMultiFingerGestureRace: true,
-          rotationThreshold: 45,
-          pinchZoomThreshold: 0.3,
+    return ColoredBox(
+      // OSM tile background color — visible while tiles load.
+      color: const Color(0xFFF2EFE9),
+      child: FlutterMap(
+        mapController: mapController,
+        options: MapOptions(
+          initialCenter: initialCenter ?? const LatLng(52.0, 5.5),
+          initialZoom: initialZoom,
+          initialCameraFit: initialCameraFit,
+          onTap: onTap,
+          onMapReady: onMapReady,
+          interactionOptions: const InteractionOptions(
+            enableMultiFingerGestureRace: true,
+            pinchZoomThreshold: 0.3,
+          ),
         ),
+        children: [
+          TileLayer(
+            urlTemplate: _tileUrl,
+            subdomains: const ['a', 'b', 'c'],
+            userAgentPackageName: 'nl.bw20.location_alarm',
+          ),
+          ...children,
+        ],
       ),
-      children: [
-        TileLayer(
-          urlTemplate: _tileUrl,
-          subdomains: const ['a', 'b', 'c'],
-          userAgentPackageName: 'nl.bw20.location_alarm',
-          tileProvider: _tileProvider,
-        ),
-        ...children,
-      ],
     );
   }
 }
