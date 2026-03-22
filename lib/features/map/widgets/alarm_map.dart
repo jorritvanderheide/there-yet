@@ -41,6 +41,16 @@ class AlarmMap extends StatelessWidget {
           urlTemplate: _tileUrl,
           subdomains: const ['a', 'b', 'c'],
           userAgentPackageName: 'nl.bw20.location_alarm',
+          tileProvider: NetworkTileProvider(
+            // Show cached tiles when offline instead of errors.
+            silenceExceptions: true,
+            cachingProvider: BuiltInMapCachingProvider.getOrCreateInstance(
+              // Keep tiles fresh for 30 days — reduces network requests.
+              overrideFreshAge: const Duration(days: 30),
+              // 2 GB cache — enough for a country at high zoom.
+              maxCacheSize: 2_000_000_000,
+            ),
+          ),
         ),
         ...children,
         const RichAttributionWidget(
