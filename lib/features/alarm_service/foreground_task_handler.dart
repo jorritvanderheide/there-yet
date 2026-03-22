@@ -8,11 +8,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/features/alarm_service/alarm_checker.dart';
 import 'package:location_alarm/features/alarm_service/background_alarm_player.dart';
+import 'package:location_alarm/features/alarm_service/proximity_alert_service.dart';
 import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/database/app_database.dart';
 import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/database/connection.dart';
 import 'package:location_alarm/shared/data/repositories/alarm_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
@@ -59,6 +61,7 @@ class LocationTaskHandler extends TaskHandler {
 
     _startPositionStream();
     await _fetchPosition(source: 'init');
+    await _reregisterProximityAlertsIfNeeded();
     await AlarmLog.trim();
   }
 
@@ -165,6 +168,27 @@ class LocationTaskHandler extends TaskHandler {
       AlarmLog.write('Resubscribing to position stream');
       _startPositionStream();
     });
+  }
+
+  /// Re-register proximity alerts after a device reboot.
+  /// Android clears all proximity alerts on reboot; the BootProximityReceiver
+  /// sets a SharedPreferences flag that we check here.
+  Future<void> _reregisterProximityAlertsIfNeeded() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final needsReregister =
+          prefs.getBool('proximity_needs_reregister') ?? false;
+      if (!needsReregister) return;
+
+      await prefs.setBool('proximity_needs_reregister', false);
+      final active = await _repo!.getActive();
+      await ProximityAlertService.syncAll(active);
+      await AlarmLog.write(
+        'Re-registered ${active.length} proximity alerts after boot',
+      );
+    } on Exception catch (e) {
+      await AlarmLog.write('Proximity re-registration failed: $e');
+    }
   }
 
   /// Compute the adaptive poll interval based on speed and distance to
@@ -277,6 +301,10 @@ class LocationTaskHandler extends TaskHandler {
         FlutterForegroundTask.sendDataToMain(
           jsonEncode({'type': 'alarm_dismissed', 'id': id}),
         );
+      } else if (type == 'proximity_wake') {
+        final id = json['id'] as int;
+        await AlarmLog.write('Proximity wake for alarm $id');
+        await _fetchPosition(source: 'proximity');
       } else if (type == 'refresh') {
         await AlarmLog.write('Refresh requested');
         final position = _lastPosition;

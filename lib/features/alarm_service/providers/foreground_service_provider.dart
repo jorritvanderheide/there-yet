@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/features/alarm_service/foreground_service_manager.dart';
+import 'package:location_alarm/features/alarm_service/proximity_alert_service.dart';
 import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarms_provider.dart';
@@ -31,7 +32,8 @@ class ForegroundServiceNotifier extends Notifier<bool> {
   }
 
   Future<void> _evaluate(List<AlarmData> alarms) async {
-    final hasActive = alarms.any((a) => a.active);
+    final activeAlarms = alarms.where((a) => a.active).toList();
+    final hasActive = activeAlarms.isNotEmpty;
     final bgPerm = ref.read(backgroundPermissionProvider);
 
     // Don't stop the service while permission status is still being checked
@@ -49,19 +51,29 @@ class ForegroundServiceNotifier extends Notifier<bool> {
           'Service self-heal: should be running but was killed, restarting',
         );
         await ForegroundServiceManager.start();
+        await ProximityAlertService.syncAll(activeAlarms);
         state = true;
         return;
       }
     }
 
-    await _updateService(shouldRun);
+    await _updateService(shouldRun, activeAlarms);
   }
 
-  Future<void> _updateService(bool shouldRun) async {
+  Future<void> _updateService(
+    bool shouldRun,
+    List<AlarmData> activeAlarms,
+  ) async {
     if (shouldRun && !state) {
       await ForegroundServiceManager.start();
+      await ProximityAlertService.syncAll(activeAlarms);
       state = true;
+    } else if (shouldRun && state) {
+      // Service already running — just sync proximity alerts in case
+      // alarms were added/removed/edited.
+      await ProximityAlertService.syncAll(activeAlarms);
     } else if (!shouldRun && state) {
+      await ProximityAlertService.unregisterAll();
       await ForegroundServiceManager.stop();
       state = false;
     }

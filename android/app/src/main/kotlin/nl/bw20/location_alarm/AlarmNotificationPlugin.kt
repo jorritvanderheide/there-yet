@@ -53,7 +53,7 @@ class AlarmNotificationPlugin(private val context: Context) :
                 }
         }
 
-        private fun playAlarmSound(context: Context) {
+        fun playAlarmSound(context: Context) {
             stopAlarmSound()
 
             val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
@@ -93,7 +93,7 @@ class AlarmNotificationPlugin(private val context: Context) :
             }
         }
 
-        private fun stopAlarmSound() {
+        fun stopAlarmSound() {
             mediaPlayer?.let {
                 try {
                     if (it.isPlaying) it.stop()
@@ -105,7 +105,10 @@ class AlarmNotificationPlugin(private val context: Context) :
     }
 
     override fun onEngineCreate(flutterEngine: FlutterEngine?) {
-        flutterEngine?.let { registerChannel(context, it) }
+        flutterEngine?.let {
+            registerChannel(context, it)
+            ProximityAlertManager.registerChannel(context, it)
+        }
     }
 
     override fun onTaskStart(starter: FlutterForegroundTaskStarter) {}

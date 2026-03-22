@@ -41,6 +41,17 @@
         <receiver
             android:name=".AlarmDismissReceiver"
             android:exported="false"/>
+        <receiver
+            android:name=".ProximityAlertReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name=".BootProximityReceiver"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
             android:foregroundServiceType="location"

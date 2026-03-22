@@ -27,6 +27,9 @@ class MainActivity : FlutterActivity() {
         // Register alarm notification method channel on main engine
         AlarmNotificationPlugin.registerChannel(applicationContext, flutterEngine)
 
+        // Register proximity alert method channel
+        ProximityAlertManager.registerChannel(applicationContext, flutterEngine)
+
         // Screen method channel
         screenChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SCREEN_CHANNEL)
         screenChannel!!.setMethodCallHandler { call, result ->
