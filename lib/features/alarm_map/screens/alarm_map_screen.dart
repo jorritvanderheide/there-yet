@@ -1,29 +1,24 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location_alarm/features/alarm_map/providers/alarm_form_provider.dart';
+import 'package:location_alarm/features/alarm_map/providers/alarm_save_provider.dart';
+import 'package:location_alarm/features/alarm_map/widgets/alarm_map_layers.dart';
 import 'package:location_alarm/features/alarm_map/widgets/alarm_settings_sheet.dart';
-import 'package:location_alarm/features/alarm_service/providers/alarm_service_provider.dart';
 import 'package:location_alarm/features/alarm_map/widgets/map_search_bar.dart';
 import 'package:location_alarm/features/map/widgets/alarm_map.dart';
 import 'package:location_alarm/features/map/widgets/center_on_location_fab.dart';
 import 'package:location_alarm/features/map/widgets/compass_button.dart';
 import 'package:location_alarm/features/map/widgets/current_location_marker.dart';
-import 'package:location_alarm/shared/data/alarm_thumbnail.dart';
-import 'package:location_alarm/shared/data/geo_utils.dart';
-import 'package:location_alarm/shared/data/models/alarm.dart';
-import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
-import 'package:location_alarm/shared/providers/geocoding_provider.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
 import 'package:location_alarm/shared/providers/location_provider.dart';
-import 'package:location_alarm/shared/providers/location_settings_provider.dart';
-import 'package:location_alarm/shared/widgets/permission_dialogs.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class AlarmMapScreen extends ConsumerStatefulWidget {
@@ -39,34 +34,20 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     with TickerProviderStateMixin {
   final _mapController = MapController();
   final _mapKey = GlobalKey();
+  final _labelController = TextEditingController();
+  final _labelFocusNode = FocusNode();
+
   bool _hasCenteredOnLocation = false;
   LatLng? _lastKnownLocation;
-
-  bool _isNew = true;
-  bool _loaded = false;
-  bool _saving = false;
-
-  late TextEditingController _labelController;
-  final _labelFocusNode = FocusNode();
-  LatLng? _selectedLocation;
-  double _radius = 500;
   double _sheetHeight = 0;
-
-  String _initialLabel = '';
-  LatLng? _initialLocation;
-  double _initialRadius = 500;
 
   @override
   void initState() {
     super.initState();
-    _labelController = TextEditingController();
-    _labelController.addListener(() => setState(() {}));
-    _isNew = widget.alarmId == null;
-    if (!_isNew) {
-      _loadAlarm();
-    } else {
-      _loaded = true;
+    if (widget.alarmId != null) {
+      ref.read(alarmFormProvider.notifier).loadAlarm(widget.alarmId!);
     }
+    _labelController.addListener(_syncNameToProvider);
     _loadLastKnownLocation();
     Future.microtask(() {
       ref.read(locationPermissionProvider.notifier).request();
@@ -75,24 +56,27 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
 
   @override
   void dispose() {
+    _labelController.removeListener(_syncNameToProvider);
     _labelController.dispose();
     _labelFocusNode.dispose();
     _mapController.dispose();
     super.dispose();
   }
 
+  void _syncNameToProvider() {
+    ref.read(alarmFormProvider.notifier).setName(_labelController.text);
+  }
+
+  // -- Map helpers --
+
   EdgeInsets _mapPadding(BuildContext context) {
     final viewPadding = MediaQuery.of(context).viewPadding;
-    return EdgeInsets.fromLTRB(
-      48,
-      80 + viewPadding.top, // search bar
-      48,
-      _sheetHeight + 16, // settings sheet + gap
-    );
+    return EdgeInsets.fromLTRB(48, 80 + viewPadding.top, 48, _sheetHeight + 16);
   }
 
   Future<void> _loadLastKnownLocation() async {
-    if (_selectedLocation != null) return; // editing — already have a location
+    final form = ref.read(alarmFormProvider);
+    if (form.location != null) return;
     try {
       final pos = await Geolocator.getLastKnownPosition();
       if (pos != null && !_hasCenteredOnLocation && mounted) {
@@ -101,80 +85,48 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
         _mapController.move(_lastKnownLocation!, 13);
       }
     } on Exception {
-      // Best-effort — GPS stream will handle it
+      // Best-effort
     }
   }
-
-  bool get _hasUnsavedChanges {
-    if (!_loaded) return false;
-    return _labelController.text != _initialLabel ||
-        _selectedLocation != _initialLocation ||
-        _radius != _initialRadius;
-  }
-
-  // -- Data loading --
-
-  Future<void> _loadAlarm() async {
-    try {
-      final repo = ref.read(alarmRepositoryProvider);
-      final alarm = await repo.getById(widget.alarmId!);
-      if (alarm == null) {
-        if (mounted) context.pop();
-        return;
-      }
-
-      if (!mounted) return;
-
-      setState(() {
-        _labelController.text = alarm.name;
-        _selectedLocation = alarm.location;
-        _radius = alarm.radius;
-        _hasCenteredOnLocation = true;
-        _initialLabel = alarm.name;
-        _initialLocation = alarm.location;
-        _initialRadius = alarm.radius;
-        _loaded = true;
-      });
-    } on Exception {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Failed to load alarm')));
-        context.pop();
-      }
-    }
-  }
-
-  // -- Map helpers --
 
   CameraFit? _initialCameraFit(BuildContext context) {
-    if (_selectedLocation == null) return null;
-    return _boundsForCircle(padding: _mapPadding(context));
+    final form = ref.read(alarmFormProvider);
+    if (form.location == null) return null;
+    return _boundsForCircle(
+      form.location!,
+      form.radius,
+      padding: _mapPadding(context),
+    );
   }
 
-  CameraFit _boundsForCircle({EdgeInsets padding = const EdgeInsets.all(48)}) {
+  CameraFit _boundsForCircle(
+    LatLng center,
+    double radius, {
+    EdgeInsets padding = const EdgeInsets.all(48),
+  }) {
     const dist = Distance();
-    final offset = dist.offset(_selectedLocation!, _radius, 0);
-    final latDiff = (offset.latitude - _selectedLocation!.latitude).abs() * 1.5;
+    final offset = dist.offset(center, radius, 0);
+    final latDiff = (offset.latitude - center.latitude).abs() * 1.5;
 
     return CameraFit.bounds(
       bounds: LatLngBounds(
-        LatLng(
-          _selectedLocation!.latitude - latDiff,
-          _selectedLocation!.longitude - latDiff,
-        ),
-        LatLng(
-          _selectedLocation!.latitude + latDiff,
-          _selectedLocation!.longitude + latDiff,
-        ),
+        LatLng(center.latitude - latDiff, center.longitude - latDiff),
+        LatLng(center.latitude + latDiff, center.longitude + latDiff),
       ),
       padding: padding,
     );
   }
 
   void _fitCircle() {
-    if (_selectedLocation == null) return;
-    _mapController.fitCamera(_boundsForCircle(padding: _mapPadding(context)));
+    final form = ref.read(alarmFormProvider);
+    if (form.location == null) return;
+    _mapController.fitCamera(
+      _boundsForCircle(
+        form.location!,
+        form.radius,
+        padding: _mapPadding(context),
+      ),
+    );
   }
 
   Future<void> _centerOnGps() async {
@@ -229,7 +181,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     });
   }
 
-  /// Animates the camera to [target] over [duration].
   Future<void> _animateCamera(
     CameraFit target, {
     Duration duration = const Duration(milliseconds: 400),
@@ -284,184 +235,188 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
 
   // -- Save --
 
-  Future<void> _save() async {
-    if (_saving || _selectedLocation == null) return;
-    setState(() => _saving = true);
+  void _save() {
+    final form = ref.read(alarmFormProvider);
+    if (form.location == null) return;
+    ref
+        .read(alarmSaveProvider.notifier)
+        .save(
+          alarmId: widget.alarmId,
+          name: _labelController.text,
+          location: form.location!,
+          radius: form.radius,
+        );
+  }
 
-    try {
-      await _performSave();
-    } finally {
-      if (mounted) setState(() => _saving = false);
+  Future<void> _onSaveEvent(AlarmSaveState saveState) async {
+    final notifier = ref.read(alarmSaveProvider.notifier);
+
+    switch (saveState) {
+      case AlarmSaveIdle() || AlarmSaveBusy():
+        break;
+
+      case AlarmSaveNeedsConfirmation(:final step):
+        switch (step) {
+          case BackgroundLocationRationale():
+            final confirmed = await _showBackgroundRationaleDialog();
+            await notifier.confirmStep(confirmed);
+          case BatteryOptimizationRationale():
+            final confirmed = await _showBatteryRationaleDialog();
+            await notifier.confirmStep(confirmed);
+          case InsideRadiusWarning():
+            final confirmed = await _showInsideRadiusDialog();
+            await notifier.confirmStep(confirmed);
+        }
+
+      case AlarmSaveNeedsThumbnail():
+        final form = ref.read(alarmFormProvider);
+        if (form.location != null) {
+          await _animateCamera(_boundsForCircle(form.location!, form.radius));
+          await Future<void>.delayed(const Duration(milliseconds: 300));
+        }
+        final thumbnail = await _captureMap();
+        await notifier.provideThumbnail(thumbnail);
+
+      case AlarmSaveNotificationDenied():
+        _showSnackBar('Notifications disabled — you won\'t hear the alarm');
+
+      case AlarmSaved(:final message):
+        ref.read(alarmFormProvider.notifier).markSaved();
+        notifier.reset();
+        if (mounted) {
+          context.pop();
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(message)));
+        }
+
+      case AlarmSaveFailed(:final message):
+        _showSnackBar(message);
+        notifier.reset();
     }
   }
 
-  Future<void> _performSave() async {
-    // 1. Verify foreground location.
-    if (!await ensureForegroundLocation(context, ref)) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permission required')),
-        );
-      }
-      return;
-    }
+  void _showSnackBar(String message) {
     if (!mounted) return;
-
-    // 2. Require background location with rationale dialog.
-    final bgGranted = await requestBackgroundWithRationale(context, ref);
-    if (!mounted) return;
-    if (!bgGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Background location required to save alarm'),
-        ),
-      );
-      return;
-    }
-
-    // 3. Request notification permission (warn but allow save).
-    final permNotifier = ref.read(locationPermissionProvider.notifier);
-    final notifGranted = await permNotifier.requestNotification();
-    if (!mounted) return;
-    if (!notifGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Notifications disabled — you won\'t hear the alarm'),
-        ),
-      );
-    }
-
-    // 4. Request battery optimization exemption (first save only).
-    await requestBatteryOptimization(context, ref);
-    if (!mounted) return;
-
-    // Animate to nicely framed view, then capture thumbnail.
-    await _animateCamera(_boundsForCircle());
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    final thumbnail = await _captureMap();
-    if (!mounted) return;
-
-    final repo = ref.read(alarmRepositoryProvider);
-
-    final position = ref.read(locationProvider).whenData((p) => p).value;
-    final hasLocationLock = position != null;
-    final isInsideRadius =
-        hasLocationLock &&
-        distanceInMeters(
-              LatLng(position.latitude, position.longitude),
-              _selectedLocation!,
-            ) <=
-            _radius;
-
-    final triggerInside = ref.read(triggerInsideRadiusProvider);
-    if (isInsideRadius && !triggerInside) {
-      final proceed = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Inside alarm area'),
-          content: const Text(
-            'You are currently inside this alarm area. The alarm will be '
-            'saved inactive and activate once you leave.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Save inactive'),
-            ),
-          ],
-        ),
-      );
-      if (proceed != true || !mounted) return;
-    }
-
-    // Always reverse geocode for location name (used as card subtitle).
-    // Also use as alarm name fallback when no label was typed.
-    final geocodingRepo = ref.read(geocodingRepositoryProvider);
-    final locationName =
-        await geocodingRepo.reverseGeocode(
-          _selectedLocation!,
-          radius: _radius,
-        ) ??
-        '';
-    final alarmName = _labelController.text.isEmpty
-        ? locationName
-        : _labelController.text;
-
-    final active = hasLocationLock && !(isInsideRadius && !triggerInside);
-    final alarm = AlarmData(
-      id: widget.alarmId,
-      name: alarmName,
-      location: _selectedLocation!,
-      active: active,
-      radius: _radius,
-      locationName: locationName,
-    );
-
-    if (thumbnail != null && widget.alarmId != null) {
-      try {
-        await AlarmThumbnail.save(widget.alarmId!, thumbnail);
-      } on Exception {
-        // non-critical
-      }
-    }
-
-    final alarmId = await repo.save(alarm);
-    AlarmServiceNotifier.refresh();
-
-    if (thumbnail != null && widget.alarmId == null) {
-      try {
-        await AlarmThumbnail.save(alarmId, thumbnail);
-      } on Exception {
-        // non-critical
-      }
-    }
-
-    if (!mounted) return;
-
-    final label = _labelController.text.isEmpty
-        ? 'Alarm'
-        : _labelController.text;
-
-    final String message;
-    if (!hasLocationLock) {
-      message = '$label saved (inactive — no GPS lock)';
-    } else if (isInsideRadius) {
-      message = '$label saved (inactive)';
-    } else {
-      message = '$label saved';
-    }
-
-    _initialLabel = _labelController.text;
-    _initialLocation = _selectedLocation;
-    _initialRadius = _radius;
-
-    context.pop();
-
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<bool> _showBackgroundRationaleDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Background location needed'),
+        content: const Text(
+          'Location Alarm needs to monitor your location in the background '
+          'to trigger alarms when you arrive.\n\n'
+          'On the next screen, select "Allow all the time".',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
+  Future<bool> _showBatteryRationaleDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Disable battery optimization'),
+        content: const Text(
+          'To reliably monitor your location in the background, '
+          'Location Alarm needs to be excluded from battery optimization.\n\n'
+          'Without this, Android may stop the alarm service to save battery.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Skip'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Disable optimization'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
+  Future<bool> _showInsideRadiusDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Inside alarm area'),
+        content: const Text(
+          'You are currently inside this alarm area. The alarm will be '
+          'saved inactive and activate once you leave.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Save inactive'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
   }
 
   // -- Build --
 
   @override
   Widget build(BuildContext context) {
+    final form = ref.watch(alarmFormProvider);
+    final saveState = ref.watch(alarmSaveProvider);
+    final saving = saveState is AlarmSaveBusy;
+
     ref.listen(locationProvider, (_, next) {
       next.whenData((_) => _centerOnFirstLocation());
     });
 
-    if (!_loaded) {
+    // Sync loaded alarm data into text controller (one-time on load).
+    ref.listen(alarmFormProvider, (prev, next) {
+      if (prev?.isLoaded != true && next.isLoaded && next.name.isNotEmpty) {
+        _labelController.text = next.name;
+      }
+    });
+
+    // React to save state changes.
+    ref.listen(alarmSaveProvider, (_, next) {
+      _onSaveEvent(next);
+    });
+
+    if (!form.isLoaded) {
+      if (form.loadError) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to load alarm')),
+            );
+            context.pop();
+          }
+        });
+      }
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final colorScheme = Theme.of(context).colorScheme;
-
     return PopScope(
-      canPop: !_hasUnsavedChanges && !_saving,
+      canPop: !form.hasUnsavedChanges && !saving,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         final discard = await showDialog<bool>(
@@ -492,55 +447,27 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
               key: _mapKey,
               child: AlarmMap(
                 mapController: _mapController,
-                initialCenter: _selectedLocation ?? _lastKnownLocation,
-                initialZoom: _selectedLocation != null
+                initialCenter: form.location ?? _lastKnownLocation,
+                initialZoom: form.location != null
                     ? 15
                     : _lastKnownLocation != null
                     ? 13
                     : 7,
                 initialCameraFit: _initialCameraFit(context),
                 onTap: (_, latLng) {
-                  setState(() => _selectedLocation = latLng);
+                  ref.read(alarmFormProvider.notifier).setLocation(latLng);
                 },
                 children: [
                   const CurrentLocationMarker(),
-                  if (_selectedLocation != null)
-                    CircleLayer(
-                      circles: [
-                        CircleMarker(
-                          point: _selectedLocation!,
-                          radius: _radius,
-                          useRadiusInMeter: true,
-                          color: colorScheme.primary.withValues(alpha: 0.25),
-                          borderColor: colorScheme.primary,
-                          borderStrokeWidth: 2,
-                        ),
-                      ],
-                    ),
-                  if (_selectedLocation != null)
-                    MarkerLayer(
-                      rotate: true,
-                      markers: [
-                        Marker(
-                          point: _selectedLocation!,
-                          width: 18,
-                          height: 18,
-                          alignment: Alignment.center,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: colorScheme.primary,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                          ),
-                        ),
-                      ],
+                  if (form.location != null)
+                    AlarmMapLayers(
+                      location: form.location!,
+                      radius: form.radius,
                     ),
                 ],
               ),
             ),
 
-            // Search bar with back button and location search
             MapSearchBar(
               onBack: () => Navigator.of(context).maybePop(),
               near: switch (ref.read(locationProvider)) {
@@ -551,12 +478,11 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                 _ => null,
               },
               onLocationSelected: (location) {
-                setState(() => _selectedLocation = location);
+                ref.read(alarmFormProvider.notifier).setLocation(location);
                 _fitCircle();
               },
             ),
 
-            // Map controls (bottom-right, above sheet)
             Positioned(
               right: 16,
               bottom: _sheetHeight + 16,
@@ -577,29 +503,27 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
               child: AlarmSettingsSheet(
                 labelController: _labelController,
                 labelFocusNode: _labelFocusNode,
-                radius: _radius,
-                canSave: _selectedLocation != null && _hasUnsavedChanges,
+                radius: form.radius,
+                canSave: form.canSave,
                 onHeightChanged: (h) {
                   if (h != _sheetHeight) {
                     final wasZero = _sheetHeight == 0;
                     setState(() => _sheetHeight = h);
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (_selectedLocation != null) {
+                      if (form.location != null) {
                         _fitCircle();
                       } else if (wasZero && _hasCenteredOnLocation) {
-                        // Sheet just appeared after initial GPS center —
-                        // re-center with correct padding.
                         _centerOnGps();
                       }
                     });
                   }
                 },
                 onRadiusChanged: (r) {
-                  setState(() => _radius = r);
+                  ref.read(alarmFormProvider.notifier).setRadius(r);
                   _fitCircle();
                 },
                 onSave: _save,
-                saving: _saving,
+                saving: saving,
               ),
             ),
           ],
