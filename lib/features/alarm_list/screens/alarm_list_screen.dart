@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location_alarm/features/alarm_list/providers/alarm_delete_provider.dart';
 import 'package:location_alarm/features/alarm_list/widgets/alarm_card.dart';
+import 'package:location_alarm/features/alarm_list/widgets/alarm_list_empty_state.dart';
+import 'package:location_alarm/features/alarm_list/widgets/alarm_list_error_state.dart';
+import 'package:location_alarm/features/alarm_list/widgets/service_health_banner.dart';
 import 'package:location_alarm/features/alarm_service/providers/alarm_service_provider.dart';
-import 'package:location_alarm/shared/data/alarm_thumbnail.dart';
 import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
@@ -56,6 +59,8 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     }
     return sorted;
   }
+
+  // -- Sort --
 
   Future<void> _showSortSheet() async {
     final result = await showModalBottomSheet<AlarmSortMode>(
@@ -118,7 +123,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     });
   }
 
-  Future<void> _deleteSelected() async {
+  Future<void> _confirmDeleteSelected() async {
     final count = _selectedIds.length;
     final confirm = await showDialog<bool>(
       context: context,
@@ -144,14 +149,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     );
     if (confirm != true) return;
 
-    final repo = ref.read(alarmRepositoryProvider);
-    await Future.wait(
-      _selectedIds.map((id) async {
-        await repo.delete(id);
-        await AlarmThumbnail.delete(id);
-      }),
-    );
-    _exitEditMode();
+    await ref.read(alarmDeleteProvider.notifier).deleteAlarms(_selectedIds);
   }
 
   // -- Build --
@@ -160,6 +158,27 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
   Widget build(BuildContext context) {
     final alarmsAsync = ref.watch(alarmsProvider);
     final colorScheme = Theme.of(context).colorScheme;
+
+    // React to delete events.
+    ref.listen(alarmDeleteProvider, (_, next) {
+      switch (next) {
+        case AlarmDeleteSuccess(:final count):
+          _exitEditMode();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('$count alarm${count > 1 ? 's' : ''} deleted'),
+            ),
+          );
+          ref.read(alarmDeleteProvider.notifier).reset();
+        case AlarmDeleteError(:final message):
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Delete failed: $message')));
+          ref.read(alarmDeleteProvider.notifier).reset();
+        case AlarmDeleteIdle():
+          break;
+      }
+    });
 
     return PopScope(
       canPop: !_editMode,
@@ -178,7 +197,9 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
                   IconButton(
                     icon: const Icon(Icons.delete_outline),
                     tooltip: 'Delete selected',
-                    onPressed: _selectedIds.isNotEmpty ? _deleteSelected : null,
+                    onPressed: _selectedIds.isNotEmpty
+                        ? _confirmDeleteSelected
+                        : null,
                   ),
                 ],
               )
@@ -226,64 +247,21 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
               ),
         body: alarmsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.error_outline, size: 64, color: colorScheme.error),
-                const SizedBox(height: 16),
-                Text(
-                  'Failed to load alarms',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                FilledButton.tonalIcon(
-                  onPressed: () => ref.invalidate(alarmsProvider),
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
-                ),
-              ],
-            ),
+          error: (_, _) => AlarmListErrorState(
+            onRetry: () => ref.invalidate(alarmsProvider),
           ),
           data: (alarms) {
-            if (alarms.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.notifications_none,
-                      size: 64,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No alarms yet',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Tap + to create your first alarm',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
+            if (alarms.isEmpty) return const AlarmListEmptyState();
 
             final sorted = _sortAlarms(alarms);
+            final hasActive = alarms.any((a) => a.active);
 
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 112),
               child: Column(
                 spacing: 16,
                 children: [
+                  ServiceHealthBanner(hasActiveAlarms: hasActive),
                   for (final alarm in sorted)
                     AlarmCard(
                       key: ValueKey(alarm.id),
@@ -315,6 +293,9 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     );
   }
 
+  // -- Toggle activation --
+  // TODO(phase2): Extract into AlarmActivationProvider
+
   Future<void> _handleToggle(
     AlarmData alarm,
     bool active,
@@ -338,7 +319,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     setState(() => _activatingIds.add(id));
 
     try {
-      // 1. Check foreground location.
       if (!await ensureForegroundLocation(context, ref)) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -349,7 +329,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
       }
       if (!mounted) return;
 
-      // 2. Check background location with rationale dialog.
       final bgGranted = await requestBackgroundWithRationale(context, ref);
       if (!mounted) return;
       if (!bgGranted) {
@@ -359,7 +338,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
         return;
       }
 
-      // 3. Request notification permission (warn but allow activation).
       final permNotifier = ref.read(locationPermissionProvider.notifier);
       final notifGranted = await permNotifier.requestNotification();
       if (!mounted) return;
@@ -371,7 +349,6 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
         );
       }
 
-      // 4. Request battery optimization exemption.
       await requestBatteryOptimization(context, ref);
       if (!mounted) return;
 
@@ -389,24 +366,22 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
       final distance = distanceInMeters(currentLatLng, alarm.location);
       final triggerInside = ref.read(triggerInsideRadiusProvider);
       if (distance <= alarm.radius && !triggerInside) {
-        if (mounted) {
-          await showDialog<void>(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Already inside alarm area'),
-              content: Text(
-                'You are ${formatDistance(distance)} from "$alarmName". '
-                'Move outside the ${formatDistance(alarm.radius)} radius to activate.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'),
-                ),
-              ],
+        await showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Already inside alarm area'),
+            content: Text(
+              'You are ${formatDistance(distance)} from "$alarmName". '
+              'Move outside the ${formatDistance(alarm.radius)} radius to activate.',
             ),
-          );
-        }
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
         return;
       }
 
