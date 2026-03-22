@@ -232,20 +232,27 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     return completer.future;
   }
 
-  /// Captures the map and crops the bottom by the sheet height so the alarm
-  /// pin appears centered in the resulting thumbnail.
+  /// Captures the map and crops symmetrically around the alarm pin so it
+  /// appears centered in the resulting thumbnail.
   Future<Uint8List?> _captureAndCropMap() async {
     try {
       final boundary =
           _mapKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) return null;
 
+      final viewPadding = MediaQuery.of(context).viewPadding;
       const pixelRatio = 1.5;
       final fullImage = await boundary.toImage(pixelRatio: pixelRatio);
 
-      // Crop the bottom portion (covered by the sheet) so the dot is centered.
-      final cropBottom = (_sheetHeight * pixelRatio).round();
-      final cropHeight = fullImage.height - cropBottom;
+      // The map padding positions the pin in the visual center between the
+      // search bar (top) and the sheet (bottom). Crop both top and bottom
+      // by the larger of the two paddings so the pin is centered.
+      final topPad = ((80 + viewPadding.top) * pixelRatio).round();
+      final bottomPad = ((_sheetHeight + 16) * pixelRatio).round();
+      final cropEach = topPad > bottomPad ? topPad : bottomPad;
+
+      final cropTop = cropEach;
+      final cropHeight = fullImage.height - cropEach - cropEach;
       if (cropHeight <= 0) {
         fullImage.dispose();
         return null;
@@ -255,7 +262,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
       final recorder = ui.PictureRecorder();
       Canvas(recorder).drawImageRect(
         fullImage,
-        Rect.fromLTWH(0, 0, srcWidth, cropHeight.toDouble()),
+        Rect.fromLTWH(0, cropTop.toDouble(), srcWidth, cropHeight.toDouble()),
         Rect.fromLTWH(0, 0, srcWidth, cropHeight.toDouble()),
         Paint(),
       );
