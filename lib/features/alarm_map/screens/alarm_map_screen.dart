@@ -334,6 +334,10 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
       );
     }
 
+    // 4. Request battery optimization exemption (first save only).
+    await requestBatteryOptimization(context, ref);
+    if (!mounted) return;
+
     // Animate to nicely framed view, then capture thumbnail.
     await _animateCamera(_boundsForCircle());
     await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -582,13 +586,17 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                 canSave: _selectedLocation != null && _hasUnsavedChanges,
                 onHeightChanged: (h) {
                   if (h != _sheetHeight) {
+                    final wasZero = _sheetHeight == 0;
                     setState(() => _sheetHeight = h);
-                    // Re-center map with updated padding.
-                    if (_selectedLocation != null) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (_selectedLocation != null) {
                         _fitCircle();
-                      });
-                    }
+                      } else if (wasZero && _hasCenteredOnLocation) {
+                        // Sheet just appeared after initial GPS center —
+                        // re-center with correct padding.
+                        _centerOnGps();
+                      }
+                    });
                   }
                 },
                 onRadiusChanged: (r) {

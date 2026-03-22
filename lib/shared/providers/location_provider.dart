@@ -7,7 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 final locationProvider = StreamProvider<Position>((ref) {
   final permission = ref.watch(locationPermissionProvider);
   if (permission != PermissionStatus.granted) {
-    return const Stream.empty();
+    return Stream.error(
+      const PermissionDeniedException('Location permission not granted'),
+    );
   }
   final usePlayServices = ref.watch(usePlayServicesProvider);
   return Geolocator.getPositionStream(

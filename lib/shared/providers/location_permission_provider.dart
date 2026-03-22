@@ -15,6 +15,11 @@ final backgroundPermissionProvider = NotifierProvider<_BoolPermNotifier, bool?>(
 final notificationPermissionProvider =
     NotifierProvider<_BoolPermNotifier, bool?>(_BoolPermNotifier.new);
 
+/// `null` = not checked yet, `true`/`false` = checked result.
+final batteryOptimizationProvider = NotifierProvider<_BoolPermNotifier, bool?>(
+  _BoolPermNotifier.new,
+);
+
 class _BoolPermNotifier extends Notifier<bool?> {
   @override
   bool? build() => null;
@@ -37,6 +42,9 @@ class LocationPermissionNotifier extends Notifier<PermissionStatus> {
     ref
         .read(notificationPermissionProvider.notifier)
         .set((await Permission.notification.status).isGranted);
+    ref
+        .read(batteryOptimizationProvider.notifier)
+        .set(await Permission.ignoreBatteryOptimizations.isGranted);
   }
 
   Future<void> checkAll() async {
@@ -47,6 +55,9 @@ class LocationPermissionNotifier extends Notifier<PermissionStatus> {
     ref
         .read(notificationPermissionProvider.notifier)
         .set((await Permission.notification.status).isGranted);
+    ref
+        .read(batteryOptimizationProvider.notifier)
+        .set(await Permission.ignoreBatteryOptimizations.isGranted);
   }
 
   Future<void> request() async {
@@ -75,5 +86,13 @@ class LocationPermissionNotifier extends Notifier<PermissionStatus> {
     final result = await Permission.notification.request();
     ref.read(notificationPermissionProvider.notifier).set(result.isGranted);
     return result.isGranted;
+  }
+
+  /// Requests battery optimization exemption. Returns true if granted.
+  Future<bool> requestBatteryOptimization() async {
+    final result = await Permission.ignoreBatteryOptimizations.request();
+    final granted = result.isGranted;
+    ref.read(batteryOptimizationProvider.notifier).set(granted);
+    return granted;
   }
 }

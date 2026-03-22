@@ -378,6 +378,10 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
         );
       }
 
+      // 4. Request battery optimization exemption.
+      await requestBatteryOptimization(context, ref);
+      if (!mounted) return;
+
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,

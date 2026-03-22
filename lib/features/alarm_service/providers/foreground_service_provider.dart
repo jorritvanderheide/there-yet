@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/features/alarm_service/foreground_service_manager.dart';
+import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarms_provider.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
@@ -29,10 +30,26 @@ class ForegroundServiceNotifier extends Notifier<bool> {
     return false;
   }
 
-  void _evaluate(List<AlarmData> alarms) {
+  Future<void> _evaluate(List<AlarmData> alarms) async {
     final hasActive = alarms.any((a) => a.active);
     final hasPermission = ref.read(backgroundPermissionProvider) ?? false;
-    _updateService(hasActive && hasPermission);
+    final shouldRun = hasActive && hasPermission;
+
+    // Self-healing: if service should be running but was killed by the OS,
+    // restart it.
+    if (shouldRun) {
+      final actuallyRunning = await ForegroundServiceManager.isRunning();
+      if (!actuallyRunning) {
+        await AlarmLog.write(
+          'Service self-heal: should be running but was killed, restarting',
+        );
+        await ForegroundServiceManager.start();
+        state = true;
+        return;
+      }
+    }
+
+    await _updateService(shouldRun);
   }
 
   Future<void> _updateService(bool shouldRun) async {

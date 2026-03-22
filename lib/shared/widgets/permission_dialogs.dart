@@ -60,3 +60,45 @@ Future<bool> ensureForegroundLocation(
   await ref.read(locationPermissionProvider.notifier).request();
   return ref.read(locationPermissionProvider) == PermissionStatus.granted;
 }
+
+/// Requests battery optimization exemption with a rationale dialog.
+///
+/// Returns `true` if the exemption was granted.
+Future<bool> requestBatteryOptimization(
+  BuildContext context,
+  WidgetRef ref,
+) async {
+  if (await Permission.ignoreBatteryOptimizations.isGranted) {
+    ref.read(batteryOptimizationProvider.notifier).set(true);
+    return true;
+  }
+
+  if (!context.mounted) return false;
+
+  final proceed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Disable battery optimization'),
+      content: const Text(
+        'To reliably monitor your location in the background, '
+        'Location Alarm needs to be excluded from battery optimization.\n\n'
+        'Without this, Android may stop the alarm service to save battery.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Skip'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Disable optimization'),
+        ),
+      ],
+    ),
+  );
+  if (proceed != true) return false;
+
+  return ref
+      .read(locationPermissionProvider.notifier)
+      .requestBatteryOptimization();
+}
