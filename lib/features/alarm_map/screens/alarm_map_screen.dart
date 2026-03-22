@@ -463,9 +463,14 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     final saveState = ref.watch(alarmSaveProvider);
     final saving = saveState is AlarmSaveBusy;
 
+    // Center on GPS for new alarms. Listen for changes AND check current value
+    // (GPS may already be available from the list screen pre-warm).
     ref.listen(locationProvider, (_, next) {
       next.whenData((_) => _centerOnFirstLocation());
     });
+    if (!_hasCenteredOnLocation) {
+      ref.read(locationProvider).whenData((_) => _centerOnFirstLocation());
+    }
 
     // Sync loaded alarm data into UI (one-time on load).
     ref.listen(alarmFormProvider(widget.alarmId), (prev, next) {
@@ -532,7 +537,10 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                 mapController: _mapController,
                 onMapReady: () {
                   _mapReady = true;
-                  // Center on last known location if we got it before map was ready.
+                  // Try to center on GPS first, fall back to last known location.
+                  if (!_hasCenteredOnLocation) {
+                    _centerOnFirstLocation();
+                  }
                   if (_lastKnownLocation != null && !_hasCenteredOnLocation) {
                     _animateCamera(
                       CameraFit.bounds(
