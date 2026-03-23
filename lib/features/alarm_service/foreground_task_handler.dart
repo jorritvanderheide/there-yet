@@ -31,12 +31,12 @@ class LocationTaskHandler extends TaskHandler {
   final Set<int> _firedIds = {};
   bool _ready = false;
 
-  // Position tracking — deduplicate checks.
+  // Position tracking: deduplicate checks.
   LatLng? _lastPosition;
   DateTime? _lastCheckTime;
   double _lastAccuracy = 0;
 
-  // Speed tracking — adaptive polling.
+  // Speed tracking for adaptive polling.
   LatLng? _previousPosition;
   DateTime? _previousPositionTime;
   double _speedMps = 0; // meters per second
@@ -96,7 +96,7 @@ class LocationTaskHandler extends TaskHandler {
     }
   }
 
-  /// Central position handler — both stream and poll positions flow through
+  /// Central position handler. Both stream and poll positions flow through
   /// here. Deduplicates checks and tracks speed.
   Future<void> _processPosition(Position pos, {required String source}) async {
     if (!_ready) return;
@@ -163,7 +163,7 @@ class LocationTaskHandler extends TaskHandler {
       final active = await _repo!.getActive();
       await ProximityAlertService.syncAll(active);
     } on Exception {
-      // Non-critical — alerts will be re-registered on next service start.
+      // Non-critical. Alerts will be re-registered on next service start.
     }
   }
 

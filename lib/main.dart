@@ -113,7 +113,7 @@ void main() async {
       container: container,
       child: _AppWithServices(
         onScreenLocked: () {
-          // User locked the screen while alarm is ringing — show ring screen
+          // User locked the screen while alarm is ringing. Show ring screen
           // over lock screen so they can dismiss without unlocking.
           final alarms = container.read(alarmServiceProvider);
           for (final alarm in alarms) {
@@ -258,7 +258,7 @@ class _AppWithServicesState extends ConsumerState<_AppWithServices>
     }
     if (_previousState == AppLifecycleState.resumed &&
         state == AppLifecycleState.paused) {
-      // Only show the ring screen if the screen is actually off — not when
+      // Only show the ring screen if the screen is actually off, not when
       // the user just pressed home or switched apps.
       _isScreenOff().then((isOff) {
         if (isOff) widget.onScreenLocked();

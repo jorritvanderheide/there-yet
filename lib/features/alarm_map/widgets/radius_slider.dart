@@ -28,7 +28,7 @@ int _radiusToIndex(double radius) {
   return closest;
 }
 
-/// Alias for backward compatibility — use [formatDistance] from geo_utils.
+/// Alias for backward compatibility. Use [formatDistance] from geo_utils.
 String formatRadius(double radius) => formatDistance(radius);
 
 class RadiusSlider extends StatelessWidget {

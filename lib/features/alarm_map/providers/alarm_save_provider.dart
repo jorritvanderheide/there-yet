@@ -112,7 +112,7 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
       }
     }
 
-    // Step 2: Background location — needs rationale dialog.
+    // Step 2: Background location (needs rationale dialog).
     if (!(await Permission.locationAlways.status).isGranted) {
       state = const AlarmSaveNeedsConfirmation(BackgroundLocationRationale());
       return;
@@ -170,7 +170,7 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
         .read(locationPermissionProvider.notifier)
         .requestNotification();
     if (!notifGranted) {
-      // Warn but don't block — emit event and continue.
+      // Warn but don't block. Emit event and continue.
       state = const AlarmSaveNotificationDenied();
       // Brief pause so UI can show snackbar before we continue.
       await Future<void>.delayed(const Duration(milliseconds: 100));
@@ -273,7 +273,7 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
       final label = _name.isEmpty ? 'Alarm' : _name;
       final String message;
       if (!hasLocationLock) {
-        message = '$label saved (inactive — no GPS lock)';
+        message = '$label saved (inactive, no GPS lock)';
       } else if (isInsideRadius) {
         message = '$label saved (inactive)';
       } else {

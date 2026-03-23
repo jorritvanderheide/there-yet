@@ -22,10 +22,10 @@ class ServiceHealthBanner extends ConsumerWidget {
     // Don't show while permission state is still loading.
     if (bgPerm == null) return const SizedBox.shrink();
 
-    // Service is running — all good.
+    // Service is running, all good.
     if (serviceRunning) return const SizedBox.shrink();
 
-    // Permission is granted — service will start momentarily. Don't flash
+    // Permission is granted. Service will start momentarily; don't flash
     // the banner during the brief async startup window.
     if (bgPerm) return const SizedBox.shrink();
 

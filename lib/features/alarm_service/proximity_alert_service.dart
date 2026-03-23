@@ -3,7 +3,7 @@ import 'package:location_alarm/shared/data/models/alarm.dart';
 
 /// Manages native Android proximity alerts via LocationManager.
 ///
-/// Proximity alerts act as a coarse "wake-up net" — the OS fires them
+/// Proximity alerts act as a coarse "wake-up net". The OS fires them
 /// when the device enters a padded radius around the alarm location.
 /// The existing GPS polling + AlarmChecker handles the precision trigger.
 class ProximityAlertService {
@@ -25,7 +25,7 @@ class ProximityAlertService {
     } on MissingPluginException {
       // Running in a context where the channel isn't available (e.g. tests).
     } on Exception {
-      // Non-critical — GPS polling acts as fallback.
+      // Non-critical. GPS polling acts as fallback.
     }
   }
 

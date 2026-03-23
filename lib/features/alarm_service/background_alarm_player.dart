@@ -8,14 +8,14 @@ const _notificationChannel = MethodChannel(
 );
 const _audioChannel = MethodChannel('nl.bw20.location_alarm/alarm_audio');
 
-/// Isolate-safe alarm player — works from the foreground service's background
+/// Isolate-safe alarm player. Works from the foreground service's background
 /// isolate as well as the main isolate.
 class BackgroundAlarmPlayer {
-  /// Fire an alarm — play looping audio, vibrate, show notification.
+  /// Fire an alarm: play looping audio, vibrate, show notification.
   Future<void> fire(AlarmData alarm) async {
     if (alarm.id == null) return;
 
-    // Start looping audio in the background — don't block notification.
+    // Start looping audio in the background without blocking notification.
     unawaited(_playLoop());
 
     final label = alarm.name.isNotEmpty ? alarm.name : null;
@@ -29,7 +29,7 @@ class BackgroundAlarmPlayer {
         'body': body,
       });
     } on Exception {
-      // Non-critical — audio is already playing.
+      // Non-critical. Audio is already playing.
     }
   }
 

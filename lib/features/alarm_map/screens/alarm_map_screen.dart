@@ -45,7 +45,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     super.initState();
     _labelController.addListener(_syncNameToProvider);
     Future.microtask(() {
-      // Invalidate to get a fresh form state — the family key (null for new
+      // Invalidate to get a fresh form state. The family key (null for new
       // alarms) is reused across screens, so stale state persists otherwise.
       ref.invalidate(alarmFormProvider(widget.alarmId));
       ref.invalidate(alarmSaveProvider);

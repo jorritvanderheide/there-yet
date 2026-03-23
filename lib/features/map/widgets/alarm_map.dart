@@ -27,7 +27,7 @@ class AlarmMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      // OSM tile background color — visible while tiles load.
+      // OSM tile background color, visible while tiles load.
       color: const Color(0xFFF2EFE9),
       child: FlutterMap(
         mapController: mapController,

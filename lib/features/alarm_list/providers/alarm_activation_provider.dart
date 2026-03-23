@@ -143,7 +143,7 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
       }
     }
 
-    // Step 2: Background location — needs rationale dialog.
+    // Step 2: Background location (needs rationale dialog).
     if (!(await Permission.locationAlways.status).isGranted) {
       state = state.copyWith(
         lastEvent: AlarmActivationNeedsBackgroundRationale(id),
@@ -194,10 +194,10 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
       state = state.copyWith(
         lastEvent: const AlarmActivationNotificationDenied(),
       );
-      // Don't return — continue activation.
+      // Don't return; continue activation.
     }
 
-    // Step 4: Battery optimization — needs rationale dialog.
+    // Step 4: Battery optimization (needs rationale dialog).
     if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
       state = state.copyWith(
         lastEvent: AlarmActivationNeedsBatteryRationale(id),

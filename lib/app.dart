@@ -37,7 +37,7 @@ final _routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-// Blue — universally distinguishable (colorblind-safe), reads as navigation.
+// Blue: universally distinguishable (colorblind-safe), reads as navigation.
 const _seedColor = Color(0xFF1976D2);
 
 ThemeData _buildTheme(

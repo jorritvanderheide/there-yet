@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-/// Live GPS stream — requires foreground location permission.
+/// Live GPS stream. Requires foreground location permission.
 final locationProvider = StreamProvider<Position>((ref) {
   final permission = ref.watch(locationPermissionProvider);
   if (permission != PermissionStatus.granted) {
@@ -37,7 +37,7 @@ final bestPositionProvider = Provider<LatLng?>((ref) {
   return null;
 });
 
-/// Last known position — fast, no hardware query, no permission needed.
+/// Last known position. Fast, no hardware query, no permission needed.
 final _lastKnownProvider = FutureProvider<Position?>((ref) {
   return Geolocator.getLastKnownPosition();
 });
