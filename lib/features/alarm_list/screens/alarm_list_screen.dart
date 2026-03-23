@@ -246,6 +246,18 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     // Pre-warm GPS so the map opens fast.
     ref.watch(bestPositionProvider);
 
+    ref.listen(alarmsProvider, (_, next) {
+      if (!_editMode) return;
+      next.whenData((alarms) {
+        final currentIds = alarms.map((a) => a.id).toSet();
+        final hadSelection = _selectedIds.isNotEmpty;
+        _selectedIds.retainAll(currentIds);
+        if (hadSelection && _selectedIds.isEmpty) {
+          _exitEditMode();
+        }
+      });
+    });
+
     ref.listen(alarmActivationProvider, (_, next) {
       if (next.lastEvent is! AlarmActivationIdle) {
         _onActivationEvent(next.lastEvent);
