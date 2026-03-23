@@ -59,4 +59,4 @@ All permissions are requested at the point they are needed, with an explanation 
 
 ## Open source
 
-Location Alarm is source-available under the PolyForm Shield 1.0.0 license. All dependencies use non-copyleft licenses (MIT, BSD, Apache 2.0).
+Location Alarm is open source under the EUPL 1.2 (European Union Public Licence).

@@ -90,7 +90,7 @@
   "appTagline": "Ontvang een melding wanneer je aankomt",
   "version": "Versie",
   "license": "Licentie",
-  "licenseValue": "PolyForm Shield 1.0.0",
+  "licenseValue": "EUPL 1.2",
   "mapData": "Kaartgegevens",
   "mapDataValue": "OpenStreetMap-bijdragers · OSM France",
   "geocoding": "Geocodering",

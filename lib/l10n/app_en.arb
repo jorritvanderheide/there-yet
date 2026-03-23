@@ -143,7 +143,7 @@
   "appTagline": "Get alerted when you arrive",
   "version": "Version",
   "license": "License",
-  "licenseValue": "PolyForm Shield 1.0.0",
+  "licenseValue": "EUPL 1.2",
   "mapData": "Map data",
   "mapDataValue": "OpenStreetMap contributors · OSM France",
   "geocoding": "Geocoding",

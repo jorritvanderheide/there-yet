@@ -573,7 +573,7 @@ abstract class AppLocalizations {
   /// No description provided for @licenseValue.
   ///
   /// In en, this message translates to:
-  /// **'PolyForm Shield 1.0.0'**
+  /// **'EUPL 1.2'**
   String get licenseValue;
 
   /// No description provided for @mapData.

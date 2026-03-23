@@ -290,7 +290,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get license => 'License';
 
   @override
-  String get licenseValue => 'PolyForm Shield 1.0.0';
+  String get licenseValue => 'EUPL 1.2';
 
   @override
   String get mapData => 'Map data';

@@ -2,7 +2,7 @@ name: location_alarm
 description: Location-based alarm app
 publish_to: "none"
 version: 1.0.0+1
-license: PolyForm-Shield-1.0.0
+license: EUPL-1.2
 
 environment:
   sdk: ^3.11.0

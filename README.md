@@ -44,7 +44,7 @@ Location Alarm is designed to minimize data leaving your device. See [PRIVACY.md
 
 ## License
 
-[PolyForm Shield 1.0.0](LICENSE) — source-available, all dependencies non-copyleft (MIT, BSD, Apache 2.0).
+[EUPL 1.2](LICENSE) (European Union Public Licence) — open source, copyleft.
 
 Map data: [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL).
 Geocoding: [Photon](https://photon.komoot.io/) by Komoot.
