@@ -80,7 +80,7 @@ class ForegroundServiceNotifier extends Notifier<bool> {
       // Service already running. Sync proximity alerts in case
       // alarms were added/removed/edited.
       await ProximityAlertService.syncAll(activeAlarms);
-    } else if (!shouldRun && state) {
+    } else if (!shouldRun) {
       await ProximityAlertService.unregisterAll();
       await ForegroundServiceManager.stop();
       state = false;
