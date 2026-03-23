@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location_alarm/features/alarm_service/foreground_service_manager.dart';
 import 'package:location_alarm/features/alarm_service/proximity_alert_service.dart';
-import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarms_provider.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
@@ -59,9 +58,6 @@ class ForegroundServiceNotifier extends Notifier<bool> {
     if (shouldRun) {
       final actuallyRunning = await ForegroundServiceManager.isRunning();
       if (!actuallyRunning) {
-        await AlarmLog.write(
-          'Service self-heal: should be running but was killed, restarting',
-        );
         await ForegroundServiceManager.start();
         await ProximityAlertService.syncAll(activeAlarms);
         state = true;

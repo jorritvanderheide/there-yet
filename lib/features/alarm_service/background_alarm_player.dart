@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 
 const _notificationChannel = MethodChannel(
@@ -29,21 +28,21 @@ class BackgroundAlarmPlayer {
         'title': title,
         'body': body,
       });
-    } on Exception catch (e) {
-      await AlarmLog.write('Notification failed: $e');
+    } on Exception {
+      // Non-critical — audio is already playing.
     }
   }
 
   Future<void> _playLoop() async {
     try {
       await _audioChannel.invokeMethod('play');
-    } on Exception catch (e) {
-      await AlarmLog.write('Audio playback failed: $e');
+    } on Exception {
+      // Audio may not be available in all contexts.
     }
     try {
       await HapticFeedback.vibrate();
     } on Exception {
-      // Not available in background isolate
+      // Not available in background isolate.
     }
   }
 
@@ -51,15 +50,15 @@ class BackgroundAlarmPlayer {
   Future<void> stop({int alarmId = -1}) async {
     try {
       await _audioChannel.invokeMethod('stop');
-    } on Exception catch (e) {
-      await AlarmLog.write('Audio stop failed: $e');
+    } on Exception {
+      // Best-effort stop.
     }
     try {
       await _notificationChannel.invokeMethod('dismissAlarm', {
         'alarmId': alarmId,
       });
-    } on Exception catch (e) {
-      await AlarmLog.write('Notification dismiss failed: $e');
+    } on Exception {
+      // Best-effort dismiss.
     }
   }
 

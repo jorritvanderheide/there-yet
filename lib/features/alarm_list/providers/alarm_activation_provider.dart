@@ -6,7 +6,6 @@ import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
-import 'package:location_alarm/shared/providers/location_settings_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final alarmActivationProvider =
@@ -242,10 +241,8 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
       final currentLatLng = LatLng(position.latitude, position.longitude);
       final distance = distanceInMeters(currentLatLng, alarm.location);
       final name = alarm.name.isEmpty ? 'Alarm #$id' : alarm.name;
-      final triggerInside = ref.read(triggerInsideRadiusProvider);
-
       // Step 6: Inside radius check.
-      if (distance <= alarm.radius && !triggerInside) {
+      if (distance <= alarm.radius) {
         _finish(id, AlarmActivationInsideRadius(name, distance, alarm.radius));
         return;
       }

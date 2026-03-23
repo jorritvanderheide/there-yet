@@ -11,6 +11,10 @@ class CurrentLocationMarker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locationAsync = ref.watch(locationProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark
+        ? colorScheme.primaryContainer
+        : colorScheme.primary;
 
     return locationAsync.when(
       data: (position) => MarkerLayer(
@@ -28,7 +32,7 @@ class CurrentLocationMarker extends ConsumerWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withValues(alpha: 0.15),
+                    color: accentColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -37,7 +41,7 @@ class CurrentLocationMarker extends ConsumerWidget {
                   width: 14,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary,
+                    color: accentColor,
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                     boxShadow: [

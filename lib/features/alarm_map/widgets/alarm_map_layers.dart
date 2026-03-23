@@ -15,6 +15,10 @@ class AlarmMapLayers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark
+        ? colorScheme.primaryContainer
+        : colorScheme.primary;
 
     return Stack(
       children: [
@@ -24,8 +28,8 @@ class AlarmMapLayers extends StatelessWidget {
               point: location,
               radius: radius,
               useRadiusInMeter: true,
-              color: colorScheme.primary.withValues(alpha: 0.25),
-              borderColor: colorScheme.primary,
+              color: accentColor.withValues(alpha: 0.25),
+              borderColor: accentColor,
               borderStrokeWidth: 2,
             ),
           ],
@@ -39,7 +43,7 @@ class AlarmMapLayers extends StatelessWidget {
               height: 32,
               child: Container(
                 decoration: BoxDecoration(
-                  color: colorScheme.primary,
+                  color: accentColor,
                   shape: BoxShape.circle,
                   boxShadow: const [
                     BoxShadow(color: Colors.black26, blurRadius: 4),
@@ -48,7 +52,9 @@ class AlarmMapLayers extends StatelessWidget {
                 child: Icon(
                   Icons.notifications,
                   size: 18,
-                  color: colorScheme.onPrimary,
+                  color: isDark
+                      ? colorScheme.onPrimaryContainer
+                      : colorScheme.onPrimary,
                 ),
               ),
             ),

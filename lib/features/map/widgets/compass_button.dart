@@ -24,6 +24,7 @@ class _CompassButtonState extends State<CompassButton>
     super.initState();
     _mapEventSub = widget.mapController.mapEventStream.listen((_) {
       _onRotationChanged();
+      if (_visible && mounted) setState(() {});
     });
   }
 
@@ -40,7 +41,7 @@ class _CompassButtonState extends State<CompassButton>
 
     if (!isNorth && !_visible) {
       _hideTimer?.cancel();
-      setState(() => _visible = true);
+      _visible = true;
     } else if (isNorth && _visible) {
       _hideTimer?.cancel();
       _hideTimer = Timer(const Duration(milliseconds: 500), () {
@@ -91,7 +92,7 @@ class _CompassButtonState extends State<CompassButton>
           tooltip: 'Reset north',
           onPressed: _animateToNorth,
           child: Transform.rotate(
-            angle: -rotation * pi / 180,
+            angle: rotation.abs() < 0.5 ? 0 : rotation * pi / 180,
             child: const Icon(Icons.navigation),
           ),
         ),

@@ -1,8 +1,5 @@
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:location_alarm/shared/data/alarm_log.dart';
-import 'package:location_alarm/shared/providers/location_settings_provider.dart';
 import 'package:location_alarm/shared/providers/theme_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -12,7 +9,6 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final amoled = ref.watch(amoledBlackProvider);
-    final triggerInside = ref.watch(triggerInsideRadiusProvider);
     final isDark =
         themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
@@ -42,60 +38,6 @@ class SettingsScreen extends ConsumerWidget {
                 ref.read(amoledBlackProvider.notifier).set(value);
               },
             ),
-          if (kDebugMode) ...[
-            const _SectionHeader(label: 'Debug'),
-            SwitchListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              title: const Text('Activate while in area'),
-              subtitle: const Text(
-                'Allow activating alarms when already inside the area',
-              ),
-              value: triggerInside,
-              onChanged: (value) {
-                ref.read(triggerInsideRadiusProvider.notifier).set(value);
-              },
-            ),
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              title: const Text('Alarm service log'),
-              subtitle: const Text('View background service diagnostics'),
-              onTap: () => _showAlarmLog(context),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showAlarmLog(BuildContext context) async {
-    final log = await AlarmLog.read();
-    if (!context.mounted) return;
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Alarm service log'),
-        content: SizedBox(
-          width: double.maxFinite,
-          height: 400,
-          child: SingleChildScrollView(
-            reverse: true,
-            child: SelectableText(
-              log.isEmpty ? 'No log entries yet.' : log,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
         ],
       ),
     );

@@ -37,8 +37,8 @@ class ForegroundServiceManager {
 
     await FlutterForegroundTask.startService(
       serviceId: 256,
-      notificationTitle: 'Location Alarm',
-      notificationText: 'Monitoring active alarms',
+      notificationTitle: 'Monitoring your alarms',
+      notificationText: 'You\'ll be notified when you arrive',
       callback: startCallback,
     );
   }

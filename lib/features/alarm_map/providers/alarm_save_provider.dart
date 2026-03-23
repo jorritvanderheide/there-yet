@@ -10,7 +10,6 @@ import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
 import 'package:location_alarm/shared/providers/geocoding_provider.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
 import 'package:location_alarm/shared/providers/location_provider.dart';
-import 'package:location_alarm/shared/providers/location_settings_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final alarmSaveProvider = NotifierProvider<AlarmSaveNotifier, AlarmSaveState>(
@@ -207,14 +206,13 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
             ) <=
             _radius;
 
-    final triggerInside = ref.read(triggerInsideRadiusProvider);
-    if (isInsideRadius && !triggerInside) {
+    if (isInsideRadius) {
       state = const AlarmSaveNeedsConfirmation(InsideRadiusWarning());
       return;
     }
 
     await _writeAlarm(
-      active: hasLocationLock && !(isInsideRadius && !triggerInside),
+      active: hasLocationLock && !isInsideRadius,
       hasLocationLock: hasLocationLock,
       isInsideRadius: isInsideRadius,
     );

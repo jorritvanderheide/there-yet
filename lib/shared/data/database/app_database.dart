@@ -19,24 +19,5 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 5;
-
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-    onUpgrade: (migrator, from, to) async {
-      if (from < 2) {
-        // v2 originally added arrival_time column.
-        await customStatement(
-          'ALTER TABLE alarms ADD COLUMN arrival_time INTEGER',
-        );
-      }
-      if (from < 3) {
-        await migrator.addColumn(alarms, alarms.updatedAt);
-      }
-      // v4: removed departure columns from Drift schema. No migration needed.
-      if (from < 5) {
-        await migrator.addColumn(alarms, alarms.locationName);
-      }
-    },
-  );
+  int get schemaVersion => 1;
 }

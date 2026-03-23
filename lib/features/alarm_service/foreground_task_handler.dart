@@ -9,7 +9,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/features/alarm_service/alarm_checker.dart';
 import 'package:location_alarm/features/alarm_service/background_alarm_player.dart';
 import 'package:location_alarm/features/alarm_service/proximity_alert_service.dart';
-import 'package:location_alarm/shared/data/alarm_log.dart';
 import 'package:location_alarm/shared/data/database/app_database.dart';
 import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/database/connection.dart';
@@ -47,21 +46,17 @@ class LocationTaskHandler extends TaskHandler {
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    await AlarmLog.write('Service started (starter: ${starter.name})');
     try {
       _db = openDatabase();
       _repo = AlarmRepository(_db!);
       _ready = true;
-      await AlarmLog.write('Initialized');
-    } on Exception catch (e) {
-      await AlarmLog.write('FATAL: failed to initialize: $e');
+    } on Exception {
       return;
     }
 
     _startPositionStream();
     await _fetchPosition(source: 'init');
     await _reregisterProximityAlertsIfNeeded();
-    await AlarmLog.trim();
   }
 
   void _startPositionStream() {
@@ -76,9 +71,7 @@ class LocationTaskHandler extends TaskHandler {
           ),
         ).listen(
           _onStreamPosition,
-          onError: (Object e) {
-            AlarmLog.write('Position stream error: $e');
-            // Keep _lastPosition — stale position is better than none.
+          onError: (Object _) {
             _resubscribeAfterDelay();
           },
         );
@@ -97,10 +90,8 @@ class LocationTaskHandler extends TaskHandler {
         );
         await _processPosition(pos, source: source);
         return;
-      } on Exception catch (e) {
-        if (attempt == 2) {
-          await AlarmLog.write('Position $source failed (3 attempts): $e');
-        }
+      } on Exception {
+        // Retry on next attempt.
       }
     }
   }
@@ -117,7 +108,6 @@ class LocationTaskHandler extends TaskHandler {
     if (_lastPosition != null && _lastCheckTime != null) {
       final moved = distanceInMeters(_lastPosition!, latLng);
       final elapsed = now.difference(_lastCheckTime!).inSeconds;
-      // Skip if moved less than accuracy AND checked within the last 5s.
       if (moved < max(10, pos.accuracy) && elapsed < 5) {
         return;
       }
@@ -138,13 +128,6 @@ class LocationTaskHandler extends TaskHandler {
     _lastAccuracy = pos.accuracy;
     _lastCheckTime = now;
 
-    await AlarmLog.write(
-      'Position ($source): ${latLng.latitude.toStringAsFixed(5)}, '
-      '${latLng.longitude.toStringAsFixed(5)} '
-      '(accuracy: ${pos.accuracy.round()}m, '
-      'speed: ${(_speedMps * 3.6).round()} km/h)',
-    );
-
     FlutterForegroundTask.sendDataToMain(
       jsonEncode({
         'type': 'position',
@@ -164,14 +147,11 @@ class LocationTaskHandler extends TaskHandler {
   void _resubscribeAfterDelay() {
     Future<void>.delayed(const Duration(seconds: 30), () {
       if (!_ready) return;
-      AlarmLog.write('Resubscribing to position stream');
       _startPositionStream();
     });
   }
 
   /// Re-register proximity alerts after a device reboot.
-  /// Android clears all proximity alerts on reboot; the BootProximityReceiver
-  /// sets a SharedPreferences flag that we check here.
   Future<void> _reregisterProximityAlertsIfNeeded() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -182,16 +162,13 @@ class LocationTaskHandler extends TaskHandler {
       await prefs.setBool('proximity_needs_reregister', false);
       final active = await _repo!.getActive();
       await ProximityAlertService.syncAll(active);
-      await AlarmLog.write(
-        'Re-registered ${active.length} proximity alerts after boot',
-      );
-    } on Exception catch (e) {
-      await AlarmLog.write('Proximity re-registration failed: $e');
+    } on Exception {
+      // Non-critical — alerts will be re-registered on next service start.
     }
   }
 
   /// Compute the adaptive poll interval based on speed and distance to
-  /// the nearest alarm. Faster speed + closer distance = more frequent polls.
+  /// the nearest alarm.
   void _scheduleAdaptivePoll() {
     _adaptivePollTimer?.cancel();
 
@@ -234,19 +211,6 @@ class LocationTaskHandler extends TaskHandler {
           .where((a) => !_firedIds.contains(a.id))
           .toList();
 
-      if (checkable.isNotEmpty) {
-        final distances = checkable
-            .map((a) {
-              final d = distanceInMeters(position, a.location);
-              final loc = a.location;
-              return '${a.id}@${loc.latitude.toStringAsFixed(4)},'
-                  '${loc.longitude.toStringAsFixed(4)}'
-                  ':${d.round()}/${a.radius.round()}m';
-            })
-            .join(', ');
-        await AlarmLog.write('Check ${checkable.length} alarm(s) [$distances]');
-      }
-
       final triggered = _checker.check(
         checkable,
         position,
@@ -256,27 +220,20 @@ class LocationTaskHandler extends TaskHandler {
       for (final alarm in triggered) {
         _firedIds.add(alarm.id!);
 
-        await AlarmLog.write(
-          'TRIGGERED alarm ${alarm.id} "${alarm.name}" '
-          '(radius: ${alarm.radius.round()}m)',
-        );
-
         FlutterForegroundTask.sendDataToMain(
           jsonEncode({'type': 'alarm_fired', 'id': alarm.id}),
         );
 
         await _player.fire(alarm);
       }
-    } on Exception catch (e) {
-      await AlarmLog.write('Check alarms error: $e');
+    } on Exception {
+      // Will retry on next position update.
     }
   }
 
   @override
   void onRepeatEvent(DateTime timestamp) {
     if (!_ready) return;
-    // Fallback poll — adaptive timer handles the fast path,
-    // this catches cases where adaptive timer didn't fire.
     _fetchPosition(source: 'poll');
   }
 
@@ -296,29 +253,24 @@ class LocationTaskHandler extends TaskHandler {
         await _player.stop(alarmId: id);
         await _repo?.toggleActive(id, active: false);
         _firedIds.remove(id);
-        await AlarmLog.write('Dismissed alarm $id');
         FlutterForegroundTask.sendDataToMain(
           jsonEncode({'type': 'alarm_dismissed', 'id': id}),
         );
       } else if (type == 'proximity_wake') {
-        final id = json['id'] as int;
-        await AlarmLog.write('Proximity wake for alarm $id');
         await _fetchPosition(source: 'proximity');
       } else if (type == 'refresh') {
-        await AlarmLog.write('Refresh requested');
         final position = _lastPosition;
         if (position != null) {
           await _checkAlarms(position);
         }
       }
-    } on Exception catch (e) {
-      await AlarmLog.write('Handle data error: $e');
+    } on Exception {
+      // Will retry on next event.
     }
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
-    await AlarmLog.write('Service destroyed (isTimeout: $isTimeout)');
     _ready = false;
     _adaptivePollTimer?.cancel();
     await _positionSub?.cancel();

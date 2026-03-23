@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -428,104 +428,107 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
         if (discard != true || !mounted) return;
         if (context.mounted) context.pop();
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            RepaintBoundary(
-              key: _mapKey,
-              child: AlarmMap(
-                mapController: _mapController,
-                onMapReady: () => _mapReady = true,
-                initialCenter: form.location ?? bestPos,
-                initialZoom: form.location != null
-                    ? 15
-                    : bestPos != null
-                    ? 13
-                    : 7,
-                initialCameraFit: _initialCameraFit(context, bestPos),
-                onTap: (_, latLng) {
-                  ref
-                      .read(alarmFormProvider(widget.alarmId).notifier)
-                      .setLocation(latLng);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) _fitCircle();
-                  });
-                },
-                children: [
-                  const CurrentLocationMarker(),
-                  if (form.location != null)
-                    AlarmMapLayers(
-                      location: form.location!,
-                      radius: form.radius,
-                    ),
-                ],
-              ),
-            ),
-
-            MapSearchBar(
-              onBack: () => Navigator.of(context).maybePop(),
-              near: bestPos,
-              onLocationSelected: (location) {
-                ref
-                    .read(alarmFormProvider(widget.alarmId).notifier)
-                    .setLocation(location);
-                _fitCircle();
-              },
-            ),
-
-            Positioned(
-              right: 16,
-              bottom: _sheetHeight + 16,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CompassButton(mapController: _mapController),
-                  const SizedBox(height: 8),
-                  CenterOnLocationButton(onPressed: _centerOnGps),
-                ],
-              ),
-            ),
-
-            Positioned(
-              left: 16,
-              bottom: _sheetHeight + 16,
-              child: Text(
-                '\u00a9 OpenStreetMap',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              RepaintBoundary(
+                key: _mapKey,
+                child: AlarmMap(
+                  mapController: _mapController,
+                  onMapReady: () => _mapReady = true,
+                  initialCenter: form.location ?? bestPos,
+                  initialZoom: form.location != null
+                      ? 15
+                      : bestPos != null
+                      ? 13
+                      : 7,
+                  initialCameraFit: _initialCameraFit(context, bestPos),
+                  onTap: (_, latLng) {
+                    ref
+                        .read(alarmFormProvider(widget.alarmId).notifier)
+                        .setLocation(latLng);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted) _fitCircle();
+                    });
+                  },
+                  children: [
+                    const CurrentLocationMarker(),
+                    if (form.location != null)
+                      AlarmMapLayers(
+                        location: form.location!,
+                        radius: form.radius,
+                      ),
+                  ],
                 ),
               ),
-            ),
 
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: AlarmSettingsSheet(
-                labelController: _labelController,
-                labelFocusNode: _labelFocusNode,
-                radius: form.radius,
-                canSave: form.canSave,
-                radiusEnabled: form.location != null,
-                onHeightChanged: (h) {
-                  if (h != _sheetHeight) {
-                    setState(() => _sheetHeight = h);
-                  }
-                },
-                onRadiusChanged: (r) {
+              MapSearchBar(
+                onBack: () => Navigator.of(context).maybePop(),
+                near: bestPos,
+                onLocationSelected: (location) {
                   ref
                       .read(alarmFormProvider(widget.alarmId).notifier)
-                      .setRadius(r);
-                  _fitCircle(animate: false);
+                      .setLocation(location);
+                  _fitCircle();
                 },
-                onSave: _save,
-                saving: saving,
               ),
-            ),
-          ],
+
+              Positioned(
+                right: 16,
+                bottom: _sheetHeight + 16,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CompassButton(mapController: _mapController),
+                    const SizedBox(height: 8),
+                    CenterOnLocationButton(onPressed: _centerOnGps),
+                  ],
+                ),
+              ),
+
+              Positioned(
+                left: 16,
+                bottom: _sheetHeight + 16,
+                child: Text(
+                  '\u00a9 OpenStreetMap',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: AlarmSettingsSheet(
+                  labelController: _labelController,
+                  labelFocusNode: _labelFocusNode,
+                  radius: form.radius,
+                  canSave: form.canSave,
+                  radiusEnabled: form.location != null,
+                  onHeightChanged: (h) {
+                    if (h != _sheetHeight) {
+                      setState(() => _sheetHeight = h);
+                    }
+                  },
+                  onRadiusChanged: (r) {
+                    ref
+                        .read(alarmFormProvider(widget.alarmId).notifier)
+                        .setRadius(r);
+                    _fitCircle(animate: false);
+                  },
+                  onSave: _save,
+                  saving: saving,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
