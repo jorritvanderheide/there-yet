@@ -6,6 +6,7 @@ import 'package:location_alarm/shared/data/geo_utils.dart';
 import 'package:location_alarm/shared/data/models/alarm.dart';
 import 'package:location_alarm/shared/providers/alarm_repository_provider.dart';
 import 'package:location_alarm/shared/providers/location_permission_provider.dart';
+import 'package:location_alarm/shared/providers/location_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final alarmActivationProvider =
@@ -213,16 +214,21 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
     if (!state.activatingIds.contains(id)) return;
 
     try {
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
-
-      if (!state.activatingIds.contains(id)) return;
-
-      final currentLatLng = LatLng(position.latitude, position.longitude);
+      // Use pre-warmed position if available, otherwise request a fresh fix.
+      final cachedPos = ref.read(bestPositionProvider);
+      final LatLng currentLatLng;
+      if (cachedPos != null) {
+        currentLatLng = cachedPos;
+      } else {
+        final position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            timeLimit: Duration(seconds: 5),
+          ),
+        );
+        if (!state.activatingIds.contains(id)) return;
+        currentLatLng = LatLng(position.latitude, position.longitude);
+      }
       final distance = distanceInMeters(currentLatLng, alarm.location);
       final name = alarm.name.isEmpty ? 'Alarm #$id' : alarm.name;
       if (distance <= alarm.radius) {

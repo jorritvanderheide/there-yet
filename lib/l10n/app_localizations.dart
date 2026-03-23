@@ -432,6 +432,12 @@ abstract class AppLocalizations {
   /// **'Search location'**
   String get searchLocation;
 
+  /// No description provided for @searchLocationOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Search unavailable (offline)'**
+  String get searchLocationOffline;
+
   /// No description provided for @noResultsFound.
   ///
   /// In en, this message translates to:

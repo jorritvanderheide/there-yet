@@ -219,6 +219,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchLocation => 'Search location';
 
   @override
+  String get searchLocationOffline => 'Search unavailable (offline)';
+
+  @override
   String get noResultsFound => 'No results found';
 
   @override

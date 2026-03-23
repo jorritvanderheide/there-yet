@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location_alarm/l10n/app_localizations.dart';
 import 'package:location_alarm/shared/data/models/geocoding_result.dart';
+import 'package:location_alarm/shared/providers/connectivity_provider.dart';
 import 'package:location_alarm/shared/providers/geocoding_provider.dart';
 
 class MapSearchBar extends ConsumerStatefulWidget {
@@ -59,6 +60,7 @@ class _MapSearchBarState extends ConsumerState<MapSearchBar> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
+    final isOnline = ref.watch(connectivityProvider);
     final geocodingState = ref.watch(geocodingProvider);
     final showResults = _focusNode.hasFocus && geocodingState is! GeocodingIdle;
 
@@ -77,9 +79,12 @@ class _MapSearchBarState extends ConsumerState<MapSearchBar> {
               controller: _controller,
               focusNode: _focusNode,
               onChanged: _onChanged,
+              readOnly: !isOnline,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: l10n.searchLocation,
+                hintText: isOnline
+                    ? l10n.searchLocation
+                    : l10n.searchLocationOffline,
                 prefixIcon: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: widget.onBack,

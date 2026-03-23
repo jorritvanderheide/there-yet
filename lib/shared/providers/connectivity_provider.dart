@@ -1,10 +1,8 @@
-import 'package:flutter/services.dart';
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const _channel = MethodChannel('nl.bw20.location_alarm/screen');
-
-/// Whether the device has network connectivity.
-/// Uses Android's ConnectivityManager (no network requests).
+/// Whether the device can reach the geocoding server.
 /// Checked on app start and refreshed on app resume.
 final connectivityProvider = NotifierProvider<ConnectivityNotifier, bool>(
   ConnectivityNotifier.new,
@@ -19,10 +17,12 @@ class ConnectivityNotifier extends Notifier<bool> {
 
   Future<void> check() async {
     try {
-      final result = await _channel.invokeMethod<bool>('hasInternet');
-      state = result ?? false;
-    } on MissingPluginException {
-      state = true;
+      final result = await InternetAddress.lookup(
+        'photon.komoot.io',
+      ).timeout(const Duration(seconds: 2));
+      state = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on Exception {
+      state = false;
     }
   }
 }

@@ -219,6 +219,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get searchLocation => 'Zoek locatie';
 
   @override
+  String get searchLocationOffline => 'Zoeken niet beschikbaar (offline)';
+
+  @override
   String get noResultsFound => 'Geen resultaten gevonden';
 
   @override

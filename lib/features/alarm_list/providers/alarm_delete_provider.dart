@@ -30,12 +30,12 @@ class AlarmDeleteNotifier extends Notifier<AlarmDeleteState> {
   AlarmDeleteState build() => const AlarmDeleteIdle();
 
   Future<void> deleteAlarms(Set<int> ids) async {
+    final count = ids.length;
     try {
       final repo = ref.read(alarmRepositoryProvider);
       await Future.wait(
         ids.map((id) async {
           await repo.delete(id);
-          // Thumbnail cleanup is non-critical.
           try {
             await AlarmThumbnail.delete(id);
           } on Exception {
@@ -43,7 +43,7 @@ class AlarmDeleteNotifier extends Notifier<AlarmDeleteState> {
           }
         }),
       );
-      state = AlarmDeleteSuccess(ids.length);
+      state = AlarmDeleteSuccess(count);
     } on Exception catch (e) {
       state = AlarmDeleteError(e.toString());
     }

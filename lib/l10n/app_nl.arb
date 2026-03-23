@@ -64,6 +64,7 @@
   "osmAttribution": "\u00a9 OpenStreetMap",
 
   "searchLocation": "Zoek locatie",
+  "searchLocationOffline": "Zoeken niet beschikbaar (offline)",
   "noResultsFound": "Geen resultaten gevonden",
   "label": "Label",
   "save": "Opslaan",

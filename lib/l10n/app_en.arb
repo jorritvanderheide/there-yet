@@ -112,6 +112,7 @@
   "osmAttribution": "\u00a9 OpenStreetMap",
 
   "searchLocation": "Search location",
+  "searchLocationOffline": "Search unavailable (offline)",
   "noResultsFound": "No results found",
   "label": "Label",
   "save": "Save",
