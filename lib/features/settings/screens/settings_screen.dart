@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:there_yet/l10n/app_localizations.dart';
 import 'package:there_yet/shared/providers/theme_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  static const _store = String.fromEnvironment('STORE', defaultValue: 'playstore');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,6 +56,22 @@ class SettingsScreen extends ConsumerWidget {
                 ref.read(amoledBlackProvider.notifier).set(value);
               },
             ),
+          if (_store == 'fdroid') ...[
+            _SectionHeader(label: l10n.support),
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              leading: const Icon(Icons.favorite_outline),
+              title: Text(l10n.donate),
+              subtitle: Text(l10n.donateSubtitle),
+              onTap: () => launchUrl(
+                Uri.parse('https://liberapay.com/BW20'),
+                mode: LaunchMode.externalApplication,
+              ),
+            ),
+          ],
         ],
       ),
     );

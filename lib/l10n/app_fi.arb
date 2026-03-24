@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Tuki",
+  "donate": "Lahjoita",
+  "donateSubtitle": "Tue There Yetin kehitystä"
 }

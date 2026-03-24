@@ -54,7 +54,7 @@
   "locationPermissionRequired": "Vyžadováno oprávnění k poloze",
   "notificationsDisabled": "Oznámení vypnuta — budík neuslyšíte",
   "alreadyInsideAlarmArea": "Už jste v oblasti budíku",
-  "alreadyInsideAlarmAreaBody": "Nacházíte se {distance} od „{name}". Opusťte okruh {radius}, aby se budík aktivoval.",
+  "alreadyInsideAlarmAreaBody": "Nacházíte se {distance} od \"{name}\". Opusťte okruh {radius}, aby se budík aktivoval.",
   "@alreadyInsideAlarmAreaBody": {
     "placeholders": {
       "distance": {"type": "String"},
@@ -93,7 +93,7 @@
   "inactive": "neaktivní",
 
   "backgroundLocationNeeded": "Potřeba polohy na pozadí",
-  "backgroundLocationBody": "There Yet potřebuje sledovat vaši polohu na pozadí, aby mohl spustit budík po příjezdu.\n\nNa další obrazovce vyberte „Povolit vždy".",
+  "backgroundLocationBody": "There Yet potřebuje sledovat vaši polohu na pozadí, aby mohl spustit budík po příjezdu.\n\nNa další obrazovce vyberte \"Povolit vždy\".",
   "continueButton": "Pokračovat",
   "disableBatteryOptimization": "Vypnout optimalizaci baterie",
   "batteryOptimizationBody": "Pro spolehlivé sledování polohy na pozadí musí být There Yet vyloučen z optimalizace baterie.\n\nBez toho může Android zastavit službu budíků kvůli úspoře baterie.",
@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Podpora",
+  "donate": "Přispět",
+  "donateSubtitle": "Podpořte vývoj There Yet"
 }

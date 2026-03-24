@@ -1,5 +1,5 @@
 {
-  "@@locale": "zh_TW",
+  "@@locale": "zh",
 
   "appTitle": "There Yet",
 
@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "支持",
+  "donate": "贊助",
+  "donateSubtitle": "支持 There Yet 的開發"
 }

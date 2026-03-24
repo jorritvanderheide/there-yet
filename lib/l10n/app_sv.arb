@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Stöd",
+  "donate": "Donera",
+  "donateSubtitle": "Stöd utvecklingen av There Yet"
 }

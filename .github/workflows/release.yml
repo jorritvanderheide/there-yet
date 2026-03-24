@@ -44,16 +44,20 @@ jobs:
       - name: Generate l10n
         run: flutter gen-l10n
 
-      - name: Build App Bundle
+      - name: Build App Bundle (Play Store)
         run: flutter build appbundle --release
 
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build APK (F-Droid)
+        run: flutter build apk --release --dart-define=STORE=fdroid
+
+      - name: Rename artifacts
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/there-yet-fdroid.apk
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             build/app/outputs/bundle/release/app-release.aab
-            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/flutter-apk/there-yet-fdroid.apk
           generate_release_notes: true

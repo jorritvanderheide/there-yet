@@ -326,4 +326,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String alarmSavedNoPermission(String name) {
     return '$name saved — enable background location to monitor';
   }
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get donate => 'Donate';
+
+  @override
+  String get donateSubtitle => 'Support development via Liberapay';
 }

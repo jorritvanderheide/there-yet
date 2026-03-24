@@ -1,5 +1,5 @@
 {
-  "@@locale": "pt_BR",
+  "@@locale": "pt",
 
   "appTitle": "There Yet",
 
@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Apoio",
+  "donate": "Doar",
+  "donateSubtitle": "Apoie o desenvolvimento do There Yet"
 }

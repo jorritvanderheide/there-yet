@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "सहायता",
+  "donate": "दान करें",
+  "donateSubtitle": "There Yet के विकास का समर्थन करें"
 }

@@ -54,7 +54,7 @@
   "locationPermissionRequired": "Standortberechtigung erforderlich",
   "notificationsDisabled": "Benachrichtigungen deaktiviert — du wirst den Wecker nicht hören",
   "alreadyInsideAlarmArea": "Bereits im Weckerbereich",
-  "alreadyInsideAlarmAreaBody": "Du bist {distance} von „{name}" entfernt. Verlasse den {radius}-Radius, um den Wecker zu aktivieren.",
+  "alreadyInsideAlarmAreaBody": "Du bist {distance} von \"{name}\" entfernt. Verlasse den {radius}-Radius, um den Wecker zu aktivieren.",
   "@alreadyInsideAlarmAreaBody": {
     "placeholders": {
       "distance": {"type": "String"},
@@ -93,7 +93,7 @@
   "inactive": "inaktiv",
 
   "backgroundLocationNeeded": "Hintergrundstandort benötigt",
-  "backgroundLocationBody": "There Yet muss deinen Standort im Hintergrund überwachen, um Wecker auszulösen, wenn du ankommst.\n\nWähle auf dem nächsten Bildschirm „Immer erlauben".",
+  "backgroundLocationBody": "There Yet muss deinen Standort im Hintergrund überwachen, um Wecker auszulösen, wenn du ankommst.\n\nWähle auf dem nächsten Bildschirm \"Immer erlauben\".",
   "continueButton": "Weiter",
   "disableBatteryOptimization": "Akkuoptimierung deaktivieren",
   "batteryOptimizationBody": "Um deinen Standort zuverlässig im Hintergrund zu überwachen, muss There Yet von der Akkuoptimierung ausgenommen werden.\n\nOhne diese Ausnahme kann Android den Weckerdienst beenden, um Akku zu sparen.",
@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Unterstützung",
+  "donate": "Spenden",
+  "donateSubtitle": "Entwicklung von There Yet unterstützen"
 }

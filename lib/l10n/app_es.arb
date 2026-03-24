@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Apoyo",
+  "donate": "Donar",
+  "donateSubtitle": "Apoya el desarrollo de There Yet"
 }

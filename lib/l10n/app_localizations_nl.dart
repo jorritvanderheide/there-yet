@@ -9,7 +9,7 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
-  String get appTitle => 'Locatiewekker';
+  String get appTitle => 'There Yet';
 
   @override
   String get alarmsTitle => 'Wekkers';
@@ -165,7 +165,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get backgroundLocationBody =>
-      'Locatiewekker moet je locatie op de achtergrond volgen om wekkers te laten afgaan wanneer je aankomt.\n\nSelecteer op het volgende scherm \"Altijd toestaan\".';
+      'There Yet moet je locatie op de achtergrond volgen om wekkers te laten afgaan wanneer je aankomt.\n\nSelecteer op het volgende scherm \"Altijd toestaan\".';
 
   @override
   String get continueButton => 'Doorgaan';
@@ -175,7 +175,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get batteryOptimizationBody =>
-      'Om je locatie betrouwbaar op de achtergrond te volgen, moet Locatiewekker worden uitgesloten van batterijoptimalisatie.\n\nZonder dit kan Android de wekkerdienst stoppen om batterij te besparen.';
+      'Om je locatie betrouwbaar op de achtergrond te volgen, moet There Yet worden uitgesloten van batterijoptimalisatie.\n\nZonder dit kan Android de wekkerdienst stoppen om batterij te besparen.';
 
   @override
   String get skip => 'Overslaan';
@@ -243,7 +243,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get dismiss => 'Sluiten';
 
   @override
-  String get locationAlarmDefault => 'Locatiewekker';
+  String get locationAlarmDefault => 'There Yet';
 
   @override
   String alarmBodyWithinRadius(int radius) {
@@ -326,4 +326,13 @@ class AppLocalizationsNl extends AppLocalizations {
   String alarmSavedNoPermission(String name) {
     return '$name opgeslagen — schakel achtergrondlocatie in';
   }
+
+  @override
+  String get support => 'Ondersteuning';
+
+  @override
+  String get donate => 'Doneren';
+
+  @override
+  String get donateSubtitle => 'Steun de ontwikkeling via Liberapay';
 }

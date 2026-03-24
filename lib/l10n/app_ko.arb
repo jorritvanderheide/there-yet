@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "지원",
+  "donate": "후원하기",
+  "donateSubtitle": "There Yet 개발 지원"
 }

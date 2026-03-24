@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "サポート",
+  "donate": "寄付する",
+  "donateSubtitle": "There Yetの開発を支援"
 }

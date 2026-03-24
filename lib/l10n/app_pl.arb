@@ -54,7 +54,7 @@
   "locationPermissionRequired": "Wymagane uprawnienie do lokalizacji",
   "notificationsDisabled": "Powiadomienia wyłączone — nie usłyszysz alarmu",
   "alreadyInsideAlarmArea": "Już w obszarze alarmu",
-  "alreadyInsideAlarmAreaBody": "Jesteś {distance} od „{name}". Oddal się poza promień {radius}, aby aktywować.",
+  "alreadyInsideAlarmAreaBody": "Jesteś {distance} od \"{name}\". Oddal się poza promień {radius}, aby aktywować.",
   "@alreadyInsideAlarmAreaBody": {
     "placeholders": {
       "distance": {"type": "String"},
@@ -93,7 +93,7 @@
   "inactive": "nieaktywny",
 
   "backgroundLocationNeeded": "Potrzebna lokalizacja w tle",
-  "backgroundLocationBody": "There Yet musi monitorować Twoją lokalizację w tle, aby uruchomić alarm po dotarciu na miejsce.\n\nNa następnym ekranie wybierz „Zezwalaj cały czas".",
+  "backgroundLocationBody": "There Yet musi monitorować Twoją lokalizację w tle, aby uruchomić alarm po dotarciu na miejsce.\n\nNa następnym ekranie wybierz \"Zezwalaj cały czas\".",
   "continueButton": "Dalej",
   "disableBatteryOptimization": "Wyłącz optymalizację baterii",
   "batteryOptimizationBody": "Aby niezawodnie monitorować lokalizację w tle, There Yet musi być wyłączony z optymalizacji baterii.\n\nBez tego Android może zatrzymać usługę alarmową w celu oszczędzania baterii.",
@@ -173,5 +173,9 @@
     "placeholders": {
       "name": {"type": "String"}
     }
-  }
+  },
+
+  "support": "Wsparcie",
+  "donate": "Wspomóż",
+  "donateSubtitle": "Wesprzyj rozwój There Yet"
 }

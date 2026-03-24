@@ -1,7 +1,7 @@
 {
   "@@locale": "nl",
 
-  "appTitle": "Locatiewekker",
+  "appTitle": "There Yet",
 
   "alarmsTitle": "Wekkers",
   "noAlarmsYet": "Nog geen wekkers",
@@ -45,10 +45,10 @@
   "inactive": "inactief",
 
   "backgroundLocationNeeded": "Achtergrondlocatie nodig",
-  "backgroundLocationBody": "Locatiewekker moet je locatie op de achtergrond volgen om wekkers te laten afgaan wanneer je aankomt.\n\nSelecteer op het volgende scherm \"Altijd toestaan\".",
+  "backgroundLocationBody": "There Yet moet je locatie op de achtergrond volgen om wekkers te laten afgaan wanneer je aankomt.\n\nSelecteer op het volgende scherm \"Altijd toestaan\".",
   "continueButton": "Doorgaan",
   "disableBatteryOptimization": "Batterijoptimalisatie uitschakelen",
-  "batteryOptimizationBody": "Om je locatie betrouwbaar op de achtergrond te volgen, moet Locatiewekker worden uitgesloten van batterijoptimalisatie.\n\nZonder dit kan Android de wekkerdienst stoppen om batterij te besparen.",
+  "batteryOptimizationBody": "Om je locatie betrouwbaar op de achtergrond te volgen, moet There Yet worden uitgesloten van batterijoptimalisatie.\n\nZonder dit kan Android de wekkerdienst stoppen om batterij te besparen.",
   "skip": "Overslaan",
   "disableOptimization": "Uitschakelen",
 
@@ -73,7 +73,7 @@
 
   "createAlarm": "Wekker aanmaken",
   "dismiss": "Sluiten",
-  "locationAlarmDefault": "Locatiewekker",
+  "locationAlarmDefault": "There Yet",
   "alarmBodyWithinRadius": "Je bent binnen {radius} m van je bestemming",
 
   "appearance": "Weergave",
@@ -100,5 +100,9 @@
   "alarmSaved": "{name} opgeslagen",
   "alarmSavedNoGps": "{name} opgeslagen (inactief — geen GPS)",
   "alarmSavedInside": "{name} opgeslagen (inactief)",
-  "alarmSavedNoPermission": "{name} opgeslagen — schakel achtergrondlocatie in"
+  "alarmSavedNoPermission": "{name} opgeslagen — schakel achtergrondlocatie in",
+
+  "support": "Ondersteuning",
+  "donate": "Doneren",
+  "donateSubtitle": "Steun de ontwikkeling van There Yet"
 }
