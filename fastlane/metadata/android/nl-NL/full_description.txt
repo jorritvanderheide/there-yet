@@ -1,0 +1,14 @@
+There Yet is een privacyvriendelijke, locatiegebaseerde alarm-app. Plaats een pin op de kaart, stel een radius in en ontvang een melding wanneer je op je bestemming aankomt.
+
+Geen accounts, geen tracking, geen Google Play Services nodig. Je locatiegegevens blijven op je apparaat.
+
+Functies:
+* Plaats alarmen overal op de kaart
+* Stel een eigen radius in voor elk alarm
+* Achtergrondmonitoring met adaptieve GPS-polling
+* Werkt offline — kaarttegels worden lokaal opgeslagen
+* Zoek plaatsen met Photon-geocodering
+* Dynamisch Material You-thema
+* Ondersteuning voor meerdere talen
+
+There Yet gebruikt OpenStreetMap-tegels en werkt volledig zonder propriëtaire diensten. Ontworpen voor forenzen, reizigers en iedereen die een eenvoudig "maak me wakker als we er zijn"-alarm wil zonder concessies aan privacy.

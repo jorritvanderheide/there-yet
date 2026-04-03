@@ -1,0 +1,14 @@
+There Yet ist eine datenschutzfreundliche, standortbasierte Alarm-App. Setze eine Markierung auf die Karte, lege einen Radius fest und lass dich benachrichtigen, wenn du an deinem Ziel ankommst.
+
+Keine Konten, kein Tracking, keine Google Play-Dienste erforderlich. Deine Standortdaten bleiben auf deinem Gerät.
+
+Funktionen:
+* Alarme überall auf der Karte setzen
+* Eigenen Radius für jeden Alarm festlegen
+* Hintergrundüberwachung mit adaptiver GPS-Abfrage
+* Funktioniert offline — Kartenkacheln werden lokal zwischengespeichert
+* Ortssuche mit Photon-Geokodierung
+* Dynamisches Material You-Design
+* Mehrere Sprachen unterstützt
+
+There Yet verwendet OpenStreetMap-Kacheln und funktioniert vollständig ohne proprietäre Dienste. Entwickelt für Pendler, Reisende und alle, die einen einfachen „Weck mich, wenn wir da sind"-Alarm ohne Einbußen beim Datenschutz möchten.

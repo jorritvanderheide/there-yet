@@ -1,0 +1,14 @@
+There Yet on yksityisyyttä kunnioittava, sijaintiin perustuva hälytyssovellus. Aseta merkki kartalle, määritä säde ja saat ilmoituksen saapuessasi perille.
+
+Ei tilejä, ei seurantaa, ei Google Play -palveluita. Sijaintitietosi pysyvät laitteellasi.
+
+Ominaisuudet:
+* Aseta hälytyksiä minne tahansa kartalla
+* Määritä mukautettu säde jokaiselle hälytykselle
+* Taustavalvonta mukautuvalla GPS-kyselyllä
+* Toimii offline — karttaruudut tallennetaan paikallisesti
+* Etsi paikkoja Photon-geokoodauksella
+* Dynaaminen Material You -teema
+* Useiden kielien tuki
+
+There Yet käyttää OpenStreetMap-karttaruutuja ja toimii täysin ilman suljetun lähdekoodin palveluita. Se on suunniteltu työmatkalaajille, matkailijoille ja kaikille, jotka haluavat yksinkertaisen "herätä minut perillä" -hälytyksen yksityisyydestä tinkimättä.

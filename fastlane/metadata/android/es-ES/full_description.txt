@@ -1,0 +1,14 @@
+There Yet es una aplicación de alarma basada en la ubicación que respeta tu privacidad. Coloca un marcador en el mapa, establece un radio y recibe una alerta cuando llegues a tu destino.
+
+Sin cuentas, sin rastreo, sin necesidad de Google Play Services. Tus datos de ubicación permanecen en tu dispositivo.
+
+Características:
+* Coloca alarmas en cualquier lugar del mapa
+* Establece un radio personalizado para cada alarma
+* Monitoreo en segundo plano con sondeo GPS adaptativo
+* Funciona sin conexión — los mosaicos del mapa se almacenan localmente
+* Busca lugares con geocodificación Photon
+* Tema dinámico Material You
+* Varios idiomas compatibles
+
+There Yet utiliza mosaicos de OpenStreetMap y funciona completamente sin servicios propietarios. Está diseñada para viajeros frecuentes y cualquiera que quiera una alarma sencilla de «avísame cuando lleguemos» sin sacrificar la privacidad.

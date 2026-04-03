@@ -1,0 +1,14 @@
+There Yet je aplikace pro alarmy založené na poloze, která respektuje vaše soukromí. Umístěte špendlík na mapu, nastavte poloměr a nechte se upozornit, když dorazíte na místo.
+
+Žádné účty, žádné sledování, žádné služby Google Play. Vaše údaje o poloze zůstávají ve vašem zařízení.
+
+Funkce:
+* Umístěte alarmy kamkoli na mapě
+* Nastavte vlastní poloměr pro každý alarm
+* Sledování na pozadí s adaptivním GPS dotazováním
+* Funguje offline — mapové dlaždice se ukládají lokálně
+* Vyhledávání míst pomocí Photon geokódování
+* Dynamický vzhled Material You
+* Podpora více jazyků
+
+There Yet používá dlaždice OpenStreetMap a funguje zcela bez proprietárních služeb. Je navržena pro dojíždějící, cestovatele a kohokoli, kdo chce jednoduchý alarm „vzbuďte mě, až tam budeme" bez obětování soukromí.

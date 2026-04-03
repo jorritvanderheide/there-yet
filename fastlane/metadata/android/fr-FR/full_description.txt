@@ -1,0 +1,14 @@
+There Yet est une application d'alarme basée sur la localisation qui respecte votre vie privée. Placez une épingle sur la carte, définissez un rayon et soyez alerté à votre arrivée.
+
+Pas de compte, pas de pistage, pas de Google Play Services. Vos données de localisation restent sur votre appareil.
+
+Fonctionnalités :
+* Placez des alarmes n'importe où sur la carte
+* Définissez un rayon personnalisé pour chaque alarme
+* Surveillance en arrière-plan avec interrogation GPS adaptative
+* Fonctionne hors ligne — les tuiles cartographiques sont mises en cache localement
+* Recherche de lieux avec géocodage Photon
+* Thème dynamique Material You
+* Prise en charge de plusieurs langues
+
+There Yet utilise les tuiles OpenStreetMap et fonctionne entièrement sans services propriétaires. Conçue pour les navetteurs, les voyageurs et tous ceux qui veulent une alarme simple « réveillez-moi quand on arrive » sans sacrifier leur vie privée.

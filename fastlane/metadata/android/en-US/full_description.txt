@@ -1,0 +1,14 @@
+There Yet is a privacy-friendly, proximity-based alarm app. Place a pin on the map, set a radius, and get alerted when you arrive at your destination.
+
+No accounts, no tracking, no Google Play Services required. Your location data stays on your device.
+
+Features:
+* Place alarms anywhere on the map
+* Set a custom radius for each alarm
+* Background monitoring with adaptive GPS polling
+* Works offline — map tiles are cached locally
+* Search for places with Photon geocoding
+* Material You dynamic theming
+* Multiple languages supported
+
+There Yet uses OpenStreetMap tiles and runs entirely without proprietary services. It's designed for commuters, travellers, and anyone who wants a simple "wake me up when we get there" alarm without sacrificing privacy.
