@@ -334,5 +334,5 @@ class AppLocalizationsNl extends AppLocalizations {
   String get donate => 'Doneren';
 
   @override
-  String get donateSubtitle => 'Steun de ontwikkeling via Liberapay';
+  String get donateSubtitle => 'Steun de ontwikkeling van There Yet';
 }

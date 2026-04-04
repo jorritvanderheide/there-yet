@@ -338,5 +338,5 @@ class AppLocalizationsDe extends AppLocalizations {
   String get donate => 'Spenden';
 
   @override
-  String get donateSubtitle => 'Entwicklung über Liberapay unterstützen';
+  String get donateSubtitle => 'Entwicklung von There Yet unterstützen';
 }

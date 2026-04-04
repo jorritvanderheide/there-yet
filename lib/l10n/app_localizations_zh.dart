@@ -328,5 +328,5 @@ class AppLocalizationsZh extends AppLocalizations {
   String get donate => '贊助';
 
   @override
-  String get donateSubtitle => '透過 Liberapay 支持開發';
+  String get donateSubtitle => '支持 There Yet 的開發';
 }

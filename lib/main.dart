@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:there_yet/app.dart';
 import 'package:there_yet/features/alarm_service/foreground_service_manager.dart';
 import 'package:there_yet/features/alarm_service/providers/alarm_service_provider.dart';
@@ -15,7 +16,6 @@ import 'package:there_yet/shared/providers/connectivity_provider.dart';
 import 'package:there_yet/shared/providers/database_provider.dart';
 import 'package:there_yet/shared/providers/location_permission_provider.dart';
 import 'package:there_yet/shared/providers/preferences_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 const _screenChannel = MethodChannel('nl.bw20.there_yet/screen');
 
@@ -37,7 +37,7 @@ void main() async {
   ForegroundServiceManager.init();
   FlutterForegroundTask.initCommunicationPort();
 
-  // Clear any leftover lock screen flags
+  // Clear any leftover lock screen flags from a previous session.
   try {
     await _screenChannel.invokeMethod('clearLockScreenFlags');
   } on MissingPluginException {
@@ -116,6 +116,21 @@ void main() async {
         onScreenLocked: () {
           // User locked the screen while alarm is ringing. Show ring screen
           // over lock screen so they can dismiss without unlocking.
+          final alarms = container.read(alarmServiceProvider);
+          for (final alarm in alarms) {
+            if (alarm.id == null) continue;
+            if (shownDismissIds.contains(alarm.id)) continue;
+            shownDismissIds.add(alarm.id!);
+            _showDismissScreen(
+              alarm,
+              launchedByIntent: false,
+              onDismissed: () => shownDismissIds.remove(alarm.id),
+            );
+          }
+        },
+        onResumeWithAlarm: () {
+          // App resumed — re-show dismiss screen if alarm is ringing but
+          // the dismiss screen was lost (process recreation, etc.).
           final alarms = container.read(alarmServiceProvider);
           for (final alarm in alarms) {
             if (alarm.id == null) continue;
@@ -227,9 +242,13 @@ void _showDismissScreen(
 }
 
 class _AppWithServices extends ConsumerStatefulWidget {
-  const _AppWithServices({required this.onScreenLocked});
+  const _AppWithServices({
+    required this.onScreenLocked,
+    required this.onResumeWithAlarm,
+  });
 
   final VoidCallback onScreenLocked;
+  final VoidCallback onResumeWithAlarm;
 
   @override
   ConsumerState<_AppWithServices> createState() => _AppWithServicesState();
@@ -256,6 +275,9 @@ class _AppWithServicesState extends ConsumerState<_AppWithServices>
     if (state == AppLifecycleState.resumed) {
       ref.read(locationPermissionProvider.notifier).checkAll();
       ref.read(connectivityProvider.notifier).check();
+      // Re-show dismiss screen if alarm is ringing but the screen was lost
+      // (e.g. process recreation, navigation stack not persisted).
+      widget.onResumeWithAlarm();
     }
     if (_previousState == AppLifecycleState.resumed &&
         state == AppLifecycleState.paused) {

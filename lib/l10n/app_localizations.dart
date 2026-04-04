@@ -669,7 +669,7 @@ abstract class AppLocalizations {
   /// No description provided for @donateSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Support development via Liberapay'**
+  /// **'Support development of There Yet'**
   String get donateSubtitle;
 }
 

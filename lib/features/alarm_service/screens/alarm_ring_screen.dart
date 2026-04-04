@@ -37,7 +37,6 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
 
   @override
   void dispose() {
-    _clearLockScreenFlags();
     widget.onDismissed?.call();
     super.dispose();
   }

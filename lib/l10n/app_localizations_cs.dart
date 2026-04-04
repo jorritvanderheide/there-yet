@@ -338,5 +338,5 @@ class AppLocalizationsCs extends AppLocalizations {
   String get donate => 'Přispět';
 
   @override
-  String get donateSubtitle => 'Podpořte vývoj přes Liberapay';
+  String get donateSubtitle => 'Podpořte vývoj There Yet';
 }
