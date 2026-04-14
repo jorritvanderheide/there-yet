@@ -1,52 +1,58 @@
-# There Yet - Location Alarm
+# <img src="fastlane/metadata/android/en-US/images/icon.png" width="48" align="absmiddle" /> There Yet - Location Alarm
 
+**Not there yet? There Yet will tell you when you are.**
+
+Place a pin on the map, set a radius, and get alerted when you arrive. No accounts, no tracking, no Google Play Services.
+
+<!--[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/nl.bw20.there_yet)-->
+<!--[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=nl.bw20.there_yet)-->
 [![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/BW20)
 
-Not there yet? There Yet will tell you when you are.
+![Feature graphic](fastlane/metadata/android/en-US/images/featureGraphic.png)
 
 ## Features
 
 - **Proximity alarms** — set a location and radius, get alerted when you arrive
-- **Works in the background** — dual trigger: GPS polling + Android ProximityAlert for reliability even when the app is closed
-- **Adaptive monitoring** — polling frequency adjusts based on your speed and distance to the alarm
-- **Offline-capable** — map tiles are cached locally for offline use after first viewing
-- **Location search** — find places by name with autocomplete (Photon geocoding)
-- **Material 3** — dynamic colors, dark mode, AMOLED true black
+- **Background monitoring** — keeps working when the app is closed or the screen is off
+- **Offline-capable** — map tiles are cached locally after first viewing
+- **Location search** — find places by name with autocomplete
+- **Material You** — dynamic colors, dark mode, supports 14 languages
 
 ## Privacy
 
-There Yet is designed to minimize data leaving your device. See [PRIVACY.md](PRIVACY.md) for full details.
+There Yet is designed to keep your data on your device. See [PRIVACY.md](PRIVACY.md) for full details.
 
-- All alarm data stays on your device (SQLite + local files)
+- All alarm data stays on-device (SQLite)
 - No accounts, no analytics, no telemetry, no ads
-- No Google Play Services — uses Android's LocationManager directly
+- No Google Play Services required
 - Works on privacy-focused ROMs (GrapheneOS, CalyxOS, LineageOS)
-- Permissions requested at point of use with rationale, never upfront
 
-**Network calls (only when you use the map):**
+**Network calls (only when using the map):**
 - Map tiles from OSM France (`tile.openstreetmap.fr`)
-- Search queries and reverse geocoding via Photon (`photon.komoot.io`)
+- Search and reverse geocoding via Photon (`photon.komoot.io`)
 
-## Limitations
+## Building from source
 
-- **Android only** — no iOS or web
-- **GPS accuracy degrades with screen off** — Android LocationManager limitation without Play Services (100–200m)
-- **Aggressive OEMs may kill the service** — battery optimization exemption helps but doesn't guarantee survival on all devices
-- **Minimum practical radius ~100m** — GPS hardware constraint
-- **High-speed transit** — at 140 km/h in Doze mode, trigger reliability is ~35% without Play Services
+Requires [Nix](https://nixos.org/) with flakes enabled:
+
+```sh
+nix develop          # enter dev shell
+flutter pub get      # fetch dependencies
+flutter run          # run in debug mode
+mask check           # format, analyze, and test
+```
 
 ## Tech stack
 
-- Flutter + Dart
-- Riverpod for state management
+- Flutter + Riverpod
 - Drift (SQLite) for persistence
 - flutter_map with OpenStreetMap tiles
-- Photon (Nominatim) for geocoding
-- Kotlin for Android-native alarm service, notifications, and proximity alerts
+- Photon geocoding by Komoot
+- Kotlin native layer for alarm service, notifications, and proximity alerts
 
 ## License
 
-[EUPL 1.2](LICENSE) (European Union Public Licence) — open source, copyleft.
+[EUPL 1.2](LICENSE) — open source, copyleft.
 
 Map data: [OpenStreetMap contributors](https://www.openstreetmap.org/copyright) (ODbL).
 Geocoding: [Photon](https://photon.komoot.io/) by Komoot.
