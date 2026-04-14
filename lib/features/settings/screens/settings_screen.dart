@@ -7,7 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  static const _store = String.fromEnvironment('STORE', defaultValue: 'playstore');
+  static const _store = String.fromEnvironment(
+    'STORE',
+    defaultValue: 'playstore',
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
