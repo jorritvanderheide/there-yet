@@ -15,10 +15,14 @@ class AboutScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           const SizedBox(height: 32),
-          Icon(
-            Icons.notifications_active,
-            size: 64,
-            color: colorScheme.primary,
+          Center(
+            child: ClipOval(
+              child: SizedBox(
+                width: 96,
+                height: 96,
+                child: Image.asset('assets/icon.png'),
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           Text(

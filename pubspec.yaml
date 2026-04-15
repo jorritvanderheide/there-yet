@@ -1,7 +1,7 @@
 name: there_yet
 description: Location-based alarm app
 publish_to: "none"
-version: 1.0.0+5
+version: 1.0.0+6
 license: EUPL-1.2
 
 environment:
@@ -38,3 +38,5 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  assets:
+    - assets/icon.png
