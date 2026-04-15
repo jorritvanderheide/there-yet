@@ -16,24 +16,67 @@
   "about": "Over",
 
   "nSelected": "{count} geselecteerd",
+  "@nSelected": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "deleteSelected": "Selectie verwijderen",
   "deleteNAlarms": "{count, plural, =1{1 wekker} other{{count} wekkers}} verwijderen?",
+  "@deleteNAlarms": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "deleteNAlarmsBody": "{count, plural, =1{1 wekker} other{{count} wekkers}} wordt permanent verwijderd.",
+  "@deleteNAlarmsBody": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "cancel": "Annuleren",
   "delete": "Verwijderen",
   "ok": "OK",
 
   "alarmDeactivated": "{name} gedeactiveerd",
+  "@alarmDeactivated": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "alarmActivated": "{name} geactiveerd — {distance} verwijderd",
+  "@alarmActivated": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "distance": {"type": "String"}
+    }
+  },
   "locationPermissionRequired": "Locatietoegang vereist",
   "notificationsDisabled": "Meldingen uitgeschakeld — je hoort de wekker niet",
   "alreadyInsideAlarmArea": "Al in het wekkergebied",
   "alreadyInsideAlarmAreaBody": "Je bent {distance} van \"{name}\". Verlaat de {radius} radius om te activeren.",
+  "@alreadyInsideAlarmAreaBody": {
+    "placeholders": {
+      "distance": {"type": "String"},
+      "name": {"type": "String"},
+      "radius": {"type": "String"}
+    }
+  },
   "gpsDisabled": "GPS is uitgeschakeld",
   "openSettings": "Open instellingen",
   "couldNotAcquireLocation": "Kan locatie niet bepalen",
   "nAlarmsDeleted": "{count, plural, =1{1 wekker} other{{count} wekkers}} verwijderd",
+  "@nAlarmsDeleted": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "deleteFailed": "Verwijderen mislukt: {message}",
+  "@deleteFailed": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
 
   "alarmsNotMonitored": "Wekkers worden niet bewaakt",
   "tapToCheckPermissions": "Tik om machtigingen te controleren",
@@ -41,6 +84,11 @@
 
   "gettingLocation": "Locatie ophalen\u2026",
   "alarmDefaultName": "Wekker #{id}",
+  "@alarmDefaultName": {
+    "placeholders": {
+      "id": {"type": "int"}
+    }
+  },
   "active": "actief",
   "inactive": "inactief",
 
@@ -75,6 +123,11 @@
   "dismiss": "Sluiten",
   "locationAlarmDefault": "There Yet",
   "alarmBodyWithinRadius": "Je bent binnen {radius} m van je bestemming",
+  "@alarmBodyWithinRadius": {
+    "placeholders": {
+      "radius": {"type": "int"}
+    }
+  },
 
   "appearance": "Weergave",
   "theme": "Thema",
@@ -98,9 +151,29 @@
   "openSourceLicenses": "Open source-licenties",
 
   "alarmSaved": "{name} opgeslagen",
+  "@alarmSaved": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "alarmSavedNoGps": "{name} opgeslagen (inactief — geen GPS)",
+  "@alarmSavedNoGps": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "alarmSavedInside": "{name} opgeslagen (inactief)",
+  "@alarmSavedInside": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "alarmSavedNoPermission": "{name} opgeslagen — schakel achtergrondlocatie in",
+  "@alarmSavedNoPermission": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
 
   "support": "Ondersteuning",
   "donate": "Doneren",
