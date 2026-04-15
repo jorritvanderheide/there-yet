@@ -4,8 +4,6 @@
 
 Place a pin on the map, set a radius, and get alerted when you arrive. No accounts, no tracking, no Google Play Services.
 
-<!--[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/nl.bw20.there_yet)-->
-<!--[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=nl.bw20.there_yet)-->
 [![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/BW20)
 
 ![Feature graphic](fastlane/metadata/android/en-US/images/featureGraphic.png)
