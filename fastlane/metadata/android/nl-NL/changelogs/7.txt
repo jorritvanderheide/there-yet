@@ -1,0 +1,5 @@
+- Alarm wekt het apparaat op het moment dat het afgaat — niet meer ontgrendelen om het te zien
+- Afwijsscherm verschijnt nu correct boven het vergrendelscherm, en de terug-beweging omzeilt het niet meer
+- Een alarm afwijzen zet de schakelaar betrouwbaar uit
+- Na afwijzen keert de app terug naar de achtergrond in plaats van geforceerd op de voorgrond te staan
+- Een alarm afwijzen sluit ook de melding

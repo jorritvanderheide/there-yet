@@ -1,0 +1,5 @@
+- L'alarme réveille l'appareil dès qu'elle se déclenche — plus besoin de le déverrouiller pour la voir
+- L'écran de rejet s'affiche correctement au-dessus de l'écran de verrouillage, et le geste de retour ne le contourne plus
+- Rejeter une alarme désactive son interrupteur de manière fiable
+- Après le rejet, l'application retourne en arrière-plan au lieu d'être forcée au premier plan
+- Rejeter une alarme supprime aussi sa notification

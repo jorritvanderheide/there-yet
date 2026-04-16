@@ -1,0 +1,5 @@
+- Alarm wakes the device the moment it fires — no more unlocking to see it
+- Dismiss screen shows properly above the lockscreen, and the back gesture no longer bypasses it
+- Dismissing an alarm reliably turns its toggle off
+- After dismissing, the app returns to the background instead of being forced to the foreground
+- Cancelling an alarm also clears its notification

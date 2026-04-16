@@ -1,0 +1,5 @@
+- Alarm budzi urządzenie w momencie uruchomienia — nie musisz już odblokowywać, aby go zobaczyć
+- Ekran odrzucania wyświetla się prawidłowo nad ekranem blokady, a gest wstecz już go nie omija
+- Odrzucenie alarmu niezawodnie wyłącza jego przełącznik
+- Po odrzuceniu aplikacja wraca do tła zamiast być wymuszana na pierwszym planie
+- Odrzucenie alarmu usuwa także jego powiadomienie

@@ -1,0 +1,5 @@
+- Der Alarm weckt das Gerät in dem Moment, in dem er ausgelöst wird — kein Entsperren mehr nötig
+- Der Verwerfen-Bildschirm erscheint korrekt über dem Sperrbildschirm, und die Zurück-Geste umgeht ihn nicht mehr
+- Einen Alarm zu verwerfen schaltet seinen Schalter zuverlässig aus
+- Nach dem Verwerfen kehrt die App in den Hintergrund zurück, statt in den Vordergrund gezwungen zu werden
+- Einen Alarm zu verwerfen entfernt auch seine Benachrichtigung

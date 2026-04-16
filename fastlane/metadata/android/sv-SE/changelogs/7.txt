@@ -1,0 +1,5 @@
+- Larmet väcker enheten i ögonblicket det går — ingen upplåsning behövs längre
+- Avvisa-skärmen visas korrekt ovanför låsskärmen, och tillbakagesten kringgår den inte längre
+- Att avvisa ett larm stänger av dess växel på ett pålitligt sätt
+- Efter avvisning återvänder appen till bakgrunden istället för att tvingas till förgrunden
+- Att avvisa ett larm rensar också dess avisering

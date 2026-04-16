@@ -1,0 +1,5 @@
+- La alarma despierta el dispositivo en el momento en que suena — ya no necesitas desbloquearlo para verla
+- La pantalla para descartar aparece correctamente sobre la pantalla de bloqueo, y el gesto atrás ya no la omite
+- Descartar una alarma apaga su interruptor de forma fiable
+- Tras descartar, la app vuelve al segundo plano en lugar de ser forzada al primer plano
+- Descartar una alarma también elimina su notificación
