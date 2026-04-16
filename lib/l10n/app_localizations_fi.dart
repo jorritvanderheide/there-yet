@@ -90,7 +90,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name käytössä — $distance päässä';
+    return '$name käytössä, $distance päässä';
   }
 
   @override
@@ -98,7 +98,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get notificationsDisabled =>
-      'Ilmoitukset pois käytöstä — et kuule herätystä';
+      'Ilmoitukset pois käytöstä, et kuule herätystä';
 
   @override
   String get alreadyInsideAlarmArea => 'Olet jo herätysalueella';
@@ -314,7 +314,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name tallennettu (pois käytöstä — ei GPS-signaalia)';
+    return '$name tallennettu (pois käytöstä, ei GPS-signaalia)';
   }
 
   @override
@@ -324,7 +324,7 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name tallennettu — ota taustasijainti käyttöön seurantaa varten';
+    return '$name tallennettu, ota taustasijainti käyttöön seurantaa varten';
   }
 
   @override

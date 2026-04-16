@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} सक्रिय — {distance} दूर",
+  "alarmActivated": "{name} सक्रिय, {distance} दूर",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "स्थान की अनुमति ज़रूरी है",
-  "notificationsDisabled": "सूचनाएँ बंद हैं — अलार्म सुनाई नहीं देगा",
+  "notificationsDisabled": "सूचनाएँ बंद हैं, अलार्म सुनाई नहीं देगा",
   "alreadyInsideAlarmArea": "आप पहले से अलार्म क्षेत्र में हैं",
   "alreadyInsideAlarmAreaBody": "आप \"{name}\" से {distance} दूर हैं। सक्रिय करने के लिए {radius} दायरे से बाहर जाएँ।",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} सहेजा गया (निष्क्रिय — GPS सिग्नल नहीं)",
+  "alarmSavedNoGps": "{name} सहेजा गया (निष्क्रिय, GPS सिग्नल नहीं)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} सहेजा गया — निगरानी के लिए बैकग्राउंड स्थान चालू करें",
+  "alarmSavedNoPermission": "{name} सहेजा गया, निगरानी के लिए बैकग्राउंड स्थान चालू करें",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

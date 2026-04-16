@@ -1,4 +1,4 @@
-- Budík probudí zařízení v okamžiku spuštění — už není třeba odemykat, abyste ho viděli
+- Budík probudí zařízení v okamžiku spuštění, už není třeba odemykat, abyste ho viděli
 - Obrazovka pro zrušení se správně zobrazuje nad zamčenou obrazovkou a gesto zpět ji již neobchází
 - Zrušení budíku spolehlivě vypne jeho přepínač
 - Po zrušení se aplikace vrátí na pozadí místo toho, aby byla vynucena do popředí

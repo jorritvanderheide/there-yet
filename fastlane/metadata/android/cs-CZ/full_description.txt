@@ -6,7 +6,7 @@ Funkce:
 * Umístěte alarmy kamkoli na mapě
 * Nastavte vlastní poloměr pro každý alarm
 * Sledování na pozadí s adaptivním GPS dotazováním
-* Funguje offline — mapové dlaždice se ukládají lokálně
+* Funguje offline, mapové dlaždice se ukládají lokálně
 * Vyhledávání míst pomocí Photon geokódování
 * Dynamický vzhled Material You
 * Podpora více jazyků

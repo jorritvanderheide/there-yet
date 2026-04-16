@@ -90,7 +90,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name geactiveerd — $distance verwijderd';
+    return '$name geactiveerd, $distance verwijderd';
   }
 
   @override
@@ -98,7 +98,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get notificationsDisabled =>
-      'Meldingen uitgeschakeld — je hoort de wekker niet';
+      'Meldingen uitgeschakeld, je hoort de wekker niet';
 
   @override
   String get alreadyInsideAlarmArea => 'Al in het wekkergebied';
@@ -314,7 +314,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name opgeslagen (inactief — geen GPS)';
+    return '$name opgeslagen (inactief, geen GPS)';
   }
 
   @override
@@ -324,7 +324,7 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name opgeslagen — schakel achtergrondlocatie in';
+    return '$name opgeslagen, schakel achtergrondlocatie in';
   }
 
   @override

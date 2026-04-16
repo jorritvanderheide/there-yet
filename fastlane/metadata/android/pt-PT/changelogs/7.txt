@@ -1,0 +1,5 @@
+- O alarme desperta o dispositivo no momento em que dispara, já não é preciso desbloquear para o ver
+- O ecrã de dispensa aparece corretamente sobre o ecrã de bloqueio, e o gesto de voltar não o contorna mais
+- Dispensar um alarme desliga o seu interruptor de forma fiável
+- Depois de dispensar, a app volta para segundo plano em vez de ser forçada para primeiro plano
+- Dispensar um alarme também remove a sua notificação

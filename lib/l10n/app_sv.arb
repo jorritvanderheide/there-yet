@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} aktiverat — {distance} bort",
+  "alarmActivated": "{name} aktiverat, {distance} bort",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Platsbehörighet krävs",
-  "notificationsDisabled": "Aviseringar avstängda — du kommer inte höra larmet",
+  "notificationsDisabled": "Aviseringar avstängda, du kommer inte höra larmet",
   "alreadyInsideAlarmArea": "Redan inom larmområdet",
   "alreadyInsideAlarmAreaBody": "Du är {distance} från \"{name}\". Förflytta dig utanför {radius}-radien för att aktivera.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} sparat (inaktivt — ingen GPS-signal)",
+  "alarmSavedNoGps": "{name} sparat (inaktivt, ingen GPS-signal)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} sparat — aktivera platsåtkomst i bakgrunden",
+  "alarmSavedNoPermission": "{name} sparat, aktivera platsåtkomst i bakgrunden",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

@@ -6,7 +6,7 @@ Funktioner:
 * Placera larm var som helst på kartan
 * Ställ in en anpassad radie för varje larm
 * Bakgrundsövervakning med adaptiv GPS-polling
-* Fungerar offline — kartrutor cachas lokalt
+* Fungerar offline, kartrutor cachas lokalt
 * Sök platser med Photon-geokodning
 * Dynamiskt Material You-tema
 * Stöd för flera språk

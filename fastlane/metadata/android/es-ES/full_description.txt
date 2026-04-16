@@ -6,7 +6,7 @@ Características:
 * Coloca alarmas en cualquier lugar del mapa
 * Establece un radio personalizado para cada alarma
 * Monitoreo en segundo plano con sondeo GPS adaptativo
-* Funciona sin conexión — los mosaicos del mapa se almacenan localmente
+* Funciona sin conexión, los mosaicos del mapa se almacenan localmente
 * Busca lugares con geocodificación Photon
 * Tema dinámico Material You
 * Varios idiomas compatibles

@@ -6,7 +6,7 @@ Funktionen:
 * Alarme überall auf der Karte setzen
 * Eigenen Radius für jeden Alarm festlegen
 * Hintergrundüberwachung mit adaptiver GPS-Abfrage
-* Funktioniert offline — Kartenkacheln werden lokal zwischengespeichert
+* Funktioniert offline, Kartenkacheln werden lokal zwischengespeichert
 * Ortssuche mit Photon-Geokodierung
 * Dynamisches Material You-Design
 * Mehrere Sprachen unterstützt

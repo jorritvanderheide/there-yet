@@ -94,14 +94,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name aktivován — $distance daleko';
+    return '$name aktivován, $distance daleko';
   }
 
   @override
   String get locationPermissionRequired => 'Vyžadováno oprávnění k poloze';
 
   @override
-  String get notificationsDisabled => 'Oznámení vypnuta — budík neuslyšíte';
+  String get notificationsDisabled => 'Oznámení vypnuta, budík neuslyšíte';
 
   @override
   String get alreadyInsideAlarmArea => 'Už jste v oblasti budíku';
@@ -318,7 +318,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name uložen (neaktivní — chybí GPS signál)';
+    return '$name uložen (neaktivní, chybí GPS signál)';
   }
 
   @override
@@ -328,7 +328,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name uložen — povolte polohu na pozadí pro sledování';
+    return '$name uložen, povolte polohu na pozadí pro sledování';
   }
 
   @override

@@ -245,7 +245,7 @@ abstract class AppLocalizations {
   /// No description provided for @alarmActivated.
   ///
   /// In en, this message translates to:
-  /// **'{name} activated — {distance} away'**
+  /// **'{name} activated, {distance} away'**
   String alarmActivated(String name, String distance);
 
   /// No description provided for @locationPermissionRequired.
@@ -257,7 +257,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsDisabled.
   ///
   /// In en, this message translates to:
-  /// **'Notifications disabled — you won\'t hear the alarm'**
+  /// **'Notifications disabled, you won\'t hear the alarm'**
   String get notificationsDisabled;
 
   /// No description provided for @alreadyInsideAlarmArea.
@@ -639,7 +639,7 @@ abstract class AppLocalizations {
   /// No description provided for @alarmSavedNoGps.
   ///
   /// In en, this message translates to:
-  /// **'{name} saved (inactive — no GPS lock)'**
+  /// **'{name} saved (inactive, no GPS lock)'**
   String alarmSavedNoGps(String name);
 
   /// No description provided for @alarmSavedInside.
@@ -651,7 +651,7 @@ abstract class AppLocalizations {
   /// No description provided for @alarmSavedNoPermission.
   ///
   /// In en, this message translates to:
-  /// **'{name} saved — enable background location to monitor'**
+  /// **'{name} saved, enable background location to monitor'**
   String alarmSavedNoPermission(String name);
 
   /// No description provided for @support.

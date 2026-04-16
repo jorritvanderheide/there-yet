@@ -6,7 +6,7 @@ Functies:
 * Plaats alarmen overal op de kaart
 * Stel een eigen radius in voor elk alarm
 * Achtergrondmonitoring met adaptieve GPS-polling
-* Werkt offline — kaarttegels worden lokaal opgeslagen
+* Werkt offline, kaarttegels worden lokaal opgeslagen
 * Zoek plaatsen met Photon-geocodering
 * Dynamisch Material You-thema
 * Ondersteuning voor meerdere talen

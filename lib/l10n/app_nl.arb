@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} geactiveerd — {distance} verwijderd",
+  "alarmActivated": "{name} geactiveerd, {distance} verwijderd",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Locatietoegang vereist",
-  "notificationsDisabled": "Meldingen uitgeschakeld — je hoort de wekker niet",
+  "notificationsDisabled": "Meldingen uitgeschakeld, je hoort de wekker niet",
   "alreadyInsideAlarmArea": "Al in het wekkergebied",
   "alreadyInsideAlarmAreaBody": "Je bent {distance} van \"{name}\". Verlaat de {radius} radius om te activeren.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} opgeslagen (inactief — geen GPS)",
+  "alarmSavedNoGps": "{name} opgeslagen (inactief, geen GPS)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} opgeslagen — schakel achtergrondlocatie in",
+  "alarmSavedNoPermission": "{name} opgeslagen, schakel achtergrondlocatie in",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

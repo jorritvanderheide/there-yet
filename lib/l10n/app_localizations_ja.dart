@@ -88,14 +88,14 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$nameを有効にしました — 目的地まで$distance';
+    return '$nameを有効にしました, 目的地まで$distance';
   }
 
   @override
   String get locationPermissionRequired => '位置情報の許可が必要です';
 
   @override
-  String get notificationsDisabled => '通知が無効です — アラーム音が鳴りません';
+  String get notificationsDisabled => '通知が無効です, アラーム音が鳴りません';
 
   @override
   String get alreadyInsideAlarmArea => 'すでにアラーム範囲内にいます';
@@ -309,7 +309,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$nameを保存しました（無効 — GPS信号なし）';
+    return '$nameを保存しました（無効, GPS信号なし）';
   }
 
   @override
@@ -319,7 +319,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$nameを保存しました — 監視するにはバックグラウンド位置情報を有効にしてください';
+    return '$nameを保存しました, 監視するにはバックグラウンド位置情報を有効にしてください';
   }
 
   @override

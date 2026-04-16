@@ -6,7 +6,7 @@ Fonctionnalités :
 * Placez des alarmes n'importe où sur la carte
 * Définissez un rayon personnalisé pour chaque alarme
 * Surveillance en arrière-plan avec interrogation GPS adaptative
-* Fonctionne hors ligne — les tuiles cartographiques sont mises en cache localement
+* Fonctionne hors ligne, les tuiles cartographiques sont mises en cache localement
 * Recherche de lieux avec géocodage Photon
 * Thème dynamique Material You
 * Prise en charge de plusieurs langues

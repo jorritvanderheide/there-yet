@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} 활성화됨 — {distance} 남음",
+  "alarmActivated": "{name} 활성화됨, {distance} 남음",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} 저장됨 (비활성 — GPS 신호 없음)",
+  "alarmSavedNoGps": "{name} 저장됨 (비활성, GPS 신호 없음)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} 저장됨 — 모니터링하려면 백그라운드 위치를 활성화하세요",
+  "alarmSavedNoPermission": "{name} 저장됨, 모니터링하려면 백그라운드 위치를 활성화하세요",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

@@ -88,7 +88,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name 활성화됨 — $distance 남음';
+    return '$name 활성화됨, $distance 남음';
   }
 
   @override
@@ -309,7 +309,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name 저장됨 (비활성 — GPS 신호 없음)';
+    return '$name 저장됨 (비활성, GPS 신호 없음)';
   }
 
   @override
@@ -319,7 +319,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name 저장됨 — 모니터링하려면 백그라운드 위치를 활성화하세요';
+    return '$name 저장됨, 모니터링하려면 백그라운드 위치를 활성화하세요';
   }
 
   @override

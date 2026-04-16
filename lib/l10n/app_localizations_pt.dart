@@ -15,13 +15,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get alarmsTitle => 'Alarmes';
 
   @override
-  String get noAlarmsYet => 'Nenhum alarme ainda';
+  String get noAlarmsYet => 'Ainda não há alarmes';
 
   @override
-  String get tapToCreateFirst => 'Toque em + para criar seu primeiro alarme';
+  String get tapToCreateFirst => 'Toque em + para criar o primeiro alarme';
 
   @override
-  String get failedToLoadAlarms => 'Falha ao carregar alarmes';
+  String get failedToLoadAlarms => 'Falha ao carregar os alarmes';
 
   @override
   String get retry => 'Tentar novamente';
@@ -39,10 +39,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sortName => 'Nome';
 
   @override
-  String get settings => 'Configurações';
+  String get settings => 'Definições';
 
   @override
-  String get about => 'Sobre';
+  String get about => 'Acerca';
 
   @override
   String nSelected(int count) {
@@ -50,7 +50,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get deleteSelected => 'Excluir selecionados';
+  String get deleteSelected => 'Eliminar selecionados';
 
   @override
   String deleteNAlarms(int count) {
@@ -60,7 +60,7 @@ class AppLocalizationsPt extends AppLocalizations {
       other: '$count alarmes',
       one: '1 alarme',
     );
-    return 'Excluir $_temp0?';
+    return 'Eliminar $_temp0?';
   }
 
   @override
@@ -78,7 +78,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cancel => 'Cancelar';
 
   @override
-  String get delete => 'Excluir';
+  String get delete => 'Eliminar';
 
   @override
   String get ok => 'OK';
@@ -90,7 +90,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name ativado — a $distance de distância';
+    return '$name ativado, a $distance de distância';
   }
 
   @override
@@ -99,10 +99,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get notificationsDisabled =>
-      'Notificações desativadas — você não ouvirá o alarme';
+      'Notificações desativadas, não vais ouvir o alarme';
 
   @override
-  String get alreadyInsideAlarmArea => 'Você já está na área do alarme';
+  String get alreadyInsideAlarmArea => 'Já estás na área do alarme';
 
   @override
   String alreadyInsideAlarmAreaBody(
@@ -110,14 +110,14 @@ class AppLocalizationsPt extends AppLocalizations {
     String name,
     String radius,
   ) {
-    return 'Você está a $distance de \"$name\". Saia do raio de $radius para ativar.';
+    return 'Estás a $distance de \"$name\". Sai do raio de $radius para ativar.';
   }
 
   @override
   String get gpsDisabled => 'GPS desativado';
 
   @override
-  String get openSettings => 'Abrir configurações';
+  String get openSettings => 'Abrir definições';
 
   @override
   String get couldNotAcquireLocation => 'Não foi possível obter a localização';
@@ -127,19 +127,19 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count alarmes excluídos',
-      one: '1 alarme excluído',
+      other: '$count alarmes eliminados',
+      one: '1 alarme eliminado',
     );
     return '$_temp0';
   }
 
   @override
   String deleteFailed(String message) {
-    return 'Falha ao excluir: $message';
+    return 'Falha ao eliminar: $message';
   }
 
   @override
-  String get alarmsNotMonitored => 'Os alarmes não estão sendo monitorados';
+  String get alarmsNotMonitored => 'Os alarmes não estão a ser monitorizados';
 
   @override
   String get tapToCheckPermissions => 'Toque para verificar as permissões';
@@ -149,7 +149,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Localização em segundo plano necessária';
 
   @override
-  String get gettingLocation => 'Obtendo localização…';
+  String get gettingLocation => 'A obter localização…';
 
   @override
   String alarmDefaultName(int id) {
@@ -168,20 +168,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get backgroundLocationBody =>
-      'O There Yet precisa monitorar sua localização em segundo plano para acionar os alarmes quando você chegar.\n\nNa próxima tela, selecione \"Permitir o tempo todo\".';
+      'O There Yet precisa de monitorizar a tua localização em segundo plano para acionar os alarmes quando chegares.\n\nNo próximo ecrã, seleciona \"Permitir sempre\".';
 
   @override
   String get continueButton => 'Continuar';
 
   @override
-  String get disableBatteryOptimization => 'Desativar otimização de bateria';
+  String get disableBatteryOptimization => 'Desativar otimização da bateria';
 
   @override
   String get batteryOptimizationBody =>
-      'Para monitorar sua localização de forma confiável em segundo plano, o There Yet precisa estar excluído da otimização de bateria.\n\nSem isso, o Android pode encerrar o serviço de alarme para economizar bateria.';
+      'Para monitorizar a tua localização de forma fiável em segundo plano, o There Yet precisa de estar excluído da otimização da bateria.\n\nSem isto, o Android pode encerrar o serviço de alarme para poupar bateria.';
 
   @override
-  String get skip => 'Pular';
+  String get skip => 'Ignorar';
 
   @override
   String get disableOptimization => 'Desativar otimização';
@@ -191,19 +191,20 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get insideAlarmAreaBody =>
-      'Você está dentro da área do alarme. O alarme será salvo como inativo e ativará quando você sair.';
+      'Estás dentro da área do alarme. O alarme será guardado como inativo e ativará quando saíres.';
 
   @override
-  String get saveInactive => 'Salvar inativo';
+  String get saveInactive => 'Guardar inativo';
 
   @override
   String get discardChanges => 'Descartar alterações?';
 
   @override
-  String get unsavedChangesBody => 'As alterações não salvas serão perdidas.';
+  String get unsavedChangesBody =>
+      'As alterações não guardadas serão perdidas.';
 
   @override
-  String get keepEditing => 'Continuar editando';
+  String get keepEditing => 'Continuar a editar';
 
   @override
   String get discard => 'Descartar';
@@ -212,7 +213,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get locationUnavailable => 'Localização indisponível';
 
   @override
-  String get failedToLoadAlarm => 'Falha ao carregar alarme';
+  String get failedToLoadAlarm => 'Falha ao carregar o alarme';
 
   @override
   String get osmAttribution => '© OpenStreetMap';
@@ -221,19 +222,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get searchLocation => 'Pesquisar local';
 
   @override
-  String get searchLocationOffline => 'Pesquisa indisponível (offline)';
+  String get searchLocationOffline => 'Pesquisa indisponível (sem ligação)';
 
   @override
   String get noResultsFound => 'Nenhum resultado encontrado';
 
   @override
-  String get label => 'Rótulo';
+  String get label => 'Etiqueta';
 
   @override
-  String get save => 'Salvar';
+  String get save => 'Guardar';
 
   @override
-  String get centerOnMyLocation => 'Centralizar na minha localização';
+  String get centerOnMyLocation => 'Centrar na minha localização';
 
   @override
   String get resetNorth => 'Apontar para o norte';
@@ -249,7 +250,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String alarmBodyWithinRadius(int radius) {
-    return 'Você está a menos de $radius m do seu destino';
+    return 'Estás a menos de $radius m do teu destino';
   }
 
   @override
@@ -271,19 +272,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get materialYou => 'Material You';
 
   @override
-  String get materialYouSubtitle => 'Usar as cores do seu papel de parede';
+  String get materialYouSubtitle => 'Usar as cores da tua imagem de fundo';
 
   @override
   String get trueBlack => 'Preto absoluto';
 
   @override
-  String get trueBlackSubtitle => 'Fundo preto puro para telas AMOLED';
+  String get trueBlackSubtitle => 'Fundo preto puro para ecrãs AMOLED';
 
   @override
-  String get aboutTitle => 'Sobre';
+  String get aboutTitle => 'Acerca';
 
   @override
-  String get appTagline => 'Seja alertado ao chegar';
+  String get appTagline => 'Recebe um alerta ao chegar';
 
   @override
   String get version => 'Versão';
@@ -298,7 +299,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get mapData => 'Dados do mapa';
 
   @override
-  String get mapDataValue => 'Colaboradores do OpenStreetMap · OSM France';
+  String get mapDataValue => 'Contribuidores do OpenStreetMap · OSM France';
 
   @override
   String get geocoding => 'Geocodificação';
@@ -311,22 +312,22 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String alarmSaved(String name) {
-    return '$name salvo';
+    return '$name guardado';
   }
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name salvo (inativo — sem sinal GPS)';
+    return '$name guardado (inativo, sem sinal GPS)';
   }
 
   @override
   String alarmSavedInside(String name) {
-    return '$name salvo (inativo)';
+    return '$name guardado (inativo)';
   }
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name salvo — ative a localização em segundo plano para monitorar';
+    return '$name guardado, ativa a localização em segundo plano para monitorizar';
   }
 
   @override
@@ -336,5 +337,5 @@ class AppLocalizationsPt extends AppLocalizations {
   String get donate => 'Doar';
 
   @override
-  String get donateSubtitle => 'Apoie o desenvolvimento do There Yet';
+  String get donateSubtitle => 'Apoia o desenvolvimento do There Yet';
 }

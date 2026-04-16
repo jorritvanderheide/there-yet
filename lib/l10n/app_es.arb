@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} activada — a {distance}",
+  "alarmActivated": "{name} activada, a {distance}",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Se requiere permiso de ubicación",
-  "notificationsDisabled": "Notificaciones desactivadas — no oirás la alarma",
+  "notificationsDisabled": "Notificaciones desactivadas, no oirás la alarma",
   "alreadyInsideAlarmArea": "Ya estás dentro de la zona de alarma",
   "alreadyInsideAlarmAreaBody": "Estás a {distance} de «{name}». Sal del radio de {radius} para activar la alarma.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} guardada (inactiva — sin señal GPS)",
+  "alarmSavedNoGps": "{name} guardada (inactiva, sin señal GPS)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} guardada — activa la ubicación en segundo plano",
+  "alarmSavedNoPermission": "{name} guardada, activa la ubicación en segundo plano",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

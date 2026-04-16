@@ -90,15 +90,14 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name सक्रिय — $distance दूर';
+    return '$name सक्रिय, $distance दूर';
   }
 
   @override
   String get locationPermissionRequired => 'स्थान की अनुमति ज़रूरी है';
 
   @override
-  String get notificationsDisabled =>
-      'सूचनाएँ बंद हैं — अलार्म सुनाई नहीं देगा';
+  String get notificationsDisabled => 'सूचनाएँ बंद हैं, अलार्म सुनाई नहीं देगा';
 
   @override
   String get alreadyInsideAlarmArea => 'आप पहले से अलार्म क्षेत्र में हैं';
@@ -313,7 +312,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name सहेजा गया (निष्क्रिय — GPS सिग्नल नहीं)';
+    return '$name सहेजा गया (निष्क्रिय, GPS सिग्नल नहीं)';
   }
 
   @override
@@ -323,7 +322,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name सहेजा गया — निगरानी के लिए बैकग्राउंड स्थान चालू करें';
+    return '$name सहेजा गया, निगरानी के लिए बैकग्राउंड स्थान चालू करें';
   }
 
   @override

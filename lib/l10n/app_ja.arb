@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name}を有効にしました — 目的地まで{distance}",
+  "alarmActivated": "{name}を有効にしました, 目的地まで{distance}",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "位置情報の許可が必要です",
-  "notificationsDisabled": "通知が無効です — アラーム音が鳴りません",
+  "notificationsDisabled": "通知が無効です, アラーム音が鳴りません",
   "alreadyInsideAlarmArea": "すでにアラーム範囲内にいます",
   "alreadyInsideAlarmAreaBody": "「{name}」から{distance}の位置にいます。アラームを有効にするには、{radius}の範囲外に移動してください。",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name}を保存しました（無効 — GPS信号なし）",
+  "alarmSavedNoGps": "{name}を保存しました（無効, GPS信号なし）",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name}を保存しました — 監視するにはバックグラウンド位置情報を有効にしてください",
+  "alarmSavedNoPermission": "{name}を保存しました, 監視するにはバックグラウンド位置情報を有効にしてください",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

@@ -4,16 +4,16 @@
   "appTitle": "There Yet",
 
   "alarmsTitle": "Alarmes",
-  "noAlarmsYet": "Nenhum alarme ainda",
-  "tapToCreateFirst": "Toque em + para criar seu primeiro alarme",
-  "failedToLoadAlarms": "Falha ao carregar alarmes",
+  "noAlarmsYet": "Ainda não há alarmes",
+  "tapToCreateFirst": "Toque em + para criar o primeiro alarme",
+  "failedToLoadAlarms": "Falha ao carregar os alarmes",
   "retry": "Tentar novamente",
   "sortBy": "Ordenar por",
   "sortAlarms": "Ordenar alarmes",
   "sortDateCreated": "Data de criação",
   "sortName": "Nome",
-  "settings": "Configurações",
-  "about": "Sobre",
+  "settings": "Definições",
+  "about": "Acerca",
 
   "nSelected": "{count} selecionado(s)",
   "@nSelected": {
@@ -21,8 +21,8 @@
       "count": {"type": "int"}
     }
   },
-  "deleteSelected": "Excluir selecionados",
-  "deleteNAlarms": "Excluir {count, plural, =1{1 alarme} other{{count} alarmes}}?",
+  "deleteSelected": "Eliminar selecionados",
+  "deleteNAlarms": "Eliminar {count, plural, =1{1 alarme} other{{count} alarmes}}?",
   "@deleteNAlarms": {
     "placeholders": {
       "count": {"type": "int"}
@@ -35,7 +35,7 @@
     }
   },
   "cancel": "Cancelar",
-  "delete": "Excluir",
+  "delete": "Eliminar",
   "ok": "OK",
 
   "alarmDeactivated": "{name} desativado",
@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} ativado — a {distance} de distância",
+  "alarmActivated": "{name} ativado, a {distance} de distância",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,9 +52,9 @@
     }
   },
   "locationPermissionRequired": "Permissão de localização necessária",
-  "notificationsDisabled": "Notificações desativadas — você não ouvirá o alarme",
-  "alreadyInsideAlarmArea": "Você já está na área do alarme",
-  "alreadyInsideAlarmAreaBody": "Você está a {distance} de \"{name}\". Saia do raio de {radius} para ativar.",
+  "notificationsDisabled": "Notificações desativadas, não vais ouvir o alarme",
+  "alreadyInsideAlarmArea": "Já estás na área do alarme",
+  "alreadyInsideAlarmAreaBody": "Estás a {distance} de \"{name}\". Sai do raio de {radius} para ativar.",
   "@alreadyInsideAlarmAreaBody": {
     "placeholders": {
       "distance": {"type": "String"},
@@ -63,26 +63,26 @@
     }
   },
   "gpsDisabled": "GPS desativado",
-  "openSettings": "Abrir configurações",
+  "openSettings": "Abrir definições",
   "couldNotAcquireLocation": "Não foi possível obter a localização",
-  "nAlarmsDeleted": "{count, plural, =1{1 alarme excluído} other{{count} alarmes excluídos}}",
+  "nAlarmsDeleted": "{count, plural, =1{1 alarme eliminado} other{{count} alarmes eliminados}}",
   "@nAlarmsDeleted": {
     "placeholders": {
       "count": {"type": "int"}
     }
   },
-  "deleteFailed": "Falha ao excluir: {message}",
+  "deleteFailed": "Falha ao eliminar: {message}",
   "@deleteFailed": {
     "placeholders": {
       "message": {"type": "String"}
     }
   },
 
-  "alarmsNotMonitored": "Os alarmes não estão sendo monitorados",
+  "alarmsNotMonitored": "Os alarmes não estão a ser monitorizados",
   "tapToCheckPermissions": "Toque para verificar as permissões",
   "backgroundLocationRequired": "Localização em segundo plano necessária",
 
-  "gettingLocation": "Obtendo localização\u2026",
+  "gettingLocation": "A obter localização\u2026",
   "alarmDefaultName": "Alarme #{id}",
   "@alarmDefaultName": {
     "placeholders": {
@@ -93,36 +93,36 @@
   "inactive": "inativo",
 
   "backgroundLocationNeeded": "Localização em segundo plano necessária",
-  "backgroundLocationBody": "O There Yet precisa monitorar sua localização em segundo plano para acionar os alarmes quando você chegar.\n\nNa próxima tela, selecione \"Permitir o tempo todo\".",
+  "backgroundLocationBody": "O There Yet precisa de monitorizar a tua localização em segundo plano para acionar os alarmes quando chegares.\n\nNo próximo ecrã, seleciona \"Permitir sempre\".",
   "continueButton": "Continuar",
-  "disableBatteryOptimization": "Desativar otimização de bateria",
-  "batteryOptimizationBody": "Para monitorar sua localização de forma confiável em segundo plano, o There Yet precisa estar excluído da otimização de bateria.\n\nSem isso, o Android pode encerrar o serviço de alarme para economizar bateria.",
-  "skip": "Pular",
+  "disableBatteryOptimization": "Desativar otimização da bateria",
+  "batteryOptimizationBody": "Para monitorizar a tua localização de forma fiável em segundo plano, o There Yet precisa de estar excluído da otimização da bateria.\n\nSem isto, o Android pode encerrar o serviço de alarme para poupar bateria.",
+  "skip": "Ignorar",
   "disableOptimization": "Desativar otimização",
 
   "insideAlarmArea": "Dentro da área do alarme",
-  "insideAlarmAreaBody": "Você está dentro da área do alarme. O alarme será salvo como inativo e ativará quando você sair.",
-  "saveInactive": "Salvar inativo",
+  "insideAlarmAreaBody": "Estás dentro da área do alarme. O alarme será guardado como inativo e ativará quando saíres.",
+  "saveInactive": "Guardar inativo",
   "discardChanges": "Descartar alterações?",
-  "unsavedChangesBody": "As alterações não salvas serão perdidas.",
-  "keepEditing": "Continuar editando",
+  "unsavedChangesBody": "As alterações não guardadas serão perdidas.",
+  "keepEditing": "Continuar a editar",
   "discard": "Descartar",
   "locationUnavailable": "Localização indisponível",
-  "failedToLoadAlarm": "Falha ao carregar alarme",
+  "failedToLoadAlarm": "Falha ao carregar o alarme",
   "osmAttribution": "\u00a9 OpenStreetMap",
 
   "searchLocation": "Pesquisar local",
-  "searchLocationOffline": "Pesquisa indisponível (offline)",
+  "searchLocationOffline": "Pesquisa indisponível (sem ligação)",
   "noResultsFound": "Nenhum resultado encontrado",
-  "label": "Rótulo",
-  "save": "Salvar",
-  "centerOnMyLocation": "Centralizar na minha localização",
+  "label": "Etiqueta",
+  "save": "Guardar",
+  "centerOnMyLocation": "Centrar na minha localização",
   "resetNorth": "Apontar para o norte",
 
   "createAlarm": "Criar alarme",
   "dismiss": "Dispensar",
   "locationAlarmDefault": "There Yet",
-  "alarmBodyWithinRadius": "Você está a menos de {radius} m do seu destino",
+  "alarmBodyWithinRadius": "Estás a menos de {radius} m do teu destino",
   "@alarmBodyWithinRadius": {
     "placeholders": {
       "radius": {"type": "int"}
@@ -135,40 +135,40 @@
   "themeLight": "Claro",
   "themeDark": "Escuro",
   "materialYou": "Material You",
-  "materialYouSubtitle": "Usar as cores do seu papel de parede",
+  "materialYouSubtitle": "Usar as cores da tua imagem de fundo",
   "trueBlack": "Preto absoluto",
-  "trueBlackSubtitle": "Fundo preto puro para telas AMOLED",
+  "trueBlackSubtitle": "Fundo preto puro para ecrãs AMOLED",
 
-  "aboutTitle": "Sobre",
-  "appTagline": "Seja alertado ao chegar",
+  "aboutTitle": "Acerca",
+  "appTagline": "Recebe um alerta ao chegar",
   "version": "Versão",
   "license": "Licença",
   "licenseValue": "EUPL 1.2",
   "mapData": "Dados do mapa",
-  "mapDataValue": "Colaboradores do OpenStreetMap · OSM France",
+  "mapDataValue": "Contribuidores do OpenStreetMap · OSM France",
   "geocoding": "Geocodificação",
   "geocodingValue": "Photon by Komoot",
   "openSourceLicenses": "Licenças de código aberto",
 
-  "alarmSaved": "{name} salvo",
+  "alarmSaved": "{name} guardado",
   "@alarmSaved": {
     "placeholders": {
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} salvo (inativo — sem sinal GPS)",
+  "alarmSavedNoGps": "{name} guardado (inativo, sem sinal GPS)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
     }
   },
-  "alarmSavedInside": "{name} salvo (inativo)",
+  "alarmSavedInside": "{name} guardado (inativo)",
   "@alarmSavedInside": {
     "placeholders": {
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} salvo — ative a localização em segundo plano para monitorar",
+  "alarmSavedNoPermission": "{name} guardado, ativa a localização em segundo plano para monitorizar",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}
@@ -177,5 +177,5 @@
 
   "support": "Apoio",
   "donate": "Doar",
-  "donateSubtitle": "Apoie o desenvolvimento do There Yet"
+  "donateSubtitle": "Apoia o desenvolvimento do There Yet"
 }

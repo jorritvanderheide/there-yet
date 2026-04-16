@@ -6,7 +6,7 @@ Funkcje:
 * Umieszczaj alarmy w dowolnym miejscu na mapie
 * Ustaw własny promień dla każdego alarmu
 * Monitorowanie w tle z adaptacyjnym odpytywaniem GPS
-* Działa offline — kafelki mapy są przechowywane lokalnie
+* Działa offline, kafelki mapy są przechowywane lokalnie
 * Wyszukiwanie miejsc za pomocą geokodowania Photon
 * Dynamiczny motyw Material You
 * Obsługa wielu języków

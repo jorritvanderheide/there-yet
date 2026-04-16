@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} aktivován — {distance} daleko",
+  "alarmActivated": "{name} aktivován, {distance} daleko",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Vyžadováno oprávnění k poloze",
-  "notificationsDisabled": "Oznámení vypnuta — budík neuslyšíte",
+  "notificationsDisabled": "Oznámení vypnuta, budík neuslyšíte",
   "alreadyInsideAlarmArea": "Už jste v oblasti budíku",
   "alreadyInsideAlarmAreaBody": "Nacházíte se {distance} od \"{name}\". Opusťte okruh {radius}, aby se budík aktivoval.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} uložen (neaktivní — chybí GPS signál)",
+  "alarmSavedNoGps": "{name} uložen (neaktivní, chybí GPS signál)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} uložen — povolte polohu na pozadí pro sledování",
+  "alarmSavedNoPermission": "{name} uložen, povolte polohu na pozadí pro sledování",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

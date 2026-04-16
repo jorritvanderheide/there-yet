@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "已啟用 {name} — 距離 {distance}",
+  "alarmActivated": "已啟用 {name}, 距離 {distance}",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "需要位置權限",
-  "notificationsDisabled": "通知已關閉 — 你將聽不到鬧鐘",
+  "notificationsDisabled": "通知已關閉, 你將聽不到鬧鐘",
   "alreadyInsideAlarmArea": "已在鬧鐘區域內",
   "alreadyInsideAlarmAreaBody": "你目前距離「{name}」{distance}。請離開 {radius} 半徑範圍後再啟用。",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "已儲存 {name}（未啟用 — 無 GPS 訊號）",
+  "alarmSavedNoGps": "已儲存 {name}（未啟用, 無 GPS 訊號）",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "已儲存 {name} — 請啟用背景位置權限以進行監控",
+  "alarmSavedNoPermission": "已儲存 {name}, 請啟用背景位置權限以進行監控",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

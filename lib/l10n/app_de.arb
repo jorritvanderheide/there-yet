@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} aktiviert — {distance} entfernt",
+  "alarmActivated": "{name} aktiviert, {distance} entfernt",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Standortberechtigung erforderlich",
-  "notificationsDisabled": "Benachrichtigungen deaktiviert — du wirst den Wecker nicht hören",
+  "notificationsDisabled": "Benachrichtigungen deaktiviert, du wirst den Wecker nicht hören",
   "alreadyInsideAlarmArea": "Bereits im Weckerbereich",
   "alreadyInsideAlarmAreaBody": "Du bist {distance} von \"{name}\" entfernt. Verlasse den {radius}-Radius, um den Wecker zu aktivieren.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} gespeichert (inaktiv — kein GPS-Signal)",
+  "alarmSavedNoGps": "{name} gespeichert (inaktiv, kein GPS-Signal)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} gespeichert — aktiviere den Hintergrundstandort zur Überwachung",
+  "alarmSavedNoPermission": "{name} gespeichert, aktiviere den Hintergrundstandort zur Überwachung",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

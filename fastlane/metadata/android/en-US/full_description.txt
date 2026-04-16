@@ -6,7 +6,7 @@ Features:
 * Place alarms anywhere on the map
 * Set a custom radius for each alarm
 * Background monitoring with adaptive GPS polling
-* Works offline — map tiles are cached locally
+* Works offline, map tiles are cached locally
 * Search for places with Photon geocoding
 * Material You dynamic theming
 * Multiple languages supported

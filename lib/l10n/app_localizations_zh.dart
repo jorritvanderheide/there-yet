@@ -88,14 +88,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '已啟用 $name — 距離 $distance';
+    return '已啟用 $name, 距離 $distance';
   }
 
   @override
   String get locationPermissionRequired => '需要位置權限';
 
   @override
-  String get notificationsDisabled => '通知已關閉 — 你將聽不到鬧鐘';
+  String get notificationsDisabled => '通知已關閉, 你將聽不到鬧鐘';
 
   @override
   String get alreadyInsideAlarmArea => '已在鬧鐘區域內';
@@ -308,7 +308,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '已儲存 $name（未啟用 — 無 GPS 訊號）';
+    return '已儲存 $name（未啟用, 無 GPS 訊號）';
   }
 
   @override
@@ -318,7 +318,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '已儲存 $name — 請啟用背景位置權限以進行監控';
+    return '已儲存 $name, 請啟用背景位置權限以進行監控';
   }
 
   @override

@@ -1,4 +1,4 @@
-- Hälytys herättää laitteen samalla hetkellä kun se soi — laitetta ei tarvitse enää avata
+- Hälytys herättää laitteen samalla hetkellä kun se soi, laitetta ei tarvitse enää avata
 - Sulje-näyttö näkyy oikein lukitusnäytön yläpuolella, eikä takaisin-ele ohita sitä enää
 - Hälytyksen sulkeminen kytkee sen kytkimen luotettavasti pois päältä
 - Sulkemisen jälkeen sovellus palaa taustalle eikä pakotu etualalle

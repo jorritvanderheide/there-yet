@@ -94,7 +94,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String alarmActivated(String name, String distance) {
-    return '$name włączony — $distance stąd';
+    return '$name włączony, $distance stąd';
   }
 
   @override
@@ -103,7 +103,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get notificationsDisabled =>
-      'Powiadomienia wyłączone — nie usłyszysz alarmu';
+      'Powiadomienia wyłączone, nie usłyszysz alarmu';
 
   @override
   String get alreadyInsideAlarmArea => 'Już w obszarze alarmu';
@@ -320,7 +320,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String alarmSavedNoGps(String name) {
-    return '$name zapisano (nieaktywny — brak sygnału GPS)';
+    return '$name zapisano (nieaktywny, brak sygnału GPS)';
   }
 
   @override
@@ -330,7 +330,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String alarmSavedNoPermission(String name) {
-    return '$name zapisano — włącz lokalizację w tle, aby monitorować';
+    return '$name zapisano, włącz lokalizację w tle, aby monitorować';
   }
 
   @override

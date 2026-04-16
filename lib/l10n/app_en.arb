@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} activated — {distance} away",
+  "alarmActivated": "{name} activated, {distance} away",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Location permission required",
-  "notificationsDisabled": "Notifications disabled — you won't hear the alarm",
+  "notificationsDisabled": "Notifications disabled, you won't hear the alarm",
   "alreadyInsideAlarmArea": "Already inside alarm area",
   "alreadyInsideAlarmAreaBody": "You are {distance} from \"{name}\". Move outside the {radius} radius to activate.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} saved (inactive — no GPS lock)",
+  "alarmSavedNoGps": "{name} saved (inactive, no GPS lock)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} saved — enable background location to monitor",
+  "alarmSavedNoPermission": "{name} saved, enable background location to monitor",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

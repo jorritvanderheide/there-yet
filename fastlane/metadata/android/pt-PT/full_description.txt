@@ -1,0 +1,14 @@
+O There Yet é uma aplicação de alarme baseada em localização que respeita a tua privacidade. Coloca um pin no mapa, define um raio e recebe um alerta quando chegares ao teu destino.
+
+Sem contas, sem rastreamento, sem Google Play Services. Os teus dados de localização ficam no teu dispositivo.
+
+Funcionalidades:
+* Coloca alarmes em qualquer local do mapa
+* Define um raio personalizado para cada alarme
+* Monitorização em segundo plano com polling GPS adaptativo
+* Funciona sem ligação, os mosaicos do mapa ficam guardados localmente
+* Pesquisa locais com a geocodificação Photon
+* Tema dinâmico Material You
+* Suporte para vários idiomas
+
+O There Yet usa mosaicos do OpenStreetMap e funciona completamente sem serviços proprietários. Pensado para viajantes frequentes e para quem queira um alarme simples de "acorda-me quando chegarmos" sem abdicar da privacidade.

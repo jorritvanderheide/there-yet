@@ -44,7 +44,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmActivated": "{name} käytössä — {distance} päässä",
+  "alarmActivated": "{name} käytössä, {distance} päässä",
   "@alarmActivated": {
     "placeholders": {
       "name": {"type": "String"},
@@ -52,7 +52,7 @@
     }
   },
   "locationPermissionRequired": "Sijaintilupa vaaditaan",
-  "notificationsDisabled": "Ilmoitukset pois käytöstä — et kuule herätystä",
+  "notificationsDisabled": "Ilmoitukset pois käytöstä, et kuule herätystä",
   "alreadyInsideAlarmArea": "Olet jo herätysalueella",
   "alreadyInsideAlarmAreaBody": "Olet {distance} päässä kohteesta \"{name}\". Poistu {radius} säteeltä aktivoidaksesi herätyksen.",
   "@alreadyInsideAlarmAreaBody": {
@@ -156,7 +156,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoGps": "{name} tallennettu (pois käytöstä — ei GPS-signaalia)",
+  "alarmSavedNoGps": "{name} tallennettu (pois käytöstä, ei GPS-signaalia)",
   "@alarmSavedNoGps": {
     "placeholders": {
       "name": {"type": "String"}
@@ -168,7 +168,7 @@
       "name": {"type": "String"}
     }
   },
-  "alarmSavedNoPermission": "{name} tallennettu — ota taustasijainti käyttöön seurantaa varten",
+  "alarmSavedNoPermission": "{name} tallennettu, ota taustasijainti käyttöön seurantaa varten",
   "@alarmSavedNoPermission": {
     "placeholders": {
       "name": {"type": "String"}

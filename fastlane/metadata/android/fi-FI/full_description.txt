@@ -6,7 +6,7 @@ Ominaisuudet:
 * Aseta hälytyksiä minne tahansa kartalla
 * Määritä mukautettu säde jokaiselle hälytykselle
 * Taustavalvonta mukautuvalla GPS-kyselyllä
-* Toimii offline — karttaruudut tallennetaan paikallisesti
+* Toimii offline, karttaruudut tallennetaan paikallisesti
 * Etsi paikkoja Photon-geokoodauksella
 * Dynaaminen Material You -teema
 * Useiden kielien tuki
