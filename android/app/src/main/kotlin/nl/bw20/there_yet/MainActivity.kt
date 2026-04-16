@@ -46,6 +46,17 @@ class MainActivity : FlutterActivity() {
                     finishAndRemoveTask()
                     result.success(null)
                 }
+                "goHome" -> {
+                    // Launching the home activity reliably pushes our task to
+                    // the background even from an above-keyguard context,
+                    // where moveTaskToBack() is a no-op.
+                    val home = Intent(Intent.ACTION_MAIN).apply {
+                        addCategory(Intent.CATEGORY_HOME)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    startActivity(home)
+                    result.success(null)
+                }
                 "isScreenOff" -> {
                     val powerManager = getSystemService(POWER_SERVICE) as PowerManager
                     val keyguardManager = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
@@ -111,6 +122,13 @@ class MainActivity : FlutterActivity() {
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
             WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
         )
+
+        // Pulls the activity above a secure keyguard and auto-dismisses a
+        // non-secure one, making the alarm UI immediately interactive.
+        val km = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+        if (km.isKeyguardLocked) {
+            km.requestDismissKeyguard(this, null)
+        }
 
         if (wakeLock == null) {
             val powerManager = getSystemService(POWER_SERVICE) as PowerManager

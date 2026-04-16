@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
@@ -34,6 +35,7 @@ object AlarmNotificationHelper {
 
     fun show(context: Context, alarmId: Int, title: String, body: String) {
         ensureChannel(context)
+        wakeScreen(context)
 
         // Dismiss action → BroadcastReceiver (no app launch)
         val dismissIntent = Intent(context, AlarmDismissReceiver::class.java).apply {
@@ -85,5 +87,24 @@ object AlarmNotificationHelper {
 
     fun cancel(context: Context, alarmId: Int) {
         NotificationManagerCompat.from(context).cancel(alarmId + NOTIFICATION_ID_OFFSET)
+    }
+
+    // Wakes the screen at notification time so the full-screen intent lands on a
+    // lit display. Without this the OS may leave the screen asleep and the alarm
+    // UI only becomes visible after manual unlock.
+    private fun wakeScreen(context: Context) {
+        try {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            @Suppress("DEPRECATION")
+            val wl = pm.newWakeLock(
+                PowerManager.FULL_WAKE_LOCK or
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                PowerManager.ON_AFTER_RELEASE,
+                "ThereYet:AlarmNotifyWake"
+            )
+            wl.setReferenceCounted(false)
+            wl.acquire(15_000L)
+        } catch (_: Exception) {
+        }
     }
 }

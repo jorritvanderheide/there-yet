@@ -101,7 +101,6 @@ void main() async {
             alarmId: alarmId,
             title: title,
             body: body,
-            launchedByIntent: false, // app was already running
             onDismissed: () => shownDismissIds.remove(alarmId),
           );
         }
@@ -123,7 +122,6 @@ void main() async {
             shownDismissIds.add(alarm.id!);
             _showDismissScreen(
               alarm,
-              launchedByIntent: false,
               onDismissed: () => shownDismissIds.remove(alarm.id),
             );
           }
@@ -138,7 +136,6 @@ void main() async {
             shownDismissIds.add(alarm.id!);
             _showDismissScreen(
               alarm,
-              launchedByIntent: false,
               onDismissed: () => shownDismissIds.remove(alarm.id),
             );
           }
@@ -155,11 +152,7 @@ Future<bool> _showDismissIfScreenOff(
 ) async {
   final screenOff = await _isScreenOff();
   if (screenOff) {
-    _showDismissScreen(
-      alarm,
-      launchedByIntent: false,
-      onDismissed: onDismissed,
-    );
+    _showDismissScreen(alarm, onDismissed: onDismissed);
     return true;
   }
   // Screen on: the native notification handles dismiss via AlarmDismissReceiver
@@ -189,7 +182,7 @@ Future<void> _checkLaunchIntent({
         alarmId: alarmId,
         title: title,
         body: body,
-        launchedByIntent: true, // app was cold-launched by alarm
+        launchedByIntent: true,
         onDismissed: () => onDismissed(alarmId),
       );
     });
@@ -202,8 +195,8 @@ void _showDismissScreenFromIntent({
   required int alarmId,
   required String title,
   required String body,
-  required bool launchedByIntent,
   required VoidCallback onDismissed,
+  bool launchedByIntent = false,
 }) {
   navigatorKey.currentState?.push(
     MaterialPageRoute<void>(
@@ -211,18 +204,14 @@ void _showDismissScreenFromIntent({
         alarmId: alarmId,
         title: title,
         body: body,
-        launchedByIntent: launchedByIntent,
         onDismissed: onDismissed,
+        launchedByIntent: launchedByIntent,
       ),
     ),
   );
 }
 
-void _showDismissScreen(
-  AlarmData alarm, {
-  required bool launchedByIntent,
-  required VoidCallback onDismissed,
-}) {
+void _showDismissScreen(AlarmData alarm, {required VoidCallback onDismissed}) {
   if (alarm.id == null) return;
   final label = alarm.name.isNotEmpty ? alarm.name : null;
   final title = label ?? 'There Yet';
@@ -234,7 +223,6 @@ void _showDismissScreen(
         alarmId: alarm.id!,
         title: title,
         body: body,
-        launchedByIntent: launchedByIntent,
         onDismissed: onDismissed,
       ),
     ),

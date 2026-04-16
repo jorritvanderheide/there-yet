@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:there_yet/shared/data/models/alarm.dart';
+import 'package:there_yet/shared/providers/alarm_repository_provider.dart';
 import 'package:there_yet/shared/providers/alarms_provider.dart';
 
 const _notificationChannel = MethodChannel(
@@ -54,14 +55,28 @@ class AlarmServiceNotifier extends Notifier<List<AlarmData>> {
     }
   }
 
-  /// Dismiss a ringing alarm by sending a command to the background isolate.
-  /// The background isolate owns the DB write for active=false.
+  /// Dismiss a ringing alarm.
+  ///
+  /// The main isolate writes `active=false` directly so the `alarmsProvider`
+  /// stream (bound to the main Drift instance) emits immediately. The BG
+  /// isolate message is still needed to stop the alarm audio and reset its
+  /// internal fired-ids set; its idempotent write is a safety net.
   Future<void> dismiss(int alarmId) async {
+    try {
+      await ref
+          .read(alarmRepositoryProvider)
+          .toggleActive(alarmId, active: false);
+    } on Exception {
+      // Best-effort; BG isolate writes as a fallback below.
+    }
+
     FlutterForegroundTask.sendDataToTask(
       jsonEncode({'type': 'dismiss', 'id': alarmId}),
     );
     try {
-      await _notificationChannel.invokeMethod('dismissAlarm');
+      await _notificationChannel.invokeMethod('dismissAlarm', {
+        'alarmId': alarmId,
+      });
     } on MissingPluginException {
       // Channel may not be available yet
     }
