@@ -14,6 +14,7 @@ import 'package:there_yet/shared/widgets/permission_dialogs.dart';
 import 'package:there_yet/shared/data/models/alarm.dart';
 import 'package:there_yet/shared/providers/alarms_provider.dart';
 import 'package:there_yet/shared/providers/location_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum AlarmSortMode { created, name }
 
@@ -179,7 +180,11 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
         await notifier.continueWithBattery(alarmId, confirmed);
 
       case AlarmActivationNotificationDenied():
-        _showSnackBar(l10n.notificationsDisabled);
+        _showSnackBar(
+          l10n.notificationsDisabled,
+          actionLabel: l10n.openSettings,
+          onAction: openAppSettings,
+        );
         notifier.consumeEvent();
 
       case AlarmActivationInsideRadius(
@@ -229,11 +234,20 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
     }
   }
 
-  void _showSnackBar(String message) {
+  void _showSnackBar(
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: actionLabel != null && onAction != null
+            ? SnackBarAction(label: actionLabel, onPressed: onAction)
+            : null,
+      ),
+    );
   }
 
   @override

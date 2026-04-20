@@ -178,10 +178,12 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
         .read(locationPermissionProvider.notifier)
         .requestNotification();
     if (!notifGranted) {
-      state = state.copyWith(
-        lastEvent: const AlarmActivationNotificationDenied(),
-      );
-      // Don't return; continue activation.
+      // Block activation: without notifications the alarm may fire but the
+      // user has no reliable way to see or dismiss it. Better to stop here
+      // and prompt the user to grant the permission than to leave them in a
+      // half-working state.
+      _finish(id, const AlarmActivationNotificationDenied());
+      return;
     }
 
     if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {

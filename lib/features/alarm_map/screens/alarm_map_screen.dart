@@ -18,6 +18,7 @@ import 'package:there_yet/features/map/widgets/compass_button.dart';
 import 'package:there_yet/features/map/widgets/current_location_marker.dart';
 import 'package:there_yet/l10n/app_localizations.dart';
 import 'package:there_yet/shared/providers/location_permission_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:there_yet/shared/widgets/permission_dialogs.dart';
 import 'package:there_yet/shared/providers/location_provider.dart';
 
@@ -314,16 +315,25 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
         await notifier.provideThumbnail(thumbnail);
 
       case AlarmSaveNotificationDenied():
-        _showSnackBar(l10n.notificationsDisabled);
+        _showSnackBar(
+          l10n.notificationsDisabled,
+          actionLabel: l10n.openSettings,
+          onAction: openAppSettings,
+        );
+        notifier.reset();
 
       case AlarmSaved(:final message):
         ref.read(alarmFormProvider(widget.alarmId).notifier).markSaved();
         notifier.reset();
         if (mounted) {
-          context.pop();
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(message)));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              context.pop();
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(message)));
+            }
+          });
         }
 
       case AlarmSaveFailed(:final message):
@@ -332,11 +342,20 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     }
   }
 
-  void _showSnackBar(String message) {
+  void _showSnackBar(
+    String message, {
+    String? actionLabel,
+    VoidCallback? onAction,
+  }) {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: actionLabel != null && onAction != null
+            ? SnackBarAction(label: actionLabel, onPressed: onAction)
+            : null,
+      ),
+    );
   }
 
   Future<bool> _showInsideRadiusDialog() async {

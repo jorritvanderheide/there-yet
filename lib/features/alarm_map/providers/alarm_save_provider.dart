@@ -162,8 +162,11 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
         .read(locationPermissionProvider.notifier)
         .requestNotification();
     if (!notifGranted) {
+      // Block save: without notifications the alarm may fire but the user
+      // has no reliable way to see or dismiss it. The UI will surface a
+      // CTA to grant the permission and the user can retry saving.
       state = const AlarmSaveNotificationDenied();
-      await Future<void>.delayed(const Duration(milliseconds: 100));
+      return;
     }
 
     if (!(await Permission.ignoreBatteryOptimizations.isGranted)) {
