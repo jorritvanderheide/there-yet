@@ -1,7 +1,7 @@
 name: there_yet
 description: Location-based alarm app
 publish_to: "none"
-version: 1.0.0+7
+version: 1.0.2+8
 license: EUPL-1.2
 
 environment:
@@ -23,6 +23,7 @@ dependencies:
   url_launcher: ^6.3.1
   latlong2: ^0.9.1
   path: ^1.9.1
+  package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
   shared_preferences: ^2.5.4
