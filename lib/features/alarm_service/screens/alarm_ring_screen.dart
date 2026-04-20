@@ -86,7 +86,9 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
         // fall through to pop
       }
     }
-    if (mounted) Navigator.of(context).pop();
+    if (mounted && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
     if (!widget.launchedByIntent) {
       try {
         await _channel.invokeMethod('goHome');
@@ -107,7 +109,9 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
         if ((alarm == null || !alarm.active) && !_dismissed) {
           _dismissed = true;
           _clearLockScreenFlags();
-          _exitActivity();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _exitActivity();
+          });
         }
       });
     });
@@ -118,6 +122,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop || _dismissed) return;
+        _dismissed = true;
         // Back gesture: leave the alarm ringing but exit the activity so the
         // app returns to the locked state. The user can dismiss from the
         // notification or unlock and dismiss in-app.
