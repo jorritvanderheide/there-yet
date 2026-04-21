@@ -43,13 +43,16 @@ class LocationTaskHandler extends TaskHandler {
 
   Timer? _adaptivePollTimer;
 
+  int _resubscribeAttempts = 0;
+
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     try {
       _db = openDatabase();
       _repo = AlarmRepository(_db!);
       _ready = true;
-    } on Exception {
+    } on Exception catch (e) {
+      debugPrint('[alarm_service] DB open failed: $e');
       return;
     }
 
@@ -82,15 +85,18 @@ class LocationTaskHandler extends TaskHandler {
       try {
         final timeout = Duration(seconds: 15 + attempt * 10);
         final pos = await Geolocator.getCurrentPosition(
-          locationSettings: LocationSettings(
+          locationSettings: AndroidSettings(
             accuracy: LocationAccuracy.high,
             timeLimit: timeout,
+            forceLocationManager: true,
           ),
         );
         await _processPosition(pos, source: source);
         return;
-      } on Exception {
-        // Retry on next attempt.
+      } on Exception catch (e) {
+        debugPrint(
+          '[alarm_service] fetch($source) attempt ${attempt + 1} failed: $e',
+        );
       }
     }
   }
@@ -140,11 +146,15 @@ class LocationTaskHandler extends TaskHandler {
   }
 
   void _onStreamPosition(Position position) {
+    _resubscribeAttempts = 0;
     _processPosition(position, source: 'stream');
   }
 
   void _resubscribeAfterDelay() {
-    Future<void>.delayed(const Duration(seconds: 30), () {
+    final exponent = _resubscribeAttempts.clamp(0, 4);
+    final seconds = (30 * (1 << exponent)).clamp(30, 480);
+    _resubscribeAttempts++;
+    Future<void>.delayed(Duration(seconds: seconds), () {
       if (!_ready) return;
       _startPositionStream();
     });
@@ -161,16 +171,14 @@ class LocationTaskHandler extends TaskHandler {
       await prefs.setBool('proximity_needs_reregister', false);
       final active = await _repo!.getActive();
       await ProximityAlertService.syncAll(active);
-    } on Exception {
-      // Non-critical. Alerts will be re-registered on next service start.
+    } on Exception catch (e) {
+      debugPrint('[alarm_service] proximity re-register failed: $e');
     }
   }
 
   /// Compute the adaptive poll interval based on speed and distance to
   /// the nearest alarm.
   void _scheduleAdaptivePoll() {
-    _adaptivePollTimer?.cancel();
-
     final pos = _lastPosition;
     if (pos == null) return;
 
@@ -193,6 +201,7 @@ class LocationTaskHandler extends TaskHandler {
         }
       }
 
+      _adaptivePollTimer?.cancel();
       _adaptivePollTimer = Timer(Duration(seconds: intervalSeconds), () {
         if (_ready) _fetchPosition(source: 'adaptive');
       });
@@ -225,8 +234,8 @@ class LocationTaskHandler extends TaskHandler {
 
         await _player.fire(alarm);
       }
-    } on Exception {
-      // Will retry on next position update.
+    } on Exception catch (e) {
+      debugPrint('[alarm_service] check failed: $e');
     }
   }
 
@@ -263,8 +272,8 @@ class LocationTaskHandler extends TaskHandler {
           await _checkAlarms(position);
         }
       }
-    } on Exception {
-      // Will retry on next event.
+    } on Exception catch (e) {
+      debugPrint('[alarm_service] handleData failed: $e');
     }
   }
 
