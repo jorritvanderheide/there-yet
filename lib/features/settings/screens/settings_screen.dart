@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:there_yet/l10n/app_localizations.dart';
 import 'package:there_yet/shared/providers/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -59,8 +60,24 @@ class SettingsScreen extends ConsumerWidget {
                 ref.read(amoledBlackProvider.notifier).set(value);
               },
             ),
-          if (_store == 'fdroid') ...[
-            _SectionHeader(label: l10n.support),
+          _SectionHeader(label: l10n.support),
+          if (_store == 'playstore')
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              leading: const Icon(Icons.star_outline),
+              title: Text(l10n.rateApp),
+              subtitle: Text(l10n.rateAppSubtitle),
+              onTap: () => launchUrl(
+                Uri.parse(
+                  'https://play.google.com/store/apps/details?id=nl.bw20.there_yet',
+                ),
+                mode: LaunchMode.externalApplication,
+              ),
+            ),
+          if (_store == 'fdroid')
             ListTile(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -74,9 +91,42 @@ class SettingsScreen extends ConsumerWidget {
                 mode: LaunchMode.externalApplication,
               ),
             ),
-          ],
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            leading: const Icon(Icons.mail_outline),
+            title: Text(l10n.sendFeedback),
+            subtitle: Text(l10n.sendFeedbackSubtitle),
+            onTap: _launchFeedback,
+          ),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
+            ),
+            leading: const Icon(Icons.help_outline),
+            title: Text(l10n.help),
+            subtitle: Text(l10n.helpSubtitle),
+            onTap: () => launchUrl(
+              Uri.parse('https://codeberg.org/BW20/there-yet'),
+              mode: LaunchMode.externalApplication,
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Future<void> _launchFeedback() async {
+    final info = await PackageInfo.fromPlatform();
+    final subject = Uri.encodeComponent(
+      'There Yet feedback (v${info.version})',
+    );
+    await launchUrl(
+      Uri.parse('mailto:jorrit@bw20.nl?subject=$subject'),
+      mode: LaunchMode.externalApplication,
     );
   }
 }

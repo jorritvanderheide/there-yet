@@ -329,4 +329,25 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get donateSubtitle => '支持 There Yet 的開發';
+
+  @override
+  String get rateApp => 'Rate There Yet';
+
+  @override
+  String get rateAppSubtitle => 'Leave a review on the Play Store';
+
+  @override
+  String get sendFeedback => 'Send feedback';
+
+  @override
+  String get sendFeedbackSubtitle => 'Email the developer';
+
+  @override
+  String get help => 'Help';
+
+  @override
+  String get helpSubtitle => 'View the project page';
+
+  @override
+  String get privacyTagline => 'No tracking, no accounts, works offline';
 }
