@@ -337,23 +337,24 @@ class AppLocalizationsFi extends AppLocalizations {
   String get donateSubtitle => 'Tue There Yetin kehitystä';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'Arvioi There Yet';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Jätä arvostelu Play Storeen';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'Lähetä palautetta';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'Lähetä kehittäjälle sähköpostia';
 
   @override
-  String get help => 'Help';
+  String get help => 'Ohje';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'Näytä projektin sivu';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline =>
+      'Ei seurantaa, ei tilejä, toimii offline-tilassa';
 }

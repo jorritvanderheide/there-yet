@@ -337,23 +337,23 @@ class AppLocalizationsSv extends AppLocalizations {
   String get donateSubtitle => 'Stöd utvecklingen av There Yet';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'Betygsätt There Yet';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Lämna ett omdöme på Play Store';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'Skicka feedback';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'Mejla utvecklaren';
 
   @override
-  String get help => 'Help';
+  String get help => 'Hjälp';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'Visa projektsidan';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => 'Ingen spårning, inga konton, fungerar offline';
 }

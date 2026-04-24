@@ -332,23 +332,23 @@ class AppLocalizationsJa extends AppLocalizations {
   String get donateSubtitle => 'There Yetの開発を支援';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'There Yetを評価';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Playストアでレビューを書く';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'フィードバックを送信';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => '開発者にメールを送る';
 
   @override
-  String get help => 'Help';
+  String get help => 'ヘルプ';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'プロジェクトページを表示';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => 'トラッキングなし、アカウントなし、オフラインで動作';
 }

@@ -341,23 +341,23 @@ class AppLocalizationsCs extends AppLocalizations {
   String get donateSubtitle => 'Podpořte vývoj There Yet';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'Ohodnotit There Yet';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Zanechte recenzi na Google Play';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'Odeslat zpětnou vazbu';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'Napište vývojáři e-mail';
 
   @override
-  String get help => 'Help';
+  String get help => 'Nápověda';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'Zobrazit stránku projektu';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => 'Žádné sledování, žádné účty, funguje offline';
 }

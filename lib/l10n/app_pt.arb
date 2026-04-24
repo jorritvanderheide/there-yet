@@ -177,5 +177,12 @@
 
   "support": "Apoio",
   "donate": "Doar",
-  "donateSubtitle": "Apoia o desenvolvimento do There Yet"
+  "donateSubtitle": "Apoia o desenvolvimento do There Yet",
+  "rateApp": "Avaliar There Yet",
+  "rateAppSubtitle": "Deixa uma avaliação na Play Store",
+  "sendFeedback": "Enviar comentários",
+  "sendFeedbackSubtitle": "Envia um e-mail ao programador",
+  "help": "Ajuda",
+  "helpSubtitle": "Ver a página do projeto",
+  "privacyTagline": "Sem rastreio, sem contas, funciona sem ligação"
 }

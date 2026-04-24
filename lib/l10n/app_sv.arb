@@ -177,5 +177,12 @@
 
   "support": "Stöd",
   "donate": "Donera",
-  "donateSubtitle": "Stöd utvecklingen av There Yet"
+  "donateSubtitle": "Stöd utvecklingen av There Yet",
+  "rateApp": "Betygsätt There Yet",
+  "rateAppSubtitle": "Lämna ett omdöme på Play Store",
+  "sendFeedback": "Skicka feedback",
+  "sendFeedbackSubtitle": "Mejla utvecklaren",
+  "help": "Hjälp",
+  "helpSubtitle": "Visa projektsidan",
+  "privacyTagline": "Ingen spårning, inga konton, fungerar offline"
 }

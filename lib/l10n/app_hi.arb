@@ -177,5 +177,12 @@
 
   "support": "सहायता",
   "donate": "दान करें",
-  "donateSubtitle": "There Yet के विकास का समर्थन करें"
+  "donateSubtitle": "There Yet के विकास का समर्थन करें",
+  "rateApp": "There Yet को रेट करें",
+  "rateAppSubtitle": "Play Store पर समीक्षा छोड़ें",
+  "sendFeedback": "फ़ीडबैक भेजें",
+  "sendFeedbackSubtitle": "डेवलपर को ईमेल भेजें",
+  "help": "मदद",
+  "helpSubtitle": "प्रोजेक्ट पेज देखें",
+  "privacyTagline": "कोई ट्रैकिंग नहीं, कोई अकाउंट नहीं, ऑफ़लाइन काम करता है"
 }

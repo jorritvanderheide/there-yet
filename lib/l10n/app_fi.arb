@@ -177,5 +177,12 @@
 
   "support": "Tuki",
   "donate": "Lahjoita",
-  "donateSubtitle": "Tue There Yetin kehitystä"
+  "donateSubtitle": "Tue There Yetin kehitystä",
+  "rateApp": "Arvioi There Yet",
+  "rateAppSubtitle": "Jätä arvostelu Play Storeen",
+  "sendFeedback": "Lähetä palautetta",
+  "sendFeedbackSubtitle": "Lähetä kehittäjälle sähköpostia",
+  "help": "Ohje",
+  "helpSubtitle": "Näytä projektin sivu",
+  "privacyTagline": "Ei seurantaa, ei tilejä, toimii offline-tilassa"
 }

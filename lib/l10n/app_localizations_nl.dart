@@ -337,23 +337,23 @@ class AppLocalizationsNl extends AppLocalizations {
   String get donateSubtitle => 'Steun de ontwikkeling van There Yet';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'Beoordeel There Yet';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Geef een beoordeling in de Play Store';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'Feedback sturen';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'Stuur een e-mail naar de ontwikkelaar';
 
   @override
-  String get help => 'Help';
+  String get help => 'Hulp';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'Bekijk de projectpagina';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => 'Geen tracking, geen accounts, werkt offline';
 }

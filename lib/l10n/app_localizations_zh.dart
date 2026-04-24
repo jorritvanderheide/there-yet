@@ -331,23 +331,23 @@ class AppLocalizationsZh extends AppLocalizations {
   String get donateSubtitle => '支持 There Yet 的開發';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => '為 There Yet 評分';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => '在 Play 商店留下評論';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => '傳送意見回饋';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => '傳送電子郵件給開發者';
 
   @override
-  String get help => 'Help';
+  String get help => '說明';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => '檢視專案頁面';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => '無追蹤、無帳號、可離線使用';
 }

@@ -177,5 +177,12 @@
 
   "support": "지원",
   "donate": "후원하기",
-  "donateSubtitle": "There Yet 개발 지원"
+  "donateSubtitle": "There Yet 개발 지원",
+  "rateApp": "There Yet 평가하기",
+  "rateAppSubtitle": "Play 스토어에 리뷰 남기기",
+  "sendFeedback": "피드백 보내기",
+  "sendFeedbackSubtitle": "개발자에게 이메일 보내기",
+  "help": "도움말",
+  "helpSubtitle": "프로젝트 페이지 보기",
+  "privacyTagline": "추적 없음, 계정 없음, 오프라인 작동"
 }

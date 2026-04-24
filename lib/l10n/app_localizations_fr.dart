@@ -343,23 +343,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get donateSubtitle => 'Soutenir le développement de There Yet';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'Évaluer There Yet';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Laisser un avis sur le Play Store';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'Envoyer des commentaires';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'Envoyer un e-mail au développeur';
 
   @override
-  String get help => 'Help';
+  String get help => 'Aide';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'Voir la page du projet';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline =>
+      'Pas de suivi, pas de compte, fonctionne hors ligne';
 }

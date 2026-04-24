@@ -332,23 +332,23 @@ class AppLocalizationsKo extends AppLocalizations {
   String get donateSubtitle => 'There Yet 개발 지원';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'There Yet 평가하기';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Play 스토어에 리뷰 남기기';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => '피드백 보내기';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => '개발자에게 이메일 보내기';
 
   @override
-  String get help => 'Help';
+  String get help => '도움말';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => '프로젝트 페이지 보기';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => '추적 없음, 계정 없음, 오프라인 작동';
 }

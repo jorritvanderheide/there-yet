@@ -177,5 +177,12 @@
 
   "support": "Wsparcie",
   "donate": "Wspomóż",
-  "donateSubtitle": "Wesprzyj rozwój There Yet"
+  "donateSubtitle": "Wesprzyj rozwój There Yet",
+  "rateApp": "Oceń There Yet",
+  "rateAppSubtitle": "Zostaw opinię w Sklepie Play",
+  "sendFeedback": "Wyślij opinię",
+  "sendFeedbackSubtitle": "Napisz e-mail do dewelopera",
+  "help": "Pomoc",
+  "helpSubtitle": "Zobacz stronę projektu",
+  "privacyTagline": "Bez śledzenia, bez kont, działa offline"
 }

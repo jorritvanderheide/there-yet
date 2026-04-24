@@ -177,5 +177,12 @@
 
   "support": "Podpora",
   "donate": "Přispět",
-  "donateSubtitle": "Podpořte vývoj There Yet"
+  "donateSubtitle": "Podpořte vývoj There Yet",
+  "rateApp": "Ohodnotit There Yet",
+  "rateAppSubtitle": "Zanechte recenzi na Google Play",
+  "sendFeedback": "Odeslat zpětnou vazbu",
+  "sendFeedbackSubtitle": "Napište vývojáři e-mail",
+  "help": "Nápověda",
+  "helpSubtitle": "Zobrazit stránku projektu",
+  "privacyTagline": "Žádné sledování, žádné účty, funguje offline"
 }

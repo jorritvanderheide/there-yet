@@ -343,23 +343,23 @@ class AppLocalizationsPl extends AppLocalizations {
   String get donateSubtitle => 'Wesprzyj rozwój There Yet';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'Oceń There Yet';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Zostaw opinię w Sklepie Play';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'Wyślij opinię';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'Napisz e-mail do dewelopera';
 
   @override
-  String get help => 'Help';
+  String get help => 'Pomoc';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'Zobacz stronę projektu';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline => 'Bez śledzenia, bez kont, działa offline';
 }

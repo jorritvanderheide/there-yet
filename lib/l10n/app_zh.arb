@@ -177,5 +177,12 @@
 
   "support": "支持",
   "donate": "贊助",
-  "donateSubtitle": "支持 There Yet 的開發"
+  "donateSubtitle": "支持 There Yet 的開發",
+  "rateApp": "為 There Yet 評分",
+  "rateAppSubtitle": "在 Play 商店留下評論",
+  "sendFeedback": "傳送意見回饋",
+  "sendFeedbackSubtitle": "傳送電子郵件給開發者",
+  "help": "說明",
+  "helpSubtitle": "檢視專案頁面",
+  "privacyTagline": "無追蹤、無帳號、可離線使用"
 }

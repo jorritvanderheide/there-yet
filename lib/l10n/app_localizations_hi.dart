@@ -335,23 +335,24 @@ class AppLocalizationsHi extends AppLocalizations {
   String get donateSubtitle => 'There Yet के विकास का समर्थन करें';
 
   @override
-  String get rateApp => 'Rate There Yet';
+  String get rateApp => 'There Yet को रेट करें';
 
   @override
-  String get rateAppSubtitle => 'Leave a review on the Play Store';
+  String get rateAppSubtitle => 'Play Store पर समीक्षा छोड़ें';
 
   @override
-  String get sendFeedback => 'Send feedback';
+  String get sendFeedback => 'फ़ीडबैक भेजें';
 
   @override
-  String get sendFeedbackSubtitle => 'Email the developer';
+  String get sendFeedbackSubtitle => 'डेवलपर को ईमेल भेजें';
 
   @override
-  String get help => 'Help';
+  String get help => 'मदद';
 
   @override
-  String get helpSubtitle => 'View the project page';
+  String get helpSubtitle => 'प्रोजेक्ट पेज देखें';
 
   @override
-  String get privacyTagline => 'No tracking, no accounts, works offline';
+  String get privacyTagline =>
+      'कोई ट्रैकिंग नहीं, कोई अकाउंट नहीं, ऑफ़लाइन काम करता है';
 }
