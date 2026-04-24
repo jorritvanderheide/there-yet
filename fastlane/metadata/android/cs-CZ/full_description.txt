@@ -1,14 +1,26 @@
-There Yet je aplikace pro alarmy založené na poloze, která respektuje vaše soukromí. Umístěte špendlík na mapu, nastavte poloměr a nechte se upozornit, když dorazíte na místo.
+Už nikdy nezmeškejte svou zastávku. There Yet je polohový alarm s ohledem na soukromí, který vás probudí po příjezdu. Umístěte špendlík na mapu, nastavte poloměr a vyrazte. Telefon vás upozorní, jakmile vstoupíte do oblasti.
 
-Žádné účty, žádné sledování, žádné služby Google Play. Vaše údaje o poloze zůstávají ve vašem zařízení.
+Skvělé pro:
+* Usnutí v autobuse nebo vlaku bez zmeškání zastávky
+* Dlouhé cesty autem, kdy si chcete odpočinout až do cíle
+* Dojíždění neznámou trasou
+* Chůzi nebo jízdu na kole do nového místa
+* Každého, kdo chce jednoduchý alarm „vzbuďte mě, až budeme na místě"
+
+Soukromí od základu:
+* Žádné účty, žádná registrace, žádný e-mail
+* Žádné sledování, žádné analýzy, žádná reklama
+* Žádné služby Google Play
+* Údaje o poloze nikdy neopouštějí vaše zařízení
+* Plně otevřený zdrojový kód pod licencí EUPL 1.2
 
 Funkce:
-* Umístěte alarmy kamkoli na mapě
-* Nastavte vlastní poloměr pro každý alarm
-* Sledování na pozadí s adaptivním GPS dotazováním
-* Funguje offline, mapové dlaždice se ukládají lokálně
+* Umístěte více alarmů na blízkost kdekoli na světě
+* Vlastní poloměr pro každý alarm, od malých bloků po široké zóny
+* Monitorování GPS na pozadí s adaptivním dotazováním pro úsporu baterie
+* Funguje offline, jakmile je oblast uložena v mezipaměti
 * Vyhledávání míst pomocí Photon geokódování
-* Dynamický vzhled Material You
-* Podpora více jazyků
+* Dynamický vzhled Material You a AMOLED tmavě černý režim
+* K dispozici ve 14 jazycích
 
-There Yet používá dlaždice OpenStreetMap a funguje zcela bez proprietárních služeb. Je navržena pro dojíždějící, cestovatele a kohokoli, kdo chce jednoduchý alarm „vzbuďte mě, až tam budeme" bez obětování soukromí.
+There Yet používá dlaždice OpenStreetMap a funguje zcela bez proprietárních služeb. Navrženo pro dojíždějící, cestovatele, rodiče s dřímajícími dětmi a všechny, kteří chtějí GPS alarm pro příjezd respektující jejich soukromí.

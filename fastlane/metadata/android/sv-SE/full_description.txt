@@ -1,14 +1,26 @@
-There Yet är en integritetsvänlig, platsbaserad larmapp. Placera en nål på kartan, ställ in en radie och bli meddelad när du anländer till din destination.
+Missa aldrig din hållplats igen. There Yet är ett integritetsvänligt platslarm som väcker dig vid framkomsten. Placera en nål på kartan, ställ in en radie och åk. Telefonen larmar dig så snart du kommer in i området.
 
-Inga konton, ingen spårning, inga Google Play-tjänster krävs. Dina platsdata stannar på din enhet.
+Bra för:
+* Att somna på bussen eller tåget utan att missa hållplatsen
+* Långa bilresor där du vill vila tills du är framme
+* Pendling genom obekanta områden
+* Promenad eller cykling till en ny plats
+* Alla som vill ha ett enkelt "väck mig när vi är framme"-larm
+
+Integritet från grunden:
+* Inga konton, ingen registrering, ingen e-post krävs
+* Ingen spårning, ingen analys, inga annonser
+* Inga Google Play-tjänster
+* Dina platsdata lämnar aldrig enheten
+* Helt öppen källkod under EUPL 1.2-licens
 
 Funktioner:
-* Placera larm var som helst på kartan
-* Ställ in en anpassad radie för varje larm
-* Bakgrundsövervakning med adaptiv GPS-polling
-* Fungerar offline, kartrutor cachas lokalt
+* Placera flera närhetslarm var som helst i världen
+* Anpassad radie per larm, från smala kvarter till stora zoner
+* GPS-bakgrundsövervakning med adaptiv polling för att spara batteri
+* Fungerar offline när området är cachat
 * Sök platser med Photon-geokodning
-* Dynamiskt Material You-tema
-* Stöd för flera språk
+* Material You dynamiskt tema och AMOLED-svart läge
+* Tillgänglig på 14 språk
 
-There Yet använder OpenStreetMap-kartrutor och fungerar helt utan proprietära tjänster. Designad för pendlare, resenärer och alla som vill ha ett enkelt "väck mig när vi är framme"-larm utan att offra integriteten.
+There Yet använder OpenStreetMap-kartrutor och fungerar helt utan proprietära tjänster. Byggd för pendlare, resenärer, föräldrar med sovande barn och alla som vill ha ett GPS-ankomstlarm som respekterar integriteten.

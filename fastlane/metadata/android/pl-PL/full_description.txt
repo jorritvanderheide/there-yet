@@ -1,14 +1,26 @@
-There Yet to przyjazna dla prywatności aplikacja alarmowa oparta na lokalizacji. Umieść pinezkę na mapie, ustaw promień i otrzymaj powiadomienie po dotarciu na miejsce.
+Nigdy więcej nie przegap swojego przystanku. There Yet to alarm lokalizacji dbający o prywatność, który budzi cię po przybyciu. Umieść pinezkę na mapie, ustaw promień i w drogę. Telefon zaalarmuje cię, gdy tylko wejdziesz na obszar.
 
-Bez kont, bez śledzenia, bez usług Google Play. Dane o lokalizacji pozostają na Twoim urządzeniu.
+Idealny do:
+* Zaśnięcia w autobusie lub pociągu bez przegapienia przystanku
+* Długich podróży samochodem, gdy chcesz odpocząć do samego miejsca
+* Codziennych dojazdów przez nieznane okolice
+* Spaceru lub jazdy rowerem do nowego miejsca
+* Każdego, kto chce prostego alarmu „obudź mnie, jak dojedziemy"
+
+Prywatność od podstaw:
+* Bez kont, bez rejestracji, bez e-maila
+* Bez śledzenia, bez analityki, bez reklam
+* Bez usług Google Play
+* Twoje dane o lokalizacji nigdy nie opuszczają urządzenia
+* W pełni otwartoźródłowy na licencji EUPL 1.2
 
 Funkcje:
-* Umieszczaj alarmy w dowolnym miejscu na mapie
-* Ustaw własny promień dla każdego alarmu
-* Monitorowanie w tle z adaptacyjnym odpytywaniem GPS
-* Działa offline, kafelki mapy są przechowywane lokalnie
+* Umieszczaj wiele alarmów zbliżeniowych w dowolnym miejscu na świecie
+* Indywidualny promień dla każdego alarmu, od ciasnych kwartałów po szerokie strefy
+* Monitorowanie GPS w tle z adaptacyjnym odpytywaniem dla oszczędzania baterii
+* Działa offline, gdy obszar jest zapisany w pamięci podręcznej
 * Wyszukiwanie miejsc za pomocą geokodowania Photon
-* Dynamiczny motyw Material You
-* Obsługa wielu języków
+* Dynamiczny motyw Material You i tryb prawdziwie czarny AMOLED
+* Dostępne w 14 językach
 
-There Yet korzysta z kafelków OpenStreetMap i działa całkowicie bez zastrzeżonych usług. Zaprojektowana dla osób dojeżdżających, podróżników i wszystkich, którzy chcą prostego alarmu „obudź mnie, jak dojedziemy" bez rezygnacji z prywatności.
+There Yet korzysta z kafelków OpenStreetMap i działa całkowicie bez zastrzeżonych usług. Stworzone dla osób dojeżdżających, podróżników, rodziców z drzemiącymi dziećmi i wszystkich, którzy chcą alarmu GPS przybycia szanującego ich prywatność.

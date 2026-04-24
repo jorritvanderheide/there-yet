@@ -1,14 +1,26 @@
-There Yet es una aplicación de alarma basada en la ubicación que respeta tu privacidad. Coloca un marcador en el mapa, establece un radio y recibe una alerta cuando llegues a tu destino.
+No vuelvas a pasarte de parada. There Yet es una alarma de ubicación respetuosa con la privacidad que te despierta al llegar. Coloca un marcador en el mapa, define un radio y ponte en marcha. Tu teléfono te avisa en cuanto entras en la zona.
 
-Sin cuentas, sin rastreo, sin necesidad de Google Play Services. Tus datos de ubicación permanecen en tu dispositivo.
+Ideal para:
+* Dormirte en el autobús o el tren sin pasarte de parada
+* Viajes largos en coche donde quieres descansar hasta llegar
+* Desplazamientos diarios por zonas desconocidas
+* Ir caminando o en bici a un sitio nuevo
+* Cualquiera que quiera una simple alarma «avísame cuando lleguemos»
+
+Privacidad desde el diseño:
+* Sin cuentas, sin registro, sin correo electrónico
+* Sin rastreo, sin analíticas, sin anuncios
+* Sin Google Play Services
+* Tus datos de ubicación nunca salen del dispositivo
+* Totalmente de código abierto bajo la licencia EUPL 1.2
 
 Características:
-* Coloca alarmas en cualquier lugar del mapa
-* Establece un radio personalizado para cada alarma
-* Monitoreo en segundo plano con sondeo GPS adaptativo
-* Funciona sin conexión, los mosaicos del mapa se almacenan localmente
+* Coloca varias alarmas de proximidad en cualquier lugar del mundo
+* Radio personalizado por alarma, desde manzanas estrechas hasta zonas amplias
+* Monitoreo GPS en segundo plano con sondeo adaptativo para ahorrar batería
+* Funciona sin conexión una vez almacenada la zona
 * Busca lugares con geocodificación Photon
-* Tema dinámico Material You
-* Varios idiomas compatibles
+* Tema dinámico Material You y modo negro AMOLED
+* Disponible en 14 idiomas
 
-There Yet utiliza mosaicos de OpenStreetMap y funciona completamente sin servicios propietarios. Está diseñada para viajeros frecuentes y cualquiera que quiera una alarma sencilla de «avísame cuando lleguemos» sin sacrificar la privacidad.
+There Yet utiliza mosaicos de OpenStreetMap y funciona completamente sin servicios propietarios. Pensada para viajeros frecuentes, familias con niños dormidos y cualquiera que quiera una alarma GPS de llegada que respete su privacidad.

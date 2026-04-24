@@ -1,1 +1,1 @@
-Alarm na blízkost s ohledem na soukromí, upozornění při příjezdu
+Polohový alarm s ohledem na soukromí. Upozorní vás po dosažení cíle.

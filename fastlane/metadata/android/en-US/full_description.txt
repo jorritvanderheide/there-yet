@@ -1,14 +1,26 @@
-There Yet is a privacy-friendly, proximity-based alarm app. Place a pin on the map, set a radius, and get alerted when you arrive at your destination.
+Never miss your stop again. There Yet is a privacy-friendly location alarm that wakes you when you arrive. Place a pin on the map, set a radius, and go. Your phone alerts you as soon as you reach the area.
 
-No accounts, no tracking, no Google Play Services required. Your location data stays on your device.
+Great for:
+* Falling asleep on the bus or train without missing your stop
+* Long road trips when you want to rest until you reach town
+* Commuting through unfamiliar areas
+* Walking or cycling to a new place
+* Anyone who wants a simple "wake me up when we get there" alarm
+
+Privacy by design:
+* No accounts, no sign-up, no email required
+* No tracking, no analytics, no ads
+* No Google Play Services
+* Your location never leaves your device
+* Fully open source under the EUPL 1.2 licence
 
 Features:
-* Place alarms anywhere on the map
-* Set a custom radius for each alarm
-* Background monitoring with adaptive GPS polling
-* Works offline, map tiles are cached locally
-* Search for places with Photon geocoding
-* Material You dynamic theming
-* Multiple languages supported
+* Place multiple proximity alarms anywhere in the world
+* Custom radius per alarm, from tight city blocks to wide zones
+* Background GPS monitoring with adaptive polling to save battery
+* Works offline once the map area is cached
+* Search any place with Photon geocoding
+* Material You dynamic theming and AMOLED true-black mode
+* Available in 14 languages
 
-There Yet uses OpenStreetMap tiles and runs entirely without proprietary services. It's designed for commuters, travellers, and anyone who wants a simple "wake me up when we get there" alarm without sacrificing privacy.
+There Yet uses OpenStreetMap tiles and runs entirely without proprietary services. Built for commuters, travellers, parents with napping kids, and anyone who wants a GPS arrival alarm that respects their privacy.

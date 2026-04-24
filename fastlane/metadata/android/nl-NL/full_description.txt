@@ -1,14 +1,26 @@
-There Yet is een privacyvriendelijke, locatiegebaseerde alarm-app. Plaats een pin op de kaart, stel een radius in en ontvang een melding wanneer je op je bestemming aankomt.
+Mis nooit meer je halte. There Yet is een privacyvriendelijk locatiealarm dat je wekt zodra je aankomt. Plaats een pin op de kaart, stel een radius in en ga op weg. Je telefoon waarschuwt je zodra je het gebied binnenkomt.
 
-Geen accounts, geen tracking, geen Google Play Services nodig. Je locatiegegevens blijven op je apparaat.
+Handig voor:
+* In slaap vallen in de bus of trein zonder je halte te missen
+* Lange autoritten waarbij je wilt rusten tot je er bent
+* Forenzen door onbekend gebied
+* Lopen of fietsen naar een nieuwe plek
+* Iedereen die een simpel "wek me als we er zijn"-alarm wil
+
+Privacy vanaf de basis:
+* Geen accounts, geen registratie, geen e-mail nodig
+* Geen tracking, geen analytics, geen advertenties
+* Geen Google Play Services
+* Je locatiegegevens blijven op je apparaat
+* Volledig open source onder de EUPL 1.2-licentie
 
 Functies:
-* Plaats alarmen overal op de kaart
-* Stel een eigen radius in voor elk alarm
-* Achtergrondmonitoring met adaptieve GPS-polling
-* Werkt offline, kaarttegels worden lokaal opgeslagen
+* Plaats meerdere nabijheidsalarmen waar ook ter wereld
+* Eigen radius per alarm, van nauwe stadsblokken tot ruime zones
+* Achtergrondmonitoring van de GPS met adaptieve polling voor minder batterijverbruik
+* Werkt offline zodra het gebied is gecachet
 * Zoek plaatsen met Photon-geocodering
-* Dynamisch Material You-thema
-* Ondersteuning voor meerdere talen
+* Material You dynamisch thema en AMOLED-true-black-modus
+* Beschikbaar in 14 talen
 
-There Yet gebruikt OpenStreetMap-tegels en werkt volledig zonder propriëtaire diensten. Ontworpen voor forenzen, reizigers en iedereen die een eenvoudig "maak me wakker als we er zijn"-alarm wil zonder concessies aan privacy.
+There Yet gebruikt OpenStreetMap-tegels en werkt volledig zonder propriëtaire diensten. Gemaakt voor forenzen, reizigers, ouders van slapende kinderen en iedereen die een GPS-aankomstalarm wil dat hun privacy respecteert.

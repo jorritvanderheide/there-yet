@@ -1,14 +1,26 @@
-There Yet on yksityisyyttä kunnioittava, sijaintiin perustuva hälytyssovellus. Aseta merkki kartalle, määritä säde ja saat ilmoituksen saapuessasi perille.
+Älä jää pysäkin ohi enää koskaan. There Yet on yksityisyyttä kunnioittava sijaintihälytys, joka herättää sinut perille saapuessa. Aseta kartalle merkki, määritä säde ja lähde matkaan. Puhelin hälyttää heti, kun saavut alueelle.
 
-Ei tilejä, ei seurantaa, ei Google Play -palveluita. Sijaintitietosi pysyvät laitteellasi.
+Sopii erinomaisesti:
+* Nukahtamiseen bussissa tai junassa ilman pysäkin missaamista
+* Pitkille automatkoille, joilla haluat levätä perille asti
+* Työmatkaan tuntemattomalla reitillä
+* Kävely- tai pyöräilymatkaan uuteen paikkaan
+* Kaikille, jotka haluavat yksinkertaisen "herätä minut perillä" -hälytyksen
+
+Yksityisyys lähtökohtaisesti:
+* Ei tilejä, ei rekisteröintiä, ei sähköpostia
+* Ei seurantaa, ei analytiikkaa, ei mainoksia
+* Ei Google Play -palveluita
+* Sijaintitietosi eivät poistu laitteeltasi
+* Täysin avoin lähdekoodi EUPL 1.2 -lisenssillä
 
 Ominaisuudet:
-* Aseta hälytyksiä minne tahansa kartalla
-* Määritä mukautettu säde jokaiselle hälytykselle
-* Taustavalvonta mukautuvalla GPS-kyselyllä
-* Toimii offline, karttaruudut tallennetaan paikallisesti
+* Aseta useita läheisyyshälytyksiä minne tahansa maailmassa
+* Mukautettu säde hälytystä kohti, tiukoista kortteleista laajoihin alueisiin
+* GPS-taustavalvonta mukautuvalla kyselyllä akun säästämiseksi
+* Toimii offline, kun alue on tallennettu välimuistiin
 * Etsi paikkoja Photon-geokoodauksella
-* Dynaaminen Material You -teema
-* Useiden kielien tuki
+* Dynaaminen Material You -teema ja AMOLED-mustatila
+* Saatavilla 14 kielellä
 
-There Yet käyttää OpenStreetMap-karttaruutuja ja toimii täysin ilman suljetun lähdekoodin palveluita. Se on suunniteltu työmatkalaajille, matkailijoille ja kaikille, jotka haluavat yksinkertaisen "herätä minut perillä" -hälytyksen yksityisyydestä tinkimättä.
+There Yet käyttää OpenStreetMap-karttaruutuja ja toimii täysin ilman suljetun lähdekoodin palveluita. Suunniteltu työmatkalaisille, matkustajille, torkkuvien lasten vanhemmille ja kaikille, jotka haluavat yksityisyyttä kunnioittavan GPS-saapumishälytyksen.

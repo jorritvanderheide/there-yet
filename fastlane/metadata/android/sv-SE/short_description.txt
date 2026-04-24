@@ -1,1 +1,1 @@
-Integritetsvänligt närhetslarm, avisering vid ankomst
+Integritetsvänligt platslarm. Meddelar dig när du når din destination.

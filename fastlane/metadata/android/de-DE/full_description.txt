@@ -1,14 +1,26 @@
-There Yet ist eine datenschutzfreundliche, standortbasierte Alarm-App. Setze eine Markierung auf die Karte, lege einen Radius fest und lass dich benachrichtigen, wenn du an deinem Ziel ankommst.
+Verpasse nie wieder deine Haltestelle. There Yet ist ein datenschutzfreundlicher Standortalarm, der dich bei Ankunft weckt. Setze eine Markierung auf die Karte, lege einen Radius fest und los. Dein Handy warnt dich, sobald du das Gebiet erreichst.
 
-Keine Konten, kein Tracking, keine Google Play-Dienste erforderlich. Deine Standortdaten bleiben auf deinem Gerät.
+Ideal für:
+* Einschlafen im Bus oder Zug, ohne die Haltestelle zu verpassen
+* Lange Autofahrten, wenn du bis zur Ankunft ausruhen willst
+* Pendeln durch unbekannte Gegenden
+* Laufen oder Radfahren zu einem neuen Ort
+* Alle, die einen einfachen „Weck mich, wenn wir da sind"-Alarm wollen
+
+Datenschutz von Grund auf:
+* Keine Konten, keine Anmeldung, keine E-Mail nötig
+* Kein Tracking, keine Analyse, keine Werbung
+* Keine Google Play-Dienste
+* Deine Standortdaten verlassen nie dein Gerät
+* Vollständig quelloffen unter der EUPL 1.2-Lizenz
 
 Funktionen:
-* Alarme überall auf der Karte setzen
-* Eigenen Radius für jeden Alarm festlegen
-* Hintergrundüberwachung mit adaptiver GPS-Abfrage
-* Funktioniert offline, Kartenkacheln werden lokal zwischengespeichert
+* Platziere mehrere Näherungsalarme überall auf der Welt
+* Eigener Radius pro Alarm, von engen Stadtblöcken bis zu weiten Zonen
+* GPS-Hintergrundüberwachung mit adaptiver Abfrage zur Akkuschonung
+* Funktioniert offline, sobald das Gebiet zwischengespeichert ist
 * Ortssuche mit Photon-Geokodierung
-* Dynamisches Material You-Design
-* Mehrere Sprachen unterstützt
+* Material You dynamisches Design und AMOLED-Tiefschwarz-Modus
+* In 14 Sprachen verfügbar
 
-There Yet verwendet OpenStreetMap-Kacheln und funktioniert vollständig ohne proprietäre Dienste. Entwickelt für Pendler, Reisende und alle, die einen einfachen „Weck mich, wenn wir da sind"-Alarm ohne Einbußen beim Datenschutz möchten.
+There Yet verwendet OpenStreetMap-Kacheln und funktioniert vollständig ohne proprietäre Dienste. Entwickelt für Pendler, Reisende, Eltern mit schlafenden Kindern und alle, die einen GPS-Ankunftsalarm mit Respekt für ihre Privatsphäre wollen.
