@@ -19,6 +19,10 @@ class MainActivity : FlutterActivity() {
     private var pendingAlarmId: Int = -1
     private var pendingAlarmTitle: String? = null
     private var pendingAlarmBody: String? = null
+    // Snapshot of the keyguard/screen state at intent arrival, before
+    // showOverLockScreen() mutates it. Lets Dart distinguish "alarm fired
+    // while device was locked" from "alarm fired while user was using app".
+    private var pendingAlarmWasLocked: Boolean = false
 
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -68,13 +72,15 @@ class MainActivity : FlutterActivity() {
                         val data = mapOf(
                             "alarm_id" to pendingAlarmId,
                             "title" to (pendingAlarmTitle ?: ""),
-                            "body" to (pendingAlarmBody ?: "")
+                            "body" to (pendingAlarmBody ?: ""),
+                            "was_locked" to pendingAlarmWasLocked
                         )
                         // Clear pending data after consumption
                         pendingAlarmAction = null
                         pendingAlarmId = -1
                         pendingAlarmTitle = null
                         pendingAlarmBody = null
+                        pendingAlarmWasLocked = false
                         result.success(data)
                     } else {
                         result.success(null)
@@ -96,7 +102,8 @@ class MainActivity : FlutterActivity() {
             screenChannel?.invokeMethod("onAlarmRing", mapOf(
                 "alarm_id" to pendingAlarmId,
                 "title" to (pendingAlarmTitle ?: ""),
-                "body" to (pendingAlarmBody ?: "")
+                "body" to (pendingAlarmBody ?: ""),
+                "was_locked" to pendingAlarmWasLocked
             ))
         }
     }
@@ -107,7 +114,12 @@ class MainActivity : FlutterActivity() {
             pendingAlarmId = intent.getIntExtra("alarm_id", -1)
             pendingAlarmTitle = intent.getStringExtra("alarm_title")
             pendingAlarmBody = intent.getStringExtra("alarm_body")
-            // Show over lock screen when launched via alarm
+            // Snapshot lock state BEFORE showOverLockScreen() dismisses
+            // any non-secure keyguard, so Dart can decide whether to push
+            // the ring screen based on the original device state.
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            val km = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
+            pendingAlarmWasLocked = !pm.isInteractive || km.isKeyguardLocked
             showOverLockScreen()
         }
     }

@@ -86,14 +86,16 @@ void main() async {
 
   // Listen for alarm intents arriving while the app is already running.
   // This fires when the full-screen intent targets an already-running activity.
-  // Only show ring screen if screen is off; otherwise the notification suffices.
+  // The native side snapshots the keyguard state at intent arrival; we gate on
+  // that, not the current screen state, because showOverLockScreen() has
+  // already woken the screen by the time we get here.
   _screenChannel.setMethodCallHandler((call) async {
     if (call.method == 'onAlarmRing') {
       final args = call.arguments as Map<Object?, Object?>;
       final alarmId = args['alarm_id'] as int?;
       if (alarmId != null && !shownDismissIds.contains(alarmId)) {
-        final screenOff = await _isScreenOff();
-        if (screenOff) {
+        final wasLocked = args['was_locked'] as bool? ?? false;
+        if (wasLocked) {
           final title = args['title'] as String? ?? '';
           final body = args['body'] as String? ?? '';
           shownDismissIds.add(alarmId);
