@@ -12,11 +12,14 @@ import 'package:there_yet/features/alarm_map/providers/alarm_save_provider.dart'
 import 'package:there_yet/features/alarm_map/widgets/alarm_map_layers.dart';
 import 'package:there_yet/features/alarm_map/widgets/alarm_settings_sheet.dart';
 import 'package:there_yet/features/alarm_map/widgets/map_search_bar.dart';
+import 'package:there_yet/features/alarm_map/widgets/other_alarms_layer.dart';
 import 'package:there_yet/features/map/widgets/alarm_map.dart';
 import 'package:there_yet/features/map/widgets/center_on_location_fab.dart';
 import 'package:there_yet/features/map/widgets/compass_button.dart';
 import 'package:there_yet/features/map/widgets/current_location_marker.dart';
 import 'package:there_yet/l10n/app_localizations.dart';
+import 'package:there_yet/shared/data/models/alarm.dart';
+import 'package:there_yet/shared/providers/alarms_provider.dart';
 import 'package:there_yet/shared/providers/location_permission_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:there_yet/shared/widgets/permission_dialogs.dart';
@@ -387,6 +390,13 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     final bestPos = ref.watch(bestPositionProvider);
     final saveState = ref.watch(alarmSaveProvider);
     final saving = saveState is AlarmSaveBusy;
+    final otherAlarms = ref
+        .watch(alarmsProvider)
+        .maybeWhen(
+          data: (alarms) =>
+              alarms.where((a) => a.id != widget.alarmId).toList(),
+          orElse: () => const <AlarmData>[],
+        );
 
     // Sync loaded alarm data into UI (one-time on load).
     ref.listen(alarmFormProvider(widget.alarmId), (prev, next) {
@@ -469,6 +479,16 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                   },
                   children: [
                     const CurrentLocationMarker(),
+                    OtherAlarmsLayer(
+                      alarms: otherAlarms,
+                      onAlarmTap: (alarm) => _animateCamera(
+                        _boundsForCircle(
+                          alarm.location,
+                          alarm.radius,
+                          padding: _mapPadding(context),
+                        ),
+                      ),
+                    ),
                     if (form.location != null)
                       AlarmMapLayers(
                         location: form.location!,
