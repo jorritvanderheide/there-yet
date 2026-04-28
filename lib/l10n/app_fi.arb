@@ -183,6 +183,5 @@
   "sendFeedback": "Lähetä palautetta",
   "sendFeedbackSubtitle": "Lähetä kehittäjälle sähköpostia",
   "help": "Ohje",
-  "helpSubtitle": "Näytä projektin sivu",
-  "privacyTagline": "Ei seurantaa, ei tilejä, toimii offline-tilassa"
+  "helpSubtitle": "Näytä projektin sivu"
 }

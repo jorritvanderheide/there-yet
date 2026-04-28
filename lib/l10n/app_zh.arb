@@ -183,6 +183,5 @@
   "sendFeedback": "傳送意見回饋",
   "sendFeedbackSubtitle": "傳送電子郵件給開發者",
   "help": "說明",
-  "helpSubtitle": "檢視專案頁面",
-  "privacyTagline": "無追蹤、無帳號、可離線使用"
+  "helpSubtitle": "檢視專案頁面"
 }

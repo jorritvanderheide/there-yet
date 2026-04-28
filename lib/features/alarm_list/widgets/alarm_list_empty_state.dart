@@ -32,13 +32,6 @@ class AlarmListEmptyState extends StatelessWidget {
               color: colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 24),
-          Text(
-            l10n.privacyTagline,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
         ],
       ),
     );

@@ -183,6 +183,5 @@
   "sendFeedback": "Skicka feedback",
   "sendFeedbackSubtitle": "Mejla utvecklaren",
   "help": "Hjälp",
-  "helpSubtitle": "Visa projektsidan",
-  "privacyTagline": "Ingen spårning, inga konton, fungerar offline"
+  "helpSubtitle": "Visa projektsidan"
 }

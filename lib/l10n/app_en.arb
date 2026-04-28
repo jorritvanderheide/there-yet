@@ -183,6 +183,5 @@
   "sendFeedback": "Send feedback",
   "sendFeedbackSubtitle": "Email the developer",
   "help": "Help",
-  "helpSubtitle": "View the project page",
-  "privacyTagline": "No tracking, no accounts, works offline"
+  "helpSubtitle": "View the project page"
 }

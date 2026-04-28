@@ -348,7 +348,4 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'プロジェクトページを表示';
-
-  @override
-  String get privacyTagline => 'トラッキングなし、アカウントなし、オフラインで動作';
 }

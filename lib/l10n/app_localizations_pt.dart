@@ -356,7 +356,4 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Ver a página do projeto';
-
-  @override
-  String get privacyTagline => 'Sem rastreio, sem contas, funciona sem ligação';
 }

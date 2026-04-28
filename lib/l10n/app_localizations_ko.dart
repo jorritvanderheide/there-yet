@@ -348,7 +348,4 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get helpSubtitle => '프로젝트 페이지 보기';
-
-  @override
-  String get privacyTagline => '추적 없음, 계정 없음, 오프라인 작동';
 }

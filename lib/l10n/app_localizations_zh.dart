@@ -347,7 +347,4 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get helpSubtitle => '檢視專案頁面';
-
-  @override
-  String get privacyTagline => '無追蹤、無帳號、可離線使用';
 }

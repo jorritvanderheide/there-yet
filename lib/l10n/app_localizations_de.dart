@@ -357,7 +357,4 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Projektseite anzeigen';
-
-  @override
-  String get privacyTagline => 'Kein Tracking, keine Konten, offline nutzbar';
 }

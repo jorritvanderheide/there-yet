@@ -47,19 +47,20 @@ class SettingsScreen extends ConsumerWidget {
               ref.read(materialYouProvider.notifier).set(value);
             },
           ),
-          if (isDark)
-            SwitchListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              title: Text(l10n.trueBlack),
-              subtitle: Text(l10n.trueBlackSubtitle),
-              value: amoled,
-              onChanged: (value) {
-                ref.read(amoledBlackProvider.notifier).set(value);
-              },
+          SwitchListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 8,
             ),
+            title: Text(l10n.trueBlack),
+            subtitle: Text(l10n.trueBlackSubtitle),
+            value: amoled,
+            onChanged: isDark
+                ? (value) {
+                    ref.read(amoledBlackProvider.notifier).set(value);
+                  }
+                : null,
+          ),
           _SectionHeader(label: l10n.support),
           if (_store == 'playstore')
             ListTile(

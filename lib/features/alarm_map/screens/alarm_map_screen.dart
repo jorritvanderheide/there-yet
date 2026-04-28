@@ -473,6 +473,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                       AlarmMapLayers(
                         location: form.location!,
                         radius: form.radius,
+                        onMarkerTap: _fitCircle,
                       ),
                   ],
                 ),

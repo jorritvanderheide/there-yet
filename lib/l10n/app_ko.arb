@@ -183,6 +183,5 @@
   "sendFeedback": "피드백 보내기",
   "sendFeedbackSubtitle": "개발자에게 이메일 보내기",
   "help": "도움말",
-  "helpSubtitle": "프로젝트 페이지 보기",
-  "privacyTagline": "추적 없음, 계정 없음, 오프라인 작동"
+  "helpSubtitle": "프로젝트 페이지 보기"
 }

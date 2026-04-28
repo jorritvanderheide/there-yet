@@ -353,8 +353,4 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Näytä projektin sivu';
-
-  @override
-  String get privacyTagline =>
-      'Ei seurantaa, ei tilejä, toimii offline-tilassa';
 }

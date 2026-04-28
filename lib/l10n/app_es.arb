@@ -183,6 +183,5 @@
   "sendFeedback": "Enviar comentarios",
   "sendFeedbackSubtitle": "Envía un correo al desarrollador",
   "help": "Ayuda",
-  "helpSubtitle": "Ver la página del proyecto",
-  "privacyTagline": "Sin seguimiento, sin cuentas, funciona sin conexión"
+  "helpSubtitle": "Ver la página del proyecto"
 }

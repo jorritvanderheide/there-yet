@@ -359,7 +359,4 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Zobacz stronę projektu';
-
-  @override
-  String get privacyTagline => 'Bez śledzenia, bez kont, działa offline';
 }

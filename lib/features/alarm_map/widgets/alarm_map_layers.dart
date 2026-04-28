@@ -7,10 +7,12 @@ class AlarmMapLayers extends StatelessWidget {
     super.key,
     required this.location,
     required this.radius,
+    this.onMarkerTap,
   });
 
   final LatLng location;
   final double radius;
+  final VoidCallback? onMarkerTap;
 
   @override
   Widget build(BuildContext context) {
@@ -41,20 +43,24 @@ class AlarmMapLayers extends StatelessWidget {
               point: location,
               width: 32,
               height: 32,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: accentColor,
-                  shape: BoxShape.circle,
-                  boxShadow: const [
-                    BoxShadow(color: Colors.black26, blurRadius: 4),
-                  ],
-                ),
-                child: Icon(
-                  Icons.notifications,
-                  size: 18,
-                  color: isDark
-                      ? colorScheme.onPrimaryContainer
-                      : colorScheme.onPrimary,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: onMarkerTap,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: accentColor,
+                    shape: BoxShape.circle,
+                    boxShadow: const [
+                      BoxShadow(color: Colors.black26, blurRadius: 4),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.notifications,
+                    size: 18,
+                    color: isDark
+                        ? colorScheme.onPrimaryContainer
+                        : colorScheme.onPrimary,
+                  ),
                 ),
               ),
             ),

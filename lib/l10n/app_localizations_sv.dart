@@ -353,7 +353,4 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Visa projektsidan';
-
-  @override
-  String get privacyTagline => 'Ingen spårning, inga konton, fungerar offline';
 }

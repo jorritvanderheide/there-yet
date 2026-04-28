@@ -353,7 +353,4 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Bekijk de projectpagina';
-
-  @override
-  String get privacyTagline => 'Geen tracking, geen accounts, werkt offline';
 }

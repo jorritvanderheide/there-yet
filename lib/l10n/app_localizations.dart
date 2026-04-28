@@ -707,12 +707,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View the project page'**
   String get helpSubtitle;
-
-  /// No description provided for @privacyTagline.
-  ///
-  /// In en, this message translates to:
-  /// **'No tracking, no accounts, works offline'**
-  String get privacyTagline;
 }
 
 class _AppLocalizationsDelegate

@@ -359,8 +359,4 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Voir la page du projet';
-
-  @override
-  String get privacyTagline =>
-      'Pas de suivi, pas de compte, fonctionne hors ligne';
 }

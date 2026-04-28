@@ -351,8 +351,4 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'प्रोजेक्ट पेज देखें';
-
-  @override
-  String get privacyTagline =>
-      'कोई ट्रैकिंग नहीं, कोई अकाउंट नहीं, ऑफ़लाइन काम करता है';
 }

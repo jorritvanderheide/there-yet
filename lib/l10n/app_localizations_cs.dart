@@ -357,7 +357,4 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get helpSubtitle => 'Zobrazit stránku projektu';
-
-  @override
-  String get privacyTagline => 'Žádné sledování, žádné účty, funguje offline';
 }
