@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -390,13 +391,6 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
     final bestPos = ref.watch(bestPositionProvider);
     final saveState = ref.watch(alarmSaveProvider);
     final saving = saveState is AlarmSaveBusy;
-    final otherAlarms = ref
-        .watch(alarmsProvider)
-        .maybeWhen(
-          data: (alarms) =>
-              alarms.where((a) => a.id != widget.alarmId).toList(),
-          orElse: () => const <AlarmData>[],
-        );
 
     // Sync loaded alarm data into UI (one-time on load).
     ref.listen(alarmFormProvider(widget.alarmId), (prev, next) {
@@ -479,21 +473,41 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                   },
                   children: [
                     const CurrentLocationMarker(),
-                    OtherAlarmsLayer(
-                      alarms: otherAlarms,
-                      onAlarmTap: (alarm) => _animateCamera(
-                        _boundsForCircle(
-                          alarm.location,
-                          alarm.radius,
-                          padding: _mapPadding(context),
-                        ),
-                      ),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final asyncAlarms = ref.watch(alarmsProvider);
+                        if (kDebugMode && asyncAlarms.hasError) {
+                          debugPrint(
+                            'alarmsProvider error: ${asyncAlarms.error}\n'
+                            '${asyncAlarms.stackTrace}',
+                          );
+                        }
+                        final alarms = asyncAlarms.maybeWhen(
+                          data: (list) => list
+                              .where((a) => a.id != widget.alarmId)
+                              .toList(),
+                          orElse: () => const <AlarmData>[],
+                        );
+                        return OtherAlarmsLayer(
+                          alarms: alarms,
+                          onAlarmTap: (alarm) => _animateCamera(
+                            _boundsForCircle(
+                              alarm.location,
+                              alarm.radius,
+                              padding: _mapPadding(context),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     if (form.location != null)
                       AlarmMapLayers(
                         location: form.location!,
                         radius: form.radius,
                         onMarkerTap: _fitCircle,
+                        semanticLabel: form.name.isEmpty
+                            ? l10n.locationAlarmDefault
+                            : form.name,
                       ),
                   ],
                 ),

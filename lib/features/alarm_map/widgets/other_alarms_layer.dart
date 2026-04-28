@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:there_yet/l10n/app_localizations.dart';
 import 'package:there_yet/shared/data/models/alarm.dart';
 
 class OtherAlarmsLayer extends StatelessWidget {
@@ -12,6 +13,7 @@ class OtherAlarmsLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     if (alarms.isEmpty) return const SizedBox.shrink();
 
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final baseColor = isDark
@@ -46,21 +48,27 @@ class OtherAlarmsLayer extends StatelessWidget {
                 point: alarm.location,
                 width: 26,
                 height: 26,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: onAlarmTap == null ? null : () => onAlarmTap!(alarm),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: markerColor,
-                      shape: BoxShape.circle,
-                      boxShadow: const [
-                        BoxShadow(color: Colors.black26, blurRadius: 3),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.notifications,
-                      size: 14,
-                      color: iconColor,
+                child: Semantics(
+                  label: alarm.name.isEmpty
+                      ? l10n.alarmDefaultName(alarm.id ?? 0)
+                      : alarm.name,
+                  button: onAlarmTap != null,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: onAlarmTap == null ? null : () => onAlarmTap!(alarm),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: markerColor,
+                        shape: BoxShape.circle,
+                        boxShadow: const [
+                          BoxShadow(color: Colors.black26, blurRadius: 3),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.notifications,
+                        size: 14,
+                        color: iconColor,
+                      ),
                     ),
                   ),
                 ),
