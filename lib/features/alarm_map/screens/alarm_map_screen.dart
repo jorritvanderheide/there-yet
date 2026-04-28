@@ -43,6 +43,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
   final _labelFocusNode = FocusNode();
 
   bool _mapReady = false;
+  bool _capturingThumbnail = false;
   double _sheetHeight = 248; // Estimated; updated by measurement.
 
   @override
@@ -303,6 +304,8 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
 
       case AlarmSaveNeedsThumbnail():
         final form = ref.read(alarmFormProvider(widget.alarmId));
+        // Hide other alarms so the thumbnail only contains the active one.
+        if (mounted) setState(() => _capturingThumbnail = true);
         if (form.location != null) {
           // Use the same offset padding as the normal view so the camera
           // doesn't jump. We'll crop the bottom to center the dot.
@@ -316,6 +319,7 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
           await Future<void>.delayed(const Duration(milliseconds: 300));
         }
         final thumbnail = await _captureAndCropMap();
+        if (mounted) setState(() => _capturingThumbnail = false);
         await notifier.provideThumbnail(thumbnail);
 
       case AlarmSaveNotificationDenied():
@@ -472,9 +476,10 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                     });
                   },
                   children: [
-                    const CurrentLocationMarker(),
+                    if (!_capturingThumbnail) const CurrentLocationMarker(),
                     Consumer(
                       builder: (context, ref, _) {
+                        if (_capturingThumbnail) return const SizedBox.shrink();
                         final asyncAlarms = ref.watch(alarmsProvider);
                         if (kDebugMode && asyncAlarms.hasError) {
                           debugPrint(
