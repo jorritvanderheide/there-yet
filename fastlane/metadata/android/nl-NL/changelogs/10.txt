@@ -1,0 +1,4 @@
+- Wekkers gaan af op de juiste afstand, ook als Android de achtergronddienst heeft gestopt
+- Gesloten wekkers blijven gesloten en gaan niet opnieuw af nadat de dienst is herstart
+- Meldingen en het sluitscherm worden nu in jouw taal getoond
+- Fouten bij opslaan en activeren tonen duidelijkere meldingen

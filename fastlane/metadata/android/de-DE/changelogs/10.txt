@@ -1,0 +1,4 @@
+- Wecker werden bei der richtigen Entfernung ausgelöst, auch wenn der Hintergrunddienst beendet wurde
+- Verworfene Wecker bleiben verworfen und werden nach einem Neustart des Dienstes nicht erneut ausgelöst
+- Benachrichtigungen und der Verwerfen-Bildschirm erscheinen jetzt in deiner Sprache
+- Fehler beim Speichern und Aktivieren zeigen verständlichere Meldungen

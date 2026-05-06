@@ -1,0 +1,4 @@
+- Las alarmas se activan a la distancia correcta incluso cuando se ha cerrado el servicio en segundo plano
+- Las alarmas descartadas siguen descartadas y no vuelven a sonar tras reiniciar el servicio
+- Las notificaciones y la pantalla de descarte ahora aparecen en tu idioma
+- Los errores al guardar y activar muestran mensajes más claros

@@ -1,0 +1,4 @@
+- Os alarmes são acionados à distância correta mesmo quando o serviço em segundo plano foi encerrado
+- Os alarmes dispensados ficam dispensados e não voltam a tocar depois de o serviço reiniciar
+- As notificações e o ecrã de dispensar aparecem agora no teu idioma
+- Os erros ao guardar e ativar mostram mensagens mais claras

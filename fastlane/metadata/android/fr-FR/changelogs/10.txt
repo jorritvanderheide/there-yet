@@ -1,0 +1,4 @@
+- Les alarmes se déclenchent à la bonne distance, même si le service en arrière-plan a été arrêté
+- Les alarmes arrêtées le restent et ne se redéclenchent pas après le redémarrage du service
+- Les notifications et l'écran d'arrêt s'affichent maintenant dans votre langue
+- Les erreurs d'enregistrement et d'activation affichent des messages plus clairs

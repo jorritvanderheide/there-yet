@@ -1,0 +1,4 @@
+- Larm utlöses på rätt avstånd även när bakgrundstjänsten har avslutats
+- Avfärdade larm förblir avfärdade och utlöses inte igen efter att tjänsten startas om
+- Aviseringar och avfärdaskärmen visas nu på ditt språk
+- Fel vid sparande och aktivering visar tydligare meddelanden

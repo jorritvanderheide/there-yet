@@ -1,0 +1,4 @@
+- Alarmy uruchamiają się we właściwej odległości, nawet gdy usługa w tle została zatrzymana
+- Odrzucone alarmy pozostają odrzucone i nie uruchamiają się ponownie po restarcie usługi
+- Powiadomienia i ekran odrzucania są teraz wyświetlane w Twoim języku
+- Błędy zapisu i aktywacji pokazują bardziej zrozumiałe komunikaty

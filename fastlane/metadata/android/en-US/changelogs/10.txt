@@ -1,0 +1,4 @@
+- Alarms fire at the correct distance even when the background service has been killed
+- Dismissed alarms stay dismissed and don't re-fire after the service restarts
+- Notifications and dismiss screen now appear in your language
+- Save and activate errors show clearer messages

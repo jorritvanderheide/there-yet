@@ -1,0 +1,4 @@
+- Budíky se spouští ve správné vzdálenosti i poté, co systém ukončil službu na pozadí
+- Zavřené budíky zůstávají zavřené a nespouští se znovu po restartu služby
+- Oznámení a obrazovka zavření se nyní zobrazují ve vašem jazyce
+- Chyby při ukládání a aktivaci nyní zobrazují srozumitelnější zprávy

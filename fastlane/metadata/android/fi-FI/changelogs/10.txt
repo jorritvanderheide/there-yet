@@ -1,0 +1,4 @@
+- Herätykset laukeavat oikealla etäisyydellä, vaikka taustapalvelu olisi suljettu
+- Hiljennetyt herätykset pysyvät hiljennettyinä eivätkä laukea uudelleen palvelun käynnistyttyä
+- Ilmoitukset ja hiljennysnäyttö näkyvät nyt omalla kielelläsi
+- Tallennus- ja aktivointivirheet näyttävät selkeämpiä viestejä
