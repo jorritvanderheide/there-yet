@@ -7,6 +7,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:there_yet/features/alarm_service/alarm_checker.dart';
+import 'package:there_yet/features/alarm_service/alarm_state_store.dart';
 import 'package:there_yet/features/alarm_service/background_alarm_player.dart';
 import 'package:there_yet/features/alarm_service/proximity_alert_service.dart';
 import 'package:there_yet/shared/data/database/app_database.dart';
@@ -44,6 +45,7 @@ class LocationTaskHandler extends TaskHandler {
   Timer? _adaptivePollTimer;
 
   int _resubscribeAttempts = 0;
+  bool _fetchInFlight = false;
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
@@ -56,9 +58,33 @@ class LocationTaskHandler extends TaskHandler {
       return;
     }
 
+    // Apply dismisses that happened while the FGS was dead, and seed
+    // `_firedIds` so an already-ringing alarm doesn't refire on this position
+    // check. Both must happen before `_fetchPosition`, which calls
+    // `_checkAlarms`.
+    await _applyPendingDismisses();
+    await _seedFiredIds();
+
     _startPositionStream();
     await _fetchPosition(source: 'init');
     await _reregisterProximityAlertsIfNeeded();
+  }
+
+  Future<void> _applyPendingDismisses() async {
+    final ids = await AlarmStateStore.consumePendingDismisses();
+    for (final id in ids) {
+      try {
+        await _repo!.toggleActive(id, active: false);
+        _firedIds.remove(id);
+      } on Exception catch (e) {
+        debugPrint('[alarm_service] writeback dismiss $id failed: $e');
+      }
+    }
+  }
+
+  Future<void> _seedFiredIds() async {
+    final ids = await AlarmStateStore.getRinging();
+    _firedIds.addAll(ids);
   }
 
   void _startPositionStream() {
@@ -80,24 +106,33 @@ class LocationTaskHandler extends TaskHandler {
   }
 
   /// Fetches a single position fix. Retries up to 3 times on failure.
+  /// Skipped if a previous fetch is still in flight, since slow GPS plus
+  /// overlapping triggers (stream, adaptive timer, repeat event) can otherwise
+  /// stack multiple concurrent requests.
   Future<void> _fetchPosition({required String source}) async {
-    for (var attempt = 0; attempt < 3; attempt++) {
-      try {
-        final timeout = Duration(seconds: 15 + attempt * 10);
-        final pos = await Geolocator.getCurrentPosition(
-          locationSettings: AndroidSettings(
-            accuracy: LocationAccuracy.high,
-            timeLimit: timeout,
-            forceLocationManager: true,
-          ),
-        );
-        await _processPosition(pos, source: source);
-        return;
-      } on Exception catch (e) {
-        debugPrint(
-          '[alarm_service] fetch($source) attempt ${attempt + 1} failed: $e',
-        );
+    if (_fetchInFlight) return;
+    _fetchInFlight = true;
+    try {
+      for (var attempt = 0; attempt < 3; attempt++) {
+        try {
+          final timeout = Duration(seconds: 15 + attempt * 10);
+          final pos = await Geolocator.getCurrentPosition(
+            locationSettings: AndroidSettings(
+              accuracy: LocationAccuracy.high,
+              timeLimit: timeout,
+              forceLocationManager: true,
+            ),
+          );
+          await _processPosition(pos, source: source);
+          return;
+        } on Exception catch (e) {
+          debugPrint(
+            '[alarm_service] fetch($source) attempt ${attempt + 1} failed: $e',
+          );
+        }
       }
+    } finally {
+      _fetchInFlight = false;
     }
   }
 
@@ -168,9 +203,11 @@ class LocationTaskHandler extends TaskHandler {
           prefs.getBool('proximity_needs_reregister') ?? false;
       if (!needsReregister) return;
 
-      await prefs.setBool('proximity_needs_reregister', false);
       final active = await _repo!.getActive();
       await ProximityAlertService.syncAll(active);
+      // Clear the flag only after successful re-registration so a transient
+      // failure doesn't leave the device without OS-level wake-ups.
+      await prefs.setBool('proximity_needs_reregister', false);
     } on Exception catch (e) {
       debugPrint('[alarm_service] proximity re-register failed: $e');
     }
@@ -213,7 +250,11 @@ class LocationTaskHandler extends TaskHandler {
       final activeAlarms = await _repo!.getActive();
 
       final activeIds = activeAlarms.map((a) => a.id!).toSet();
+      final droppedIds = _firedIds.difference(activeIds);
       _firedIds.retainAll(activeIds);
+      for (final id in droppedIds) {
+        await AlarmStateStore.unmarkRinging(id);
+      }
 
       final checkable = activeAlarms
           .where((a) => !_firedIds.contains(a.id))
@@ -227,6 +268,7 @@ class LocationTaskHandler extends TaskHandler {
 
       for (final alarm in triggered) {
         _firedIds.add(alarm.id!);
+        await AlarmStateStore.markRinging(alarm.id!);
 
         FlutterForegroundTask.sendDataToMain(
           jsonEncode({'type': 'alarm_fired', 'id': alarm.id}),
@@ -261,6 +303,7 @@ class LocationTaskHandler extends TaskHandler {
         await _player.stop(alarmId: id);
         await _repo?.toggleActive(id, active: false);
         _firedIds.remove(id);
+        await AlarmStateStore.unmarkRinging(id);
         FlutterForegroundTask.sendDataToMain(
           jsonEncode({'type': 'alarm_dismissed', 'id': id}),
         );

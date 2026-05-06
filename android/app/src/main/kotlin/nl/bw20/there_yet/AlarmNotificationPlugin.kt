@@ -96,6 +96,7 @@ class AlarmNotificationPlugin(private val context: Context) :
         flutterEngine?.let {
             registerChannel(context, it)
             ProximityAlertManager.registerChannel(context, it)
+            AlarmStateChannel.registerChannel(context, it)
         }
     }
 

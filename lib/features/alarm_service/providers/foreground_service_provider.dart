@@ -31,12 +31,21 @@ class ForegroundServiceNotifier extends Notifier<bool> {
   }
 
   bool _evaluating = false;
+  List<AlarmData>? _pending;
 
+  /// Coalesces concurrent evaluation requests onto the current run by
+  /// stashing the latest snapshot. Drops would lose proximity-alert syncs
+  /// when a user creates and edits alarms in quick succession.
   Future<void> _evaluate(List<AlarmData> alarms) async {
+    _pending = alarms;
     if (_evaluating) return;
     _evaluating = true;
     try {
-      await _doEvaluate(alarms);
+      while (_pending != null) {
+        final next = _pending!;
+        _pending = null;
+        await _doEvaluate(next);
+      }
     } finally {
       _evaluating = false;
     }

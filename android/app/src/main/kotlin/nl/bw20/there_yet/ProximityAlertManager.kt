@@ -54,7 +54,7 @@ object ProximityAlertManager {
         unregister(context, alarmId)
 
         val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val intent = createPendingIntent(context, alarmId)
+        val intent = createPendingIntent(context, alarmId, lat, lng, radius)
         val alertRadius = max(radius + RADIUS_BUFFER_METERS, MIN_RADIUS_METERS)
 
         try {
@@ -73,7 +73,9 @@ object ProximityAlertManager {
         saveIds(context, ids)
 
         val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val intent = createPendingIntent(context, alarmId)
+        // PendingIntent equality ignores extras, so any matching intent will be
+        // located regardless of the lat/lng values used here.
+        val intent = createPendingIntent(context, alarmId, 0.0, 0.0, 0f)
         try {
             lm.removeProximityAlert(intent)
             Log.d(TAG, "Unregistered alarm $alarmId")
@@ -86,7 +88,7 @@ object ProximityAlertManager {
         val ids = loadIds(context)
         val lm = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         for (id in ids) {
-            val intent = createPendingIntent(context, id)
+            val intent = createPendingIntent(context, id, 0.0, 0.0, 0f)
             try {
                 lm.removeProximityAlert(intent)
                 Log.d(TAG, "Unregistered alarm $id")
@@ -116,10 +118,19 @@ object ProximityAlertManager {
         prefs.edit().putStringSet(KEY_IDS, ids.map { it.toString() }.toSet()).apply()
     }
 
-    private fun createPendingIntent(context: Context, alarmId: Int): PendingIntent {
+    private fun createPendingIntent(
+        context: Context,
+        alarmId: Int,
+        lat: Double,
+        lng: Double,
+        radius: Float,
+    ): PendingIntent {
         val intent = Intent(context, ProximityAlertReceiver::class.java).apply {
             action = "nl.bw20.there_yet.PROXIMITY_ALERT"
             putExtra("alarm_id", alarmId)
+            putExtra("alarm_lat", lat)
+            putExtra("alarm_lng", lng)
+            putExtra("alarm_radius", radius)
         }
         return PendingIntent.getBroadcast(
             context,

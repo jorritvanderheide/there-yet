@@ -34,6 +34,10 @@ class MainActivity : FlutterActivity() {
         // Register proximity alert method channel
         ProximityAlertManager.registerChannel(applicationContext, flutterEngine)
 
+        // Register alarm state method channel (cross-process ringing /
+        // pending-dismiss bookkeeping)
+        AlarmStateChannel.registerChannel(applicationContext, flutterEngine)
+
         // Screen method channel
         screenChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SCREEN_CHANNEL)
         screenChannel!!.setMethodCallHandler { call, result ->

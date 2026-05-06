@@ -11,18 +11,20 @@ class AlarmDismissReceiver : BroadcastReceiver() {
         if (alarmId == -1) return
 
         AlarmNotificationHelper.cancel(context, alarmId)
-        // Stop audio directly — covers the case where the FGS is dead
+        // Stop audio directly; covers the case where the FGS is dead
         // and the Dart-side stop call won't reach.
         AlarmNotificationPlugin.stopAlarmSound()
+        AlarmStateStore.removeRinging(context, alarmId)
 
-        // Send dismiss command to the background Dart isolate.
-        // Triggers LocationTaskHandler.onReceiveData() which deactivates
-        // the alarm in the database. May fail if FGS is dead — the alarm
-        // stays active in DB and will be re-evaluated on next service start.
+        // Send dismiss command to the background Dart isolate, which
+        // deactivates the alarm in the database.
         try {
             ForegroundService.sendData("""{"type":"dismiss","id":$alarmId}""")
         } catch (_: Exception) {
-            // FGS not running — alarm stays active, will self-heal on restart.
+            // FGS is dead. Persist the dismiss intent so the FGS writes
+            // active=false on its next start, preventing immediate re-fire
+            // when the user is still inside the radius.
+            AlarmStateStore.addPendingDismiss(context, alarmId)
         }
     }
 }
