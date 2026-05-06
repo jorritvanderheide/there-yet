@@ -26,6 +26,11 @@ Future<bool> _isScreenOff() async {
     return result ?? true;
   } on MissingPluginException {
     return true;
+  } on Exception catch (e) {
+    // Conservative default: if the channel call fails, don't pop a ring
+    // screen we couldn't justify. Log so the failure is visible in logcat.
+    debugPrint('[main] _isScreenOff failed: $e');
+    return false;
   }
 }
 
