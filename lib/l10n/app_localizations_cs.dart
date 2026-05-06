@@ -160,6 +160,15 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Budík';
+
+  @override
+  String get activationFailed => 'Budík nelze aktivovat';
+
+  @override
+  String get saveFailed => 'Budík nelze uložit';
+
+  @override
   String get active => 'aktivní';
 
   @override

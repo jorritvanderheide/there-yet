@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">Olet määränpääsi lähellä</string>
+    <string name="notification_dismiss">Hiljennä</string>
+    <string name="notification_channel_alerts_name">Herätysilmoitukset</string>
+    <string name="notification_channel_alerts_description">Sijaintiherätysten ilmoitukset</string>
+</resources>

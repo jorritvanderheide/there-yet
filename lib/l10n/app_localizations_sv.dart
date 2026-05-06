@@ -155,6 +155,15 @@ class AppLocalizationsSv extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Larm';
+
+  @override
+  String get activationFailed => 'Det gick inte att aktivera larmet';
+
+  @override
+  String get saveFailed => 'Det gick inte att spara larmet';
+
+  @override
   String get active => 'aktivt';
 
   @override

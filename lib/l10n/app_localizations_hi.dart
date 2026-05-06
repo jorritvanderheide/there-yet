@@ -154,6 +154,15 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'अलार्म';
+
+  @override
+  String get activationFailed => 'अलार्म सक्रिय नहीं हो सका';
+
+  @override
+  String get saveFailed => 'अलार्म सहेजा नहीं जा सका';
+
+  @override
   String get active => 'सक्रिय';
 
   @override

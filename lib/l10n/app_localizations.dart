@@ -336,6 +336,24 @@ abstract class AppLocalizations {
   /// **'Alarm #{id}'**
   String alarmDefaultName(int id);
 
+  /// No description provided for @alarmDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get alarmDefault;
+
+  /// No description provided for @activationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not activate alarm'**
+  String get activationFailed;
+
+  /// No description provided for @saveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save alarm'**
+  String get saveFailed;
+
   /// No description provided for @active.
   ///
   /// In en, this message translates to:

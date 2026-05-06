@@ -10,6 +10,7 @@ import 'package:there_yet/features/alarm_service/foreground_service_manager.dart
 import 'package:there_yet/features/alarm_service/providers/alarm_service_provider.dart';
 import 'package:there_yet/features/alarm_service/providers/foreground_service_provider.dart';
 import 'package:there_yet/features/alarm_service/screens/alarm_ring_screen.dart';
+import 'package:there_yet/l10n/app_localizations.dart';
 import 'package:there_yet/shared/data/database/connection.dart';
 import 'package:there_yet/shared/data/models/alarm.dart';
 import 'package:there_yet/shared/providers/connectivity_provider.dart';
@@ -129,7 +130,7 @@ void main() async {
           }
         },
         onResumeWithAlarm: () {
-          // App resumed — re-show dismiss screen if alarm is ringing but
+          // App resumed; re-show dismiss screen if alarm is ringing but
           // the dismiss screen was lost (process recreation, etc.).
           final alarms = container.read(alarmServiceProvider);
           for (final alarm in alarms) {
@@ -215,9 +216,14 @@ void _showDismissScreenFromIntent({
 
 void _showDismissScreen(AlarmData alarm, {required VoidCallback onDismissed}) {
   if (alarm.id == null) return;
-  final label = alarm.name.isNotEmpty ? alarm.name : null;
-  final title = label ?? 'There Yet';
-  final body = 'You are within ${alarm.radius.round()} m of your destination';
+  final ctx = navigatorKey.currentContext;
+  final l10n = ctx != null ? AppLocalizations.of(ctx) : null;
+  final title = alarm.name.isNotEmpty
+      ? alarm.name
+      : (l10n?.locationAlarmDefault ?? 'There Yet');
+  final body =
+      l10n?.alarmBodyWithinRadius(alarm.radius.round()) ??
+      'You are within ${alarm.radius.round()} m of your destination';
 
   navigatorKey.currentState?.push(
     MaterialPageRoute<void>(

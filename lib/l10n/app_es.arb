@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "Alarma",
+  "activationFailed": "No se pudo activar la alarma",
+  "saveFailed": "No se pudo guardar la alarma",
   "active": "activa",
   "inactive": "inactiva",
 

@@ -155,6 +155,15 @@ class AppLocalizationsFi extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Herätys';
+
+  @override
+  String get activationFailed => 'Herätyksen aktivointi epäonnistui';
+
+  @override
+  String get saveFailed => 'Herätyksen tallennus epäonnistui';
+
+  @override
   String get active => 'käytössä';
 
   @override

@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "알람",
+  "activationFailed": "알람을 활성화할 수 없습니다",
+  "saveFailed": "알람을 저장할 수 없습니다",
   "active": "활성",
   "inactive": "비활성",
 

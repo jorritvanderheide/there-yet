@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "Wecker",
+  "activationFailed": "Wecker konnte nicht aktiviert werden",
+  "saveFailed": "Wecker konnte nicht gespeichert werden",
   "active": "aktiv",
   "inactive": "inaktiv",
 

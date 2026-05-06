@@ -156,6 +156,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Alarma';
+
+  @override
+  String get activationFailed => 'No se pudo activar la alarma';
+
+  @override
+  String get saveFailed => 'No se pudo guardar la alarma';
+
+  @override
   String get active => 'activa';
 
   @override

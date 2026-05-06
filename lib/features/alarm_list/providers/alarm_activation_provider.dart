@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -41,13 +42,19 @@ final class AlarmActivationIdle extends AlarmActivationEvent {
 }
 
 final class AlarmDeactivated extends AlarmActivationEvent {
-  const AlarmDeactivated(this.alarmName);
-  final String alarmName;
+  const AlarmDeactivated({required this.alarmId, required this.name});
+  final int alarmId;
+  final String name;
 }
 
 final class AlarmActivated extends AlarmActivationEvent {
-  const AlarmActivated(this.alarmName, this.distance);
-  final String alarmName;
+  const AlarmActivated({
+    required this.alarmId,
+    required this.name,
+    required this.distance,
+  });
+  final int alarmId;
+  final String name;
   final double distance;
 }
 
@@ -75,8 +82,14 @@ final class AlarmActivationNotificationDenied extends AlarmActivationEvent {
 }
 
 final class AlarmActivationInsideRadius extends AlarmActivationEvent {
-  const AlarmActivationInsideRadius(this.alarmName, this.distance, this.radius);
-  final String alarmName;
+  const AlarmActivationInsideRadius({
+    required this.alarmId,
+    required this.name,
+    required this.distance,
+    required this.radius,
+  });
+  final int alarmId;
+  final String name;
   final double distance;
   final double radius;
 }
@@ -85,9 +98,15 @@ final class AlarmActivationGpsDisabled extends AlarmActivationEvent {
   const AlarmActivationGpsDisabled();
 }
 
-final class AlarmActivationError extends AlarmActivationEvent {
-  const AlarmActivationError(this.message);
-  final String message;
+/// Background location permission was required but denied.
+final class AlarmActivationBackgroundDenied extends AlarmActivationEvent {
+  const AlarmActivationBackgroundDenied();
+}
+
+/// Unexpected error during activation. Technical details are logged via
+/// `debugPrint`; the user only sees a generic message.
+final class AlarmActivationUnknownError extends AlarmActivationEvent {
+  const AlarmActivationUnknownError();
 }
 
 class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
@@ -105,12 +124,10 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
 
   Future<void> deactivate(AlarmData alarm) async {
     final id = alarm.id!;
-    final name = alarm.name.isEmpty ? 'Alarm #$id' : alarm.name;
-
     final ids = {...state.activatingIds}..remove(id);
     state = AlarmActivationState(
       activatingIds: ids,
-      lastEvent: AlarmDeactivated(name),
+      lastEvent: AlarmDeactivated(alarmId: id, name: alarm.name),
     );
 
     await ref.read(alarmRepositoryProvider).toggleActive(id, active: false);
@@ -149,10 +166,7 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
     if (alarm == null) return;
 
     if (!confirmed) {
-      _finish(
-        alarm.id!,
-        const AlarmActivationError('Background location required'),
-      );
+      _finish(alarm.id!, const AlarmActivationBackgroundDenied());
       return;
     }
 
@@ -160,10 +174,7 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
         .read(locationPermissionProvider.notifier)
         .requestBackground();
     if (!granted) {
-      _finish(
-        alarm.id!,
-        const AlarmActivationError('Background location required'),
-      );
+      _finish(alarm.id!, const AlarmActivationBackgroundDenied());
       return;
     }
 
@@ -232,20 +243,31 @@ class AlarmActivationNotifier extends Notifier<AlarmActivationState> {
         currentLatLng = LatLng(position.latitude, position.longitude);
       }
       final distance = distanceInMeters(currentLatLng, alarm.location);
-      final name = alarm.name.isEmpty ? 'Alarm #$id' : alarm.name;
       if (distance <= alarm.radius) {
-        _finish(id, AlarmActivationInsideRadius(name, distance, alarm.radius));
+        _finish(
+          id,
+          AlarmActivationInsideRadius(
+            alarmId: id,
+            name: alarm.name,
+            distance: distance,
+            radius: alarm.radius,
+          ),
+        );
         return;
       }
 
       await ref.read(alarmRepositoryProvider).toggleActive(id, active: true);
       AlarmServiceNotifier.refresh();
 
-      _finish(id, AlarmActivated(name, distance));
+      _finish(
+        id,
+        AlarmActivated(alarmId: id, name: alarm.name, distance: distance),
+      );
     } on LocationServiceDisabledException {
       _finish(id, const AlarmActivationGpsDisabled());
     } on Exception catch (e) {
-      _finish(id, AlarmActivationError(e.toString()));
+      debugPrint('[alarm_activation] failed: $e');
+      _finish(id, const AlarmActivationUnknownError());
     }
   }
 

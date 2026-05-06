@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:there_yet/features/alarm_service/providers/alarm_service_provider.dart';
@@ -60,14 +59,49 @@ final class AlarmSaveNotificationDenied extends AlarmSaveState {
   const AlarmSaveNotificationDenied();
 }
 
+/// The kind of "saved" outcome to display. The UI maps each to an l10n key.
+enum AlarmSavedKind {
+  /// Saved and active.
+  regular,
+
+  /// Saved inactive because no GPS lock was available.
+  noGps,
+
+  /// Saved inactive because the user is currently inside the radius.
+  inside,
+}
+
 final class AlarmSaved extends AlarmSaveState {
-  const AlarmSaved(this.message);
-  final String message;
+  const AlarmSaved({required this.name, required this.kind});
+
+  /// Display name to substitute into the localized message. Empty if the
+  /// alarm has neither a user-supplied label nor a reverse-geocoded name;
+  /// callers should fall back to a localized default.
+  final String name;
+  final AlarmSavedKind kind;
+}
+
+sealed class AlarmSaveError {
+  const AlarmSaveError();
+}
+
+final class AlarmSaveErrorLocationDenied extends AlarmSaveError {
+  const AlarmSaveErrorLocationDenied();
+}
+
+final class AlarmSaveErrorBackgroundDenied extends AlarmSaveError {
+  const AlarmSaveErrorBackgroundDenied();
+}
+
+/// Unexpected failure. Technical details are logged; the user only sees a
+/// generic message.
+final class AlarmSaveErrorUnknown extends AlarmSaveError {
+  const AlarmSaveErrorUnknown();
 }
 
 final class AlarmSaveFailed extends AlarmSaveState {
-  const AlarmSaveFailed(this.message);
-  final String message;
+  const AlarmSaveFailed(this.error);
+  final AlarmSaveError error;
 }
 
 class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
@@ -101,7 +135,7 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
     if (!fgStatus.isGranted) {
       await ref.read(locationPermissionProvider.notifier).request();
       if (ref.read(locationPermissionProvider) != PermissionStatus.granted) {
-        state = const AlarmSaveFailed('Location permission required');
+        state = const AlarmSaveFailed(AlarmSaveErrorLocationDenied());
         return;
       }
     }
@@ -124,18 +158,14 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
     switch (step) {
       case BackgroundLocationRationale():
         if (!confirmed) {
-          state = const AlarmSaveFailed(
-            'Background location required to save alarm',
-          );
+          state = const AlarmSaveFailed(AlarmSaveErrorBackgroundDenied());
           return;
         }
         final granted = await ref
             .read(locationPermissionProvider.notifier)
             .requestBackground();
         if (!granted) {
-          state = const AlarmSaveFailed(
-            'Background location required to save alarm',
-          );
+          state = const AlarmSaveFailed(AlarmSaveErrorBackgroundDenied());
           return;
         }
         await _continueAfterBackground();
@@ -261,19 +291,21 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
         }
       }
 
-      final label = _name.isEmpty ? 'Alarm' : _name;
-      final String message;
+      // Use the saved name (which falls back to the reverse-geocoded
+      // location). UI substitutes a localized "Alarm" if both are empty.
+      final AlarmSavedKind kind;
       if (!hasLocationLock) {
-        message = '$label saved (inactive, no GPS lock)';
+        kind = AlarmSavedKind.noGps;
       } else if (isInsideRadius) {
-        message = '$label saved (inactive)';
+        kind = AlarmSavedKind.inside;
       } else {
-        message = '$label saved';
+        kind = AlarmSavedKind.regular;
       }
 
-      state = AlarmSaved(message);
+      state = AlarmSaved(name: alarmName, kind: kind);
     } on Exception catch (e) {
-      state = AlarmSaveFailed('Save failed: $e');
+      debugPrint('[alarm_save] failed: $e');
+      state = const AlarmSaveFailed(AlarmSaveErrorUnknown());
     }
   }
 }

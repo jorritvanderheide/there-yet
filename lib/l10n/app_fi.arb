@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "Herätys",
+  "activationFailed": "Herätyksen aktivointi epäonnistui",
+  "saveFailed": "Herätyksen tallennus epäonnistui",
   "active": "käytössä",
   "inactive": "pois käytöstä",
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">Jste poblíž svého cíle</string>
+    <string name="notification_dismiss">Zavřít</string>
+    <string name="notification_channel_alerts_name">Upozornění budíku</string>
+    <string name="notification_channel_alerts_description">Upozornění o budících podle polohy</string>
+</resources>

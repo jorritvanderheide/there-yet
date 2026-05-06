@@ -151,6 +151,15 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => '鬧鐘';
+
+  @override
+  String get activationFailed => '無法啟用鬧鐘';
+
+  @override
+  String get saveFailed => '無法儲存鬧鐘';
+
+  @override
   String get active => '已啟用';
 
   @override

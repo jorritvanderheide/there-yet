@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Strings used by the native fallback path that fires when the Flutter
+  foreground service is not running. Strings shown by the Dart side use
+  Flutter l10n in lib/l10n/. Keep both in sync when adding new strings.
+-->
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">You are near your destination</string>
+    <string name="notification_dismiss">Dismiss</string>
+    <string name="notification_channel_alerts_name">Alarm Alerts</string>
+    <string name="notification_channel_alerts_description">Location alarm alerts</string>
+</resources>

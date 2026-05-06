@@ -150,17 +150,24 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
   Future<void> _onActivationEvent(AlarmActivationEvent event) async {
     final l10n = AppLocalizations.of(context)!;
     final notifier = ref.read(alarmActivationProvider.notifier);
+    String displayName(int id, String raw) =>
+        raw.isEmpty ? l10n.alarmDefaultName(id) : raw;
 
     switch (event) {
       case AlarmActivationIdle():
         break;
 
-      case AlarmDeactivated(:final alarmName):
-        _showSnackBar(l10n.alarmDeactivated(alarmName));
+      case AlarmDeactivated(:final alarmId, :final name):
+        _showSnackBar(l10n.alarmDeactivated(displayName(alarmId, name)));
         notifier.consumeEvent();
 
-      case AlarmActivated(:final alarmName, :final distance):
-        _showSnackBar(l10n.alarmActivated(alarmName, formatDistance(distance)));
+      case AlarmActivated(:final alarmId, :final name, :final distance):
+        _showSnackBar(
+          l10n.alarmActivated(
+            displayName(alarmId, name),
+            formatDistance(distance),
+          ),
+        );
         notifier.consumeEvent();
 
       case AlarmActivationNeedsForeground():
@@ -188,7 +195,8 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
         notifier.consumeEvent();
 
       case AlarmActivationInsideRadius(
-        :final alarmName,
+        :final alarmId,
+        :final name,
         :final distance,
         :final radius,
       ):
@@ -201,7 +209,7 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
             content: Text(
               l10n.alreadyInsideAlarmAreaBody(
                 formatDistance(distance),
-                alarmName,
+                displayName(alarmId, name),
                 formatDistance(radius),
               ),
             ),
@@ -228,8 +236,12 @@ class _AlarmListScreenState extends ConsumerState<AlarmListScreen> {
           ),
         );
 
-      case AlarmActivationError(:final message):
-        _showSnackBar(message);
+      case AlarmActivationBackgroundDenied():
+        _showSnackBar(l10n.backgroundLocationRequired);
+        notifier.consumeEvent();
+
+      case AlarmActivationUnknownError():
+        _showSnackBar(l10n.activationFailed);
         notifier.consumeEvent();
     }
   }

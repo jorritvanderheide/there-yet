@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "鬧鐘",
+  "activationFailed": "無法啟用鬧鐘",
+  "saveFailed": "無法儲存鬧鐘",
   "active": "已啟用",
   "inactive": "未啟用",
 

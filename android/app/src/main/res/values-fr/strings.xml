@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">Vous êtes près de votre destination</string>
+    <string name="notification_dismiss">Arrêter</string>
+    <string name="notification_channel_alerts_name">Alertes d\'alarme</string>
+    <string name="notification_channel_alerts_description">Alertes d\'alarmes par localisation</string>
+</resources>

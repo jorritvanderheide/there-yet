@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">Je bent in de buurt van je bestemming</string>
+    <string name="notification_dismiss">Sluiten</string>
+    <string name="notification_channel_alerts_name">Wekkermeldingen</string>
+    <string name="notification_channel_alerts_description">Wekkermeldingen op basis van locatie</string>
+</resources>

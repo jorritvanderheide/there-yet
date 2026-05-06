@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">Du är nära din destination</string>
+    <string name="notification_dismiss">Avfärda</string>
+    <string name="notification_channel_alerts_name">Larmaviseringar</string>
+    <string name="notification_channel_alerts_description">Aviseringar för platslarm</string>
+</resources>

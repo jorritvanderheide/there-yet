@@ -158,6 +158,15 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Wecker';
+
+  @override
+  String get activationFailed => 'Wecker konnte nicht aktiviert werden';
+
+  @override
+  String get saveFailed => 'Wecker konnte nicht gespeichert werden';
+
+  @override
   String get active => 'aktiv';
 
   @override

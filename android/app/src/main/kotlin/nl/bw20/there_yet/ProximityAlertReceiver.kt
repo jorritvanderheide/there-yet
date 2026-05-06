@@ -57,7 +57,10 @@ class ProximityAlertReceiver : BroadcastReceiver() {
         AlarmStateStore.addRinging(context, alarmId)
         AlarmNotificationPlugin.playAlarmSound(context)
         AlarmNotificationHelper.show(
-            context, alarmId, "There Yet", "You are near your destination"
+            context,
+            alarmId,
+            context.getString(R.string.notification_alarm_title_default),
+            context.getString(R.string.notification_near_destination),
         )
     }
 

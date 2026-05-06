@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "अलार्म",
+  "activationFailed": "अलार्म सक्रिय नहीं हो सका",
+  "saveFailed": "अलार्म सहेजा नहीं जा सका",
   "active": "सक्रिय",
   "inactive": "निष्क्रिय",
 

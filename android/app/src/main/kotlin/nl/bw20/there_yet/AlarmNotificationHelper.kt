@@ -12,7 +12,6 @@ import androidx.core.app.NotificationManagerCompat
 
 object AlarmNotificationHelper {
     private const val CHANNEL_ID = "alarm_alert_channel"
-    private const val CHANNEL_NAME = "Alarm Alerts"
     // Use alarm ID + offset as notification ID so multiple alarms don't collide.
     private const val NOTIFICATION_ID_OFFSET = 30000
 
@@ -20,10 +19,12 @@ object AlarmNotificationHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                CHANNEL_NAME,
+                context.getString(R.string.notification_channel_alerts_name),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Location alarm alerts"
+                description = context.getString(
+                    R.string.notification_channel_alerts_description
+                )
                 enableVibration(true)
                 setBypassDnd(true)
                 lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
@@ -75,7 +76,11 @@ object AlarmNotificationHelper {
             .setOngoing(true)
             .setAutoCancel(false)
             .setFullScreenIntent(fullScreenPending, true)
-            .addAction(0, "Dismiss", dismissPending)
+            .addAction(
+                0,
+                context.getString(R.string.notification_dismiss),
+                dismissPending,
+            )
             .build()
 
         try {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">목적지에 가까워졌습니다</string>
+    <string name="notification_dismiss">닫기</string>
+    <string name="notification_channel_alerts_name">알람 알림</string>
+    <string name="notification_channel_alerts_description">위치 알람 알림</string>
+</resources>

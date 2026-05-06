@@ -162,6 +162,15 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Alarm';
+
+  @override
+  String get activationFailed => 'Nie udało się włączyć alarmu';
+
+  @override
+  String get saveFailed => 'Nie udało się zapisać alarmu';
+
+  @override
   String get active => 'aktywny';
 
   @override

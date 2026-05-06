@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_alarm_title_default">There Yet</string>
+    <string name="notification_near_destination">Du bist in der Nähe deines Ziels</string>
+    <string name="notification_dismiss">Schließen</string>
+    <string name="notification_channel_alerts_name">Wecker-Hinweise</string>
+    <string name="notification_channel_alerts_description">Standort-Wecker-Hinweise</string>
+</resources>

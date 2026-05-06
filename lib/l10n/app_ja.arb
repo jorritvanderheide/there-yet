@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "アラーム",
+  "activationFailed": "アラームを有効にできませんでした",
+  "saveFailed": "アラームを保存できませんでした",
   "active": "有効",
   "inactive": "無効",
 

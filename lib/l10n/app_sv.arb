@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "Larm",
+  "activationFailed": "Det gick inte att aktivera larmet",
+  "saveFailed": "Det gick inte att spara larmet",
   "active": "aktivt",
   "inactive": "inaktivt",
 

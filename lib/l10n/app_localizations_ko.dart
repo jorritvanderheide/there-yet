@@ -151,6 +151,15 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => '알람';
+
+  @override
+  String get activationFailed => '알람을 활성화할 수 없습니다';
+
+  @override
+  String get saveFailed => '알람을 저장할 수 없습니다';
+
+  @override
   String get active => '활성';
 
   @override

@@ -299,7 +299,13 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
         );
         notifier.reset();
 
-      case AlarmSaved(:final message):
+      case AlarmSaved(:final name, :final kind):
+        final displayName = name.isEmpty ? l10n.alarmDefault : name;
+        final message = switch (kind) {
+          AlarmSavedKind.regular => l10n.alarmSaved(displayName),
+          AlarmSavedKind.noGps => l10n.alarmSavedNoGps(displayName),
+          AlarmSavedKind.inside => l10n.alarmSavedInside(displayName),
+        };
         ref.read(alarmFormProvider(widget.alarmId).notifier).markSaved();
         notifier.reset();
         if (mounted) {
@@ -313,7 +319,12 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
           });
         }
 
-      case AlarmSaveFailed(:final message):
+      case AlarmSaveFailed(:final error):
+        final message = switch (error) {
+          AlarmSaveErrorLocationDenied() => l10n.locationPermissionRequired,
+          AlarmSaveErrorBackgroundDenied() => l10n.backgroundLocationRequired,
+          AlarmSaveErrorUnknown() => l10n.saveFailed,
+        };
         _showSnackBar(message);
         notifier.reset();
     }

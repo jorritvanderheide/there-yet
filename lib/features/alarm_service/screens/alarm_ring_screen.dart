@@ -75,7 +75,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
   // Warm: pop the ring screen and launch the home activity so unlocking does
   // not force-foreground There Yet. moveTaskToBack is a no-op here because
   // the activity is still in the keyguard-occluding state, so we explicitly
-  // bring the launcher to the front instead — the task is preserved for
+  // bring the launcher to the front instead; the task is preserved for
   // later resumption via the app icon or recents.
   Future<void> _exitActivity() async {
     if (widget.launchedByIntent) {

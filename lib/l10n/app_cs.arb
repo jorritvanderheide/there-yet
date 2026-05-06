@@ -89,6 +89,9 @@
       "id": {"type": "int"}
     }
   },
+  "alarmDefault": "Budík",
+  "activationFailed": "Budík nelze aktivovat",
+  "saveFailed": "Budík nelze uložit",
   "active": "aktivní",
   "inactive": "neaktivní",
 

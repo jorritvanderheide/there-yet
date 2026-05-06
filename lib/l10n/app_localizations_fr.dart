@@ -158,6 +158,15 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'Alarme';
+
+  @override
+  String get activationFailed => 'Impossible d\'activer l\'alarme';
+
+  @override
+  String get saveFailed => 'Impossible d\'enregistrer l\'alarme';
+
+  @override
   String get active => 'active';
 
   @override

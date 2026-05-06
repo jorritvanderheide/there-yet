@@ -151,6 +151,15 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get alarmDefault => 'アラーム';
+
+  @override
+  String get activationFailed => 'アラームを有効にできませんでした';
+
+  @override
+  String get saveFailed => 'アラームを保存できませんでした';
+
+  @override
   String get active => '有効';
 
   @override
