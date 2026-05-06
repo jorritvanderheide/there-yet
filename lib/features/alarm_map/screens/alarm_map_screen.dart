@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:ui' as ui;
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +12,13 @@ import 'package:there_yet/features/alarm_map/providers/alarm_save_provider.dart'
 import 'package:there_yet/features/alarm_map/widgets/alarm_map_layers.dart';
 import 'package:there_yet/features/alarm_map/widgets/alarm_settings_sheet.dart';
 import 'package:there_yet/features/alarm_map/widgets/map_search_bar.dart';
+import 'package:there_yet/features/alarm_map/widgets/map_thumbnail_capture.dart';
 import 'package:there_yet/features/alarm_map/widgets/other_alarms_layer.dart';
 import 'package:there_yet/features/map/widgets/alarm_map.dart';
 import 'package:there_yet/features/map/widgets/center_on_location_fab.dart';
 import 'package:there_yet/features/map/widgets/compass_button.dart';
 import 'package:there_yet/features/map/widgets/current_location_marker.dart';
 import 'package:there_yet/l10n/app_localizations.dart';
-import 'package:there_yet/shared/data/models/alarm.dart';
-import 'package:there_yet/shared/providers/alarms_provider.dart';
 import 'package:there_yet/shared/providers/location_permission_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:there_yet/shared/widgets/permission_dialogs.dart';
@@ -225,45 +223,16 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
       final viewPadding = MediaQuery.of(context).viewPadding;
       const pixelRatio = 1.5;
       final fullImage = await boundary.toImage(pixelRatio: pixelRatio);
-      final h = fullImage.height.toDouble();
 
       // The pin is at the visual center between the top and bottom paddings.
       final topPad = (64 + viewPadding.top) * pixelRatio;
       final bottomPad = (_sheetHeight + 16) * pixelRatio;
-      final pinY = topPad + (h - topPad - bottomPad) / 2;
+      final pinY = topPad + (fullImage.height - topPad - bottomPad) / 2;
 
-      // Crop equally above and below the pin to center it.
-      final halfH = [pinY, h - pinY].reduce((a, b) => a < b ? a : b);
-      final cropTop = (pinY - halfH).round();
-      final cropHeight = (halfH * 2).round();
-      if (cropHeight <= 0) {
-        fullImage.dispose();
-        return null;
-      }
-
-      final srcWidth = fullImage.width.toDouble();
-      final recorder = ui.PictureRecorder();
-      Canvas(recorder).drawImageRect(
-        fullImage,
-        Rect.fromLTWH(0, cropTop.toDouble(), srcWidth, cropHeight.toDouble()),
-        Rect.fromLTWH(0, 0, srcWidth, cropHeight.toDouble()),
-        Paint(),
-      );
+      final result = await cropImageVerticallyCenteredOn(fullImage, pinY);
       fullImage.dispose();
-
-      final croppedPicture = recorder.endRecording();
-      final croppedImage = await croppedPicture.toImage(
-        srcWidth.round(),
-        cropHeight,
-      );
-      croppedPicture.dispose();
-
-      final byteData = await croppedImage.toByteData(
-        format: ui.ImageByteFormat.png,
-      );
-      croppedImage.dispose();
-      return byteData?.buffer.asUint8List();
-    } catch (_) {
+      return result;
+    } on Exception {
       return null;
     }
   }
@@ -476,35 +445,21 @@ class _AlarmMapScreenState extends ConsumerState<AlarmMapScreen>
                     });
                   },
                   children: [
-                    if (!_capturingThumbnail) const CurrentLocationMarker(),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        if (_capturingThumbnail) return const SizedBox.shrink();
-                        final asyncAlarms = ref.watch(alarmsProvider);
-                        if (kDebugMode && asyncAlarms.hasError) {
-                          debugPrint(
-                            'alarmsProvider error: ${asyncAlarms.error}\n'
-                            '${asyncAlarms.stackTrace}',
-                          );
-                        }
-                        final alarms = asyncAlarms.maybeWhen(
-                          data: (list) => list
-                              .where((a) => a.id != widget.alarmId)
-                              .toList(),
-                          orElse: () => const <AlarmData>[],
-                        );
-                        return OtherAlarmsLayer(
-                          alarms: alarms,
-                          onAlarmTap: (alarm) => _animateCamera(
-                            _boundsForCircle(
-                              alarm.location,
-                              alarm.radius,
-                              padding: _mapPadding(context),
-                            ),
+                    // Hide overlays during thumbnail capture so the saved
+                    // image only contains the alarm being saved.
+                    if (!_capturingThumbnail) ...[
+                      const CurrentLocationMarker(),
+                      OtherAlarmsLayer(
+                        excludeAlarmId: widget.alarmId,
+                        onAlarmTap: (alarm) => _animateCamera(
+                          _boundsForCircle(
+                            alarm.location,
+                            alarm.radius,
+                            padding: _mapPadding(context),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                    ],
                     if (form.location != null)
                       AlarmMapLayers(
                         location: form.location!,

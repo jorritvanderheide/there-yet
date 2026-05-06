@@ -1,16 +1,33 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:there_yet/l10n/app_localizations.dart';
 import 'package:there_yet/shared/data/models/alarm.dart';
+import 'package:there_yet/shared/providers/alarms_provider.dart';
 
-class OtherAlarmsLayer extends StatelessWidget {
-  const OtherAlarmsLayer({super.key, required this.alarms, this.onAlarmTap});
+/// Renders pins and radii for stored alarms, optionally omitting one.
+class OtherAlarmsLayer extends ConsumerWidget {
+  const OtherAlarmsLayer({super.key, this.excludeAlarmId, this.onAlarmTap});
 
-  final List<AlarmData> alarms;
+  /// When set, the alarm with this id is omitted. Used by the edit screen so
+  /// the alarm being edited isn't drawn twice.
+  final int? excludeAlarmId;
   final void Function(AlarmData alarm)? onAlarmTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncAlarms = ref.watch(alarmsProvider);
+    if (kDebugMode && asyncAlarms.hasError) {
+      debugPrint(
+        'alarmsProvider error: ${asyncAlarms.error}\n'
+        '${asyncAlarms.stackTrace}',
+      );
+    }
+    final alarms = asyncAlarms.maybeWhen(
+      data: (list) => list.where((a) => a.id != excludeAlarmId).toList(),
+      orElse: () => const <AlarmData>[],
+    );
     if (alarms.isEmpty) return const SizedBox.shrink();
 
     final l10n = AppLocalizations.of(context)!;
