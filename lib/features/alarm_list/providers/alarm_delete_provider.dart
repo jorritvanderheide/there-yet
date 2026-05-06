@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:there_yet/shared/data/alarm_thumbnail.dart';
 import 'package:there_yet/shared/providers/alarm_repository_provider.dart';
@@ -38,8 +39,8 @@ class AlarmDeleteNotifier extends Notifier<AlarmDeleteState> {
           await repo.delete(id);
           try {
             await AlarmThumbnail.delete(id);
-          } on Exception {
-            // ignore
+          } on Exception catch (e) {
+            debugPrint('[alarm_delete] thumbnail delete failed: $e');
           }
         }),
       );

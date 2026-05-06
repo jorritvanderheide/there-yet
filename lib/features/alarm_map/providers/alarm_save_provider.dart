@@ -274,8 +274,8 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
       if (_thumbnail != null && _alarmId != null) {
         try {
           await AlarmThumbnail.save(_alarmId!, _thumbnail!);
-        } on Exception {
-          // non-critical
+        } on Exception catch (e) {
+          debugPrint('[alarm_save] thumbnail save failed: $e');
         }
       }
 
@@ -286,8 +286,8 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
       if (_thumbnail != null && _alarmId == null) {
         try {
           await AlarmThumbnail.save(savedId, _thumbnail!);
-        } on Exception {
-          // non-critical
+        } on Exception catch (e) {
+          debugPrint('[alarm_save] thumbnail save failed: $e');
         }
       }
 
