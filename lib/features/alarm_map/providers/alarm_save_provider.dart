@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:there_yet/features/alarm_service/providers/alarm_service_provider.dart';
@@ -274,6 +275,8 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
       if (_thumbnail != null && _alarmId != null) {
         try {
           await AlarmThumbnail.save(_alarmId!, _thumbnail!);
+        } on MissingPluginException {
+          // No path_provider in this context (tests, desktop). No-op.
         } on Exception catch (e) {
           debugPrint('[alarm_save] thumbnail save failed: $e');
         }
@@ -286,6 +289,8 @@ class AlarmSaveNotifier extends Notifier<AlarmSaveState> {
       if (_thumbnail != null && _alarmId == null) {
         try {
           await AlarmThumbnail.save(savedId, _thumbnail!);
+        } on MissingPluginException {
+          // No path_provider in this context (tests, desktop). No-op.
         } on Exception catch (e) {
           debugPrint('[alarm_save] thumbnail save failed: $e');
         }
