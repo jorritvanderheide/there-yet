@@ -41,6 +41,24 @@
           android_sdk.accept_license = true;
         };
       };
+
+      # SQLite amalgamation (3.50.2). Built from source via the sqlite3 hook
+      # configured in pubspec.yaml. Pinned to a specific zip hash; bump
+      # `sqliteVersionCode` and `sha256` together when upgrading.
+      sqliteVersionCode = "3500200";
+      sqliteAmalgamationZip = pkgs.fetchurl {
+        url = "https://www.sqlite.org/2025/sqlite-amalgamation-${sqliteVersionCode}.zip";
+        sha256 = "387991de2834b5da2894119ff4173a9ea0779ea55ebcf53d9a40b24d1dc2484e";
+      };
+      sqliteAmalgamation =
+        pkgs.runCommand "sqlite-amalgamation-${sqliteVersionCode}"
+          {
+            nativeBuildInputs = [ pkgs.unzip ];
+          }
+          ''
+            mkdir -p $out
+            unzip -j ${sqliteAmalgamationZip} 'sqlite-amalgamation-${sqliteVersionCode}/sqlite3.c' -d $out
+          '';
     in
     {
       checks.${system}.formatting = treefmtEval.config.build.check self;
@@ -64,6 +82,18 @@
 
         shellHook = ''
           echo "There Yet dev shell"
+          # Materialize the pinned SQLite amalgamation into vendor/sqlite/.
+          # File is gitignored; the sqlite3 build hook in pubspec.yaml expects
+          # it at this path. Only runs when entering the shell from the
+          # repo root.
+          if [ -f pubspec.yaml ]; then
+            mkdir -p vendor/sqlite
+            if [ ! -f vendor/sqlite/sqlite3.c ] \
+              || ! cmp -s vendor/sqlite/sqlite3.c ${sqliteAmalgamation}/sqlite3.c; then
+              cp ${sqliteAmalgamation}/sqlite3.c vendor/sqlite/sqlite3.c
+              chmod +w vendor/sqlite/sqlite3.c
+            fi
+          fi
         '';
       };
     };

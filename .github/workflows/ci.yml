@@ -101,6 +101,28 @@ jobs:
           key: gradle-${{ hashFiles('android/**/*.gradle.kts', 'android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: gradle-
 
+      - name: Cache SQLite amalgamation
+        id: sqlite-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor/sqlite/sqlite3.c
+          key: sqlite-amalgamation-3500200
+
+      - name: Fetch SQLite amalgamation
+        if: steps.sqlite-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p vendor/sqlite
+          curl -fSL -o /tmp/sqlite.zip \
+            https://www.sqlite.org/2025/sqlite-amalgamation-3500200.zip
+          unzip -j /tmp/sqlite.zip 'sqlite-amalgamation-3500200/sqlite3.c' \
+            -d vendor/sqlite/
+          rm /tmp/sqlite.zip
+
+      - name: Verify SQLite amalgamation
+        run: |
+          echo "c9a0b6829b81d5f1b78392181f09744c818117a725667411d517b98149fcd3be  vendor/sqlite/sqlite3.c" \
+            | sha256sum -c -
+
       - name: Get dependencies
         run: flutter pub get
 
