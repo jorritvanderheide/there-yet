@@ -43,6 +43,3 @@ android/key.properties
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# SQLite amalgamation fetched at build time
-/vendor/sqlite/
